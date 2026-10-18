@@ -1,2 +1,3 @@
-# bmforge
-Software development standards, reference implementations, and agent guidance
+# BMForge
+
+Software development standards, reference implementations, and agent guidance.
