@@ -24,7 +24,7 @@ Replace `__PROJECT_NAME__` and `__PROJECT_SLUG__` in `deployment/config.py` and 
 
 The starter has `application` and `filesystem` targets. Replace its `__main__.py` entry point with the actual application entry point, or retain it if the project runs as a Python module. Adapt targets to actual processes and services. MyCount uses `listener`, `report-server`, and `filesystem`; those are project-specific names.
 
-Add installation and upgrade scripts, service units, requirements, assets, schemas, and other deployment inputs to the rules as they are introduced. The starter is a minimal map, not a complete installer. Extend `scan_roots`, `package_roots`, and `setup_files` in the configuration to match what the installer manages. The policy module exposes a `DeploymentConfig` named `CONFIG` and imports the generated map; it is ordinary trusted project code.
+The starter includes the lifecycle scripts and their shared helper from [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}). Extend the rules with service units, requirements, assets, schemas, and other deployment inputs as they are introduced. The starter is a minimal map, not a complete installer. Extend `scan_roots`, `package_roots`, and `setup_files` in the configuration to match what the installer manages. The policy module exposes a `DeploymentConfig` named `CONFIG` and imports the generated map; it is ordinary trusted project code.
 
 ## Generate and Check Dependencies
 

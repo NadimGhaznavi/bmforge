@@ -193,8 +193,15 @@ preflight_local() {
     for branch in "${dev_branch}" "${main_branch}"; do
         git show-ref --verify --quiet "refs/heads/${branch}" || fail "Missing local ${branch} branch."
     done
-    git ls-files --error-unmatch "${version_file}" "${changelog_file}" >/dev/null ||
-        fail "The release constants and changelog files must be committed."
+    local lifecycle_script
+    local lifecycle_scripts=(scripts/install.sh scripts/upgrade.sh scripts/uninstall.sh)
+    for lifecycle_script in "${lifecycle_scripts[@]}"; do
+        [[ -x ${lifecycle_script} ]] || fail "Missing executable ${lifecycle_script}."
+        bash -n "${lifecycle_script}" || fail "Invalid shell syntax in ${lifecycle_script}."
+    done
+    git ls-files --error-unmatch "${version_file}" "${changelog_file}" "${cmdb_checker}" \
+        "${lifecycle_scripts[@]}" >/dev/null ||
+        fail "Release constants, changelog, metadata checker, and lifecycle scripts must be committed."
     "${python_command}" -B "${cmdb_checker}" --name "${project_name}" --codename="${description}" \
         --release-version="${version}" "${version_file}"
     current_version >/dev/null

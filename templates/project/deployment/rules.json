@@ -1,13 +1,47 @@
 {
   "output": "deployment/DependencyMap.py",
   "template": "deployment/DependencyMap.py.in",
-  "python_roots": ["__PROJECT_SLUG__"],
+  "python_roots": [
+    "__PROJECT_SLUG__"
+  ],
   "template_roots": [],
-  "scan": ["__PROJECT_SLUG__/**/*.py"],
+  "scan": [
+    "__PROJECT_SLUG__/**/*.py"
+  ],
   "exclude": [],
   "targets": {
-    "application": ["__PROJECT_SLUG__/__main__.py", "__PROJECT_SLUG__/constants/D__PROJECT_NAME__.py"],
-    "filesystem": ["deployment/config.py", "deployment/rules.json", "deployment/DependencyMap.py", "deployment/DependencyMap.py.in", "deployment/__init__.py"]
+    "application": [
+      "__PROJECT_SLUG__/__main__.py",
+      "__PROJECT_SLUG__/constants/D__PROJECT_NAME__.py"
+    ],
+    "filesystem": [
+      "deployment/config.py",
+      "deployment/rules.json",
+      "deployment/DependencyMap.py",
+      "deployment/DependencyMap.py.in",
+      "deployment/__init__.py",
+      "scripts/install.sh",
+      "scripts/upgrade.sh",
+      "scripts/uninstall.sh",
+      "scripts/new-release.sh"
+    ]
   },
-  "extra": {}
+  "extra": {
+    "scripts/install.sh": [
+      "scripts/install.py"
+    ],
+    "scripts/upgrade.sh": [
+      "scripts/install.py"
+    ],
+    "scripts/uninstall.sh": [
+      "scripts/install.py"
+    ],
+    "scripts/install.py": [
+      "scripts/check-cmdb.py",
+      "__PROJECT_SLUG__/constants/D__PROJECT_NAME__.py"
+    ],
+    "scripts/new-release.sh": [
+      "scripts/check-cmdb.py"
+    ]
+  }
 }

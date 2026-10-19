@@ -15,7 +15,8 @@ class BMForgeReleaseTests(unittest.TestCase):
         fixture = fixtures.ReleaseTests()
         self.addCleanup(fixture.doCleanups)
         fixture.setUp()
-        for name in ['scripts/new-release.sh', 'scripts/check-cmdb.py', CONSTANTS,
+        for name in ['scripts/new-release.sh', 'scripts/check-cmdb.py', 'scripts/install.sh',
+                     'scripts/upgrade.sh', 'scripts/uninstall.sh', 'scripts/install.py', CONSTANTS,
                      'bmforge/__init__.py', 'bmforge/constants/__init__.py', 'CHANGELOG.md']:
             fixture.write(name, (ROOT / name).read_text())
         fixture.commit('Configure BMForge release files')
