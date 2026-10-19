@@ -9,6 +9,19 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-19 @ 04:35
+
+The **Rosetta** release is named for the *ESA comet exploration mission*.
+
+### Added
+
+- A standard install, upgrade, and uninstall contract with guarded starter scripts for new projects.
+- BMForge file deployment under `/opt/prod/bmforge`, including readable CMDB metadata, managed-file ownership, retained unowned files, and a successful-version marker.
+
+### Changed
+
+- Require executable, committed install, upgrade, and uninstall entry points during release preflight.
+
 ## [0.1.0] - 2026-10-19 @ 04:06
 
 The **Queqiao** release is named for the *Chinese lunar communications relay*.
