@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-19 @ 04:06
+
 The **Queqiao** release is named for the *Chinese lunar communications relay*.
 
 ### Summary
