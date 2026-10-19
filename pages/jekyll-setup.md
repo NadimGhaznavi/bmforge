@@ -10,6 +10,8 @@ Set up a new project's documentation site using GitHub Pages and the shared `Nad
 
 Record any project-specific setup requirements or exceptions in the project's own documentation.
 
+Establish the new project's name using [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) so the repository slug, package name, and release settings agree.
+
 ## Configure the Site
 
 Copy the [configuration template]({{ '/templates/_config.yml' | relative_url }}) to `_config.yml` in the new project's root. Replace every `__PLACEHOLDER__` using the following values.

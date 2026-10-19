@@ -1,0 +1,4 @@
+"""Generated dependency map; edit deployment/rules.json instead."""
+
+TARGETS = {{TARGETS}}
+DEPENDENCIES = {{DEPENDENCIES}}

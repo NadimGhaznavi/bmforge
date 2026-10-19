@@ -35,5 +35,14 @@ Projects reference BMForge from their `AGENTS.md`. Project-specific instructions
 - [Jekyll Setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %})
 - [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %})
 - [Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %})
+- [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %})
+- Development and Maintenance
+  - [Changelog Maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %})
 - Release Management
-  - Initial Setup
+  - [Initial Setup]({{ site.baseurl }}{% link pages/release-setup.md %})
+  - [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %})
+  - [Deployment Impact Tracking]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %})
+
+---
+
+[Changelog]({{ site.baseurl }}{% link CHANGELOG.md %})

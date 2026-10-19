@@ -1,0 +1,13 @@
+{
+  "output": "deployment/DependencyMap.py",
+  "template": "deployment/DependencyMap.py.in",
+  "python_roots": ["__PROJECT_SLUG__"],
+  "template_roots": [],
+  "scan": ["__PROJECT_SLUG__/**/*.py"],
+  "exclude": [],
+  "targets": {
+    "application": ["__PROJECT_SLUG__/__main__.py", "__PROJECT_SLUG__/constants/D__PROJECT_NAME__.py"],
+    "filesystem": ["deployment/config.py", "deployment/rules.json", "deployment/DependencyMap.py", "deployment/DependencyMap.py.in", "deployment/__init__.py"]
+  },
+  "extra": {}
+}
