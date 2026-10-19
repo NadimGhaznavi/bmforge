@@ -145,6 +145,7 @@ footer:
 include:
   - .htaccess
   - pages
+  - templates/_config.yml
 exclude:
   - "*.sublime-project"
   - "*.sublime-workspace"

@@ -11,8 +11,29 @@ translation_key: bmforge-home
 
 ![BMForge Logo](/pages/images/bmforge.png)
 
-This site provides guidance for coding agents.
+BMForge provides shared development standards, guidance, and reusable templates for coding agents creating new projects and working on existing projects.
+
+Projects reference BMForge from their `AGENTS.md`. Project-specific instructions and exceptions stay in the project's own documentation.
+
+## Objectives
+
+- Formalize and extend the coding guidelines into a shared reference for agents
+- Build a reusable software development toolkit for project setup, implementation, and maintenance
+- Create a lightweight project management framework covering changelogs, releases, and documentation
+
+## Guiding Principles
+
+- Extract proven solutions from existing projects
+- Add reusable templates as new solutions are developed
+- Keep guidance clear and actionable for agents working across projects
+- Give each document one clear purpose; link to related guidance instead of duplicating it
 
 ---
 
-[Project Setup]({% link pages/project-setup.md %})
+# Processes
+
+- [Jekyll Setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %})
+- [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %})
+- [Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %})
+- Release Management
+  - Initial Setup

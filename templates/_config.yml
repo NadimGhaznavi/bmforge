@@ -1,41 +1,27 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your entire site, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# `jekyll serve`. If you change this file, please restart the server process.
-
-# Theme Settings
-#
-# Review documentation to determine if you should use `theme` or `remote_theme`
-# https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/#installing-the-theme
-
-# theme                  : "minimal-mistakes-jekyll"
+# Copy to the project root and replace every placeholder.
+# See pages/jekyll-setup.md for the shared defaults and required values.
 remote_theme: "NadimGhaznavi/minimal-mistakes"
-#remote_theme: "mmistakes/minimal-mistakes"
-
-# "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 minimal_mistakes_skin: "dark"
-#minimal_mistakes_skin: "sunrise"
-#minimal_mistakes_skin: "air"
 
-# Site Settings
-# Site Settings
 mycount:
   endpoint: "https://count.osoyalce.com/count"
-  site: "mycount"
+  site: "__PROJECT_SLUG__"
+multilingual:
+  enabled: true
+  default_lang: en
+
 locale: "en-US"
 rtl: # true, false (default) # turns direction of the page into right to left for RTL languages
-title: "Website Visitor Analytics"
+title: "__PROJECT_TITLE__"
 title_separator: "-"
 subtitle: # site tagline that appears below site title in masthead
-name: "mycount"
-description: "The project provides a GeoIP service over HTTP and ZMQ"
-url: "https://mycount.osoyalce.com" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl: "" # the subpath of your site, e.g. "/blog"
-repository: NadimGhaznavi/mycount # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
+name: "__PROJECT_TITLE__"
+description: "__PROJECT_DESCRIPTION__"
+url: "https://__SITE_HOST__" # hostname only; put any path in baseurl
+baseurl: "__SITE_BASEURL__" # empty for a custom domain, or e.g. "/myproject"
+repository: "__GITHUB_OWNER__/__PROJECT_SLUG__"
 teaser: # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo: "/pages/images/mycount.png"
+logo: "__PROJECT_LOGO__" # existing /pages/images/... path, or empty if unavailable
 masthead_title: # overrides the website title displayed in the masthead, use " " for no title
 breadcrumbs: # true, false (default)
 words_per_minute: 200
@@ -121,18 +107,18 @@ analytics:
 
 # Site Author
 author:
-  name: "Nadim-Daniel Ghaznavi"
+  name: "__AUTHOR_NAME__"
   avatar: # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio: "Creator"
-  location: "Hamilton, ON"
-  email: "nghaznavi@gmail.com"
+  location: "__AUTHOR_LOCATION__"
+  email: "__AUTHOR_EMAIL__"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/NadimGhaznavi"
+      url: "https://github.com/__GITHUB_OWNER__"
     - label: "My Website"
       icon: "fas fa-fw fa-link"
-      url: "https://www.osoyalce.com/"
+      url: "__AUTHOR_WEBSITE__"
 
 # Site Footer
 footer:
@@ -155,7 +141,7 @@ footer:
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       # url:
-  since: "2026"
+  since: "__START_YEAR__"
 
 # Reading Files
 include:
