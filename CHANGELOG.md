@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+The **Rosetta** release is named for the *ESA comet exploration mission*.
+
 ### Added
 
 - A standard install, upgrade, and uninstall contract with guarded starter scripts for new projects.
