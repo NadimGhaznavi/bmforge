@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-19 @ 04:35
+
 The **Rosetta** release is named for the *ESA comet exploration mission*.
 
 ### Added
