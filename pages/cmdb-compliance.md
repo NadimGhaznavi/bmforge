@@ -64,6 +64,8 @@ For an installation, use `--root /opt/prod/mycount` with the same relative const
 
 Deploy the constants file as readable Python source at the derived path, even if the executable is bundled. The `cmdbagent` account needs directory traversal and file read access. Keep credentials in separate protected configuration files.
 
+Provide the required [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) to deploy, update, and remove the local installation consistently.
+
 After installation, register the application, run an application scan, and verify the host, version, subtype, supplier, codename, and declared data components. `CMDB_CODENAME` is stored as the release's `VERSION_CODENAME` tag. A release publication and a verified installation are separate outcomes.
 
 ---

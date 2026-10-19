@@ -7,8 +7,6 @@ language_name: English
 translation_key: bmforge-home
 ---
 
-# BMForge
-
 ![BMForge Logo](/pages/images/bmforge.png)
 
 BMForge provides shared development standards, guidance, and reusable templates for coding agents creating new projects and working on existing projects.
@@ -36,6 +34,7 @@ Projects reference BMForge from their `AGENTS.md`. Project-specific instructions
 - [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %})
 - [Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %})
 - [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %})
+- [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %})
 - Development and Maintenance
   - [Changelog Maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %})
 - Release Management
@@ -44,5 +43,9 @@ Projects reference BMForge from their `AGENTS.md`. Project-specific instructions
   - [Deployment Impact Tracking]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %})
 
 ---
+
+## Using BMForge
+
+[Install, Upgrade, and Uninstall]({{ site.baseurl }}{% link pages/installing-bmforge.md %})
 
 [Changelog]({{ site.baseurl }}{% link CHANGELOG.md %})

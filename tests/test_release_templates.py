@@ -79,8 +79,11 @@ class ReleaseTests(unittest.TestCase):
         self.git('init', '-b', 'main')
         self.git('init', '--bare', str(self.root / 'remote.git'))
         self.git('remote', 'add', 'origin', str(self.root / 'remote.git'))
-        for name in ['scripts/new-release.sh', 'scripts/check-cmdb.py', 'CHANGELOG.md']:
+        for name in ['scripts/new-release.sh', 'scripts/check-cmdb.py', 'scripts/install.sh',
+                     'scripts/upgrade.sh', 'scripts/uninstall.sh', 'scripts/install.py', 'CHANGELOG.md']:
             self.write(name, configure((TEMPLATES / 'project' / name).read_text()))
+            if name.endswith('.sh'):
+                (self.repo / name).chmod(0o755)
         self.write(CONSTANTS, configure((TEMPLATES / 'project/constants/DProject.py').read_text()).replace(
             'class DProject:', 'class DAcmeApp:').replace('"0.0.0"', '"0.0.1"'))
         self.git('add', '.')
@@ -209,6 +212,12 @@ class ReleaseTests(unittest.TestCase):
         self.git('switch', 'feat/maint-0.1.0')
         self.assert_rejected(('0.1.0', 'Release'), 'Merge main into dev')
 
+    def test_missing_or_nonexecutable_lifecycle_script_is_rejected(self):
+        path = self.repo / 'scripts/upgrade.sh'
+        path.chmod(0o644)
+        self.commit('Remove upgrade executable permission')
+        self.assert_rejected(('0.1.0', 'Release'), 'Missing executable scripts/upgrade.sh')
+
     def test_rejected_atomic_push_preserves_remote_refs(self):
         before = self.git('ls-remote', 'origin')
         hook = self.root / 'remote.git/hooks/pre-receive'
@@ -248,8 +257,8 @@ class ReleaseTests(unittest.TestCase):
         result = self.release('0.1.0', 'Beacon')
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
         history = json.loads((self.repo / 'deployment/releases.json').read_text())
-        self.assertEqual(history['releases'][-1], {'version': '0.1.0', 'targets': ['application']})
-        self.assertEqual(self.history('upgrade', '0.0.1', '0.1.0').stdout.strip(), 'application')
+        self.assertEqual(history['releases'][-1], {'version': '0.1.0', 'targets': ['application', 'filesystem']})
+        self.assertEqual(self.history('upgrade', '0.0.1', '0.1.0').stdout.splitlines(), ['application', 'filesystem'])
         config = self.repo / 'deployment/config.py'
         config.write_text(config.read_text() + '\n# setup changed\n')
         self.commit('Change setup')

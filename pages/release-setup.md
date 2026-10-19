@@ -12,6 +12,8 @@ Prepare a new project's release tooling once. Use [Creating a Release]({{ site.b
 
 Complete [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) first. Establish the canonical application name, constants path, literal `VERSION`, and initial `CMDB_CODENAME`.
 
+Add the three lifecycle entry points using [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}). They must be executable and committed before releasing; deployment remains a separate operation.
+
 Create `CHANGELOG.md` with exactly one `## [Unreleased]` heading. The [changelog template]({{ '/templates/project/CHANGELOG.md' | relative_url }}) provides the initial structure. Follow [Changelog Maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) to keep it current during development and maintenance.
 
 ## Install the Scripts
