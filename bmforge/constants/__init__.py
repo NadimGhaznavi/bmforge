@@ -1,0 +1,1 @@
+"""BMForge project constants."""
