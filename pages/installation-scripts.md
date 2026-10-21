@@ -32,6 +32,10 @@ The helper is a source-file deployment baseline. Replace its project name and pa
 
 For a source-only toolkit, the baseline can be sufficient once its file lists are configured. [BMForge's installation]({{ site.baseurl }}{% link pages/installing-bmforge.md %}) is an example. Applications with running services or databases need their own additional work before enabling deployment.
 
+## Configure Listeners Before Service Changes
+
+For applications with listeners, implement [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) as part of the lifecycle work. Create production JSON from `CMDB_NETWORK` only when missing and preserve existing files during reinstall and upgrade. Validate configuration before stopping services, share resolved settings with health checks, and provide a restart entry point that applies all affected settings. The starter helper does not implement these application-specific steps.
+
 ## Preserve Data and Deployment Identity
 
 Deploy to the literal `BASE_DIR` and install readable constants at the path specified by [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}). Directory permissions must allow the inventory account to traverse the path and read the metadata. Credentials stay outside public source files.
@@ -46,7 +50,7 @@ Release publication and host deployment are separate processes. Run installation
 
 For selective upgrades, include lifecycle scripts and their dependencies in [Deployment Impact Tracking]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}). Preserve the last successful version before replacing application files, execute the planned work, and publish success bookkeeping after health checks.
 
-Verify first installation, reinstallation, upgrades, repeat uninstallation, retained configuration and data, removed obsolete files, readable CMDB metadata, invalid paths, and interrupted work. Run filesystem checks in temporary directories and service or database checks in an appropriate disposable environment. Verify a real CMDB scan after deployment.
+Verify first installation, reinstallation, upgrades, repeat uninstallation, retained configuration and data, removed obsolete files, readable CMDB metadata, invalid paths, and interrupted work. Run filesystem checks in temporary directories and service or database checks in an appropriate disposable environment. Verify a real CMDB scan after deployment, including declared component paths and same-host database connections. Test declared backups and effective listener bindings separately; discovery neither checks directory existence nor collects network declarations yet.
 
 ---
 

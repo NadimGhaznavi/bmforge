@@ -26,6 +26,8 @@ The starter has `application` and `filesystem` targets. Replace its `__main__.py
 
 The starter includes the lifecycle scripts and their shared helper from [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}). Extend the rules with service units, requirements, assets, schemas, and other deployment inputs as they are introduced. The starter is a minimal map, not a complete installer. Extend `scan_roots`, `package_roots`, and `setup_files` in the configuration to match what the installer manages. The policy module exposes a `DeploymentConfig` named `CONFIG` and imports the generated map; it is ordinary trusted project code.
 
+For listener applications, include the [network resolver and configuration consumers]({{ site.baseurl }}{% link pages/network-configuration.md %}) in the rules. Changes to defaults, proxy templates, restart tooling, or health checks must reach their affected service targets. Keep live production JSON outside copied source artifacts so selective upgrades preserve operator overrides.
+
 ## Generate and Check Dependencies
 
 Run from the project root:
