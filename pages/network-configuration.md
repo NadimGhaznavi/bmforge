@@ -6,7 +6,7 @@ language_name: English
 translation_key: bmforge-network-configuration
 ---
 
-Use `CMDB_NETWORK` as the single source for application listener defaults. This process follows CMDB's [network developer guide](https://github.com/NadimGhaznavi/cmdb/blob/main/pages/cmdb-network.md), reviewed against `/opt/dev/cmdb/pages/cmdb-network.md` on 2026-10-21. The application standard is available now; CMDB collection, storage, and display remain pending.
+Use `CMDB_NETWORK` as the single source for application listener defaults. Apply the shared [Runtime Configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) contract for constants, production JSON, discovery, and deployment lifecycle. This guide defines the network-specific schema and consumers.
 
 ## Declare Defaults
 
@@ -50,7 +50,7 @@ A partial Example configuration is:
 
 A missing file uses defaults. Omitted roles and fields inherit defaults. Reject malformed JSON, unknown roles or fields, invalid IPv4 addresses, and invalid ports with an error identifying the file or setting. Invalid configuration must fail instead of silently using defaults. Resolve configuration once per process and restart affected processes after edits. Preserve existing supported CLI overrides.
 
-The declaration describes default inventory. Production JSON and CLI overrides can change actual bindings without changing the declaration. Current CMDB scans cannot verify either declared or effective network settings.
+The declaration describes default inventory. Production JSON and CLI overrides can change actual bindings without changing the declaration. Follow the runtime configuration discovery contract so CMDB and application consumers interpret defaults and overrides consistently.
 
 ## Integrate Installation and Restart
 

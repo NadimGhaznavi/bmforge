@@ -8,7 +8,7 @@ translation_key: bmforge-cmdb-compliance
 
 Make every new project discoverable by the CMDB. Establish its application name, constants file, and installation path during setup.
 
-This process follows CMDB's [App Discovery Settings](https://github.com/NadimGhaznavi/cmdb/blob/main/pages/app-discovery.md) and individual setting guides, reviewed against `/opt/dev/cmdb/pages` on 2026-10-21. CMDB's scanner requires only a literal `VERSION`; BMForge additionally requires the release metadata and installation root below. `CMDB_NETWORK` is an application standard whose CMDB discovery support is still pending.
+This process follows CMDB's [App Discovery Settings](https://github.com/NadimGhaznavi/cmdb/blob/main/pages/app-discovery.md) and individual setting guides, reviewed against `/opt/dev/cmdb/pages` on 2026-10-21. CMDB's scanner requires only a literal `VERSION`; BMForge additionally requires the release metadata and installation root below. Follow [Runtime Configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) to make deployment settings discoverable through constants and production JSON.
 
 ## Name the Application
 
@@ -64,7 +64,7 @@ Directory and matched database targets appear in the Backups page's Application 
 
 ## Declare Network Listeners
 
-Follow [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) for `CMDB_NETWORK`, runtime defaults, production overrides, and lifecycle verification. Declare every owned or managed listener, including internal and proxy listeners. Use an empty tuple for applications without listeners, such as BMForge. Current CMDB scans do not read, store, or display this declaration.
+Follow [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) for `CMDB_NETWORK`, runtime defaults, production overrides, and lifecycle verification. Declare every owned or managed listener, including internal and proxy listeners. Use an empty tuple for applications without listeners, such as BMForge.
 
 ## Verify Discovery
 
