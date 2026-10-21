@@ -11,4 +11,5 @@ class DBMForge:
     CMDB_CODENAME: Final[str] = "Rosetta"
     CMDB_COMPONENTS = ()
     CMDB_DATABASES = ()
+    CMDB_NETWORK: Final[tuple[tuple[str, str, int], ...]] = ()
     BASE_DIR: Final[str] = "/opt/prod/bmforge"

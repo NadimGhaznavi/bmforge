@@ -10,7 +10,7 @@ Prepare a new project's release tooling once. Use [Creating a Release]({{ site.b
 
 ## Prepare the Constants and Changelog
 
-Complete [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) first. Establish the canonical application name, constants path, literal `VERSION`, and initial `CMDB_CODENAME`.
+Complete [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) first. Establish the canonical application name, constants path, literal `VERSION`, and initial `CMDB_CODENAME`. Declare persistent components, database references, and network listeners, using empty tuples where none exist. For listener applications, complete [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) so runtime defaults and lifecycle checks consume the declaration.
 
 Add the three lifecycle entry points using [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}). They must be executable and committed before releasing; deployment remains a separate operation.
 

@@ -9,6 +9,15 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Boron (B)**. Boron compounds help give heat-resistant borosilicate glass its remarkable durability!
+
+### Changed
+
+- Document the runtime configuration contract for future applications: constants supply defaults, production JSON supplies persistent overrides, and shared resolution supports application tools and CMDB discovery.
+- Align CMDB compliance with current metadata, scan, persistent component, database, and backup behavior; accept software classifications without a fixed vocabulary while recommending `application` for new projects.
+- Add a network configuration process covering literal listener defaults, shared runtime resolution, production overrides, installation, restart, and deployment verification, with CMDB network discovery explicitly pending.
+- Add empty listener declarations to starter and BMForge constants and validate declared listener roles, IPv4 addresses, and ports in both metadata checkers.
+
 ## [0.2.0] - 2026-10-19 @ 04:35
 
 The **Rosetta** release is named for the *ESA comet exploration mission*.

@@ -3,6 +3,7 @@
 
 import argparse
 import ast
+from ipaddress import IPv4Address
 from pathlib import Path, PurePosixPath
 import re
 
@@ -40,7 +41,7 @@ def validate(source: str, name: str, pathname: str, codename: str | None = None,
         else:
             continue
         for target in targets:
-            if isinstance(target, ast.Name) and target.id in (*FIELDS, "CMDB_COMPONENTS", "CMDB_DATABASES"):
+            if isinstance(target, ast.Name) and target.id in (*FIELDS, "CMDB_COMPONENTS", "CMDB_DATABASES", "CMDB_NETWORK"):
                 if target.id in assignments or len(targets) != 1:
                     raise ValueError(f"{target.id} must have exactly one independent assignment")
                 assignments[target.id] = value
@@ -54,8 +55,6 @@ def validate(source: str, name: str, pathname: str, codename: str | None = None,
             raise ValueError(f"{field} must be a single-line literal for release tooling")
     if VERSION.fullmatch(values['VERSION']) is None:
         raise ValueError("VERSION must be a semantic version without a leading v")
-    if values['CMDB_TYPE'] != "Application":
-        raise ValueError('CMDB_TYPE must be exactly "Application"')
     if values['BASE_DIR'] != f"/opt/prod/{name.lower()}":
         raise ValueError(f"BASE_DIR must be /opt/prod/{name.lower()}")
     if codename is not None:
@@ -77,6 +76,28 @@ def validate(source: str, name: str, pathname: str, codename: str | None = None,
             value = text_value(pair[1], field, limit)
             if field == "CMDB_COMPONENTS" and (".." in PurePosixPath(value).parts or str(PurePosixPath(value)) == "."):
                 raise ValueError("CMDB component paths must not contain parent traversal or resolve to '.'")
+    if "CMDB_NETWORK" in assignments:
+        declarations = ast.literal_eval(assignments["CMDB_NETWORK"])
+        if not isinstance(declarations, (tuple, list)):
+            raise ValueError("CMDB_NETWORK must be a literal tuple or list of listener tuples")
+        uses = set()
+        for listener in declarations:
+            if not isinstance(listener, tuple) or len(listener) != 3:
+                raise ValueError("CMDB_NETWORK entries must be (use, interface, port) tuples")
+            use, interface, port = listener
+            if not isinstance(use, str) or not use.strip() or use != use.strip():
+                raise ValueError("CMDB_NETWORK use must be a nonempty string without surrounding whitespace")
+            if use in uses:
+                raise ValueError(f"CMDB_NETWORK has duplicate use: {use}")
+            uses.add(use)
+            if not isinstance(interface, str):
+                raise ValueError("CMDB_NETWORK interface must be an IPv4 address string")
+            try:
+                IPv4Address(interface)
+            except ValueError as error:
+                raise ValueError("CMDB_NETWORK interface must be an IPv4 address string") from error
+            if type(port) is not int or not 1 <= port <= 65535:
+                raise ValueError("CMDB_NETWORK port must be an integer from 1 to 65535")
     return values
 
 
