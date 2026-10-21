@@ -34,12 +34,12 @@ class MetadataTests(unittest.TestCase):
     def test_literals_are_read_without_executing_project_code(self):
         values = checker.validate('raise RuntimeError("never run")\n' + self.source,
                                   "AcmeApp", CONSTANTS)
-        self.assertEqual(values['CMDB_TYPE'], 'Application')
+        self.assertEqual(values['CMDB_TYPE'], 'application')
         self.assertEqual(values['BASE_DIR'], '/opt/prod/acmeapp')
 
     def test_type_name_path_and_metadata_contract(self):
         cases = [
-            (self.source.replace('"Application"', '"application"'), 'CMDB_TYPE'),
+            (self.source.replace('"application"', '"   "'), 'CMDB_TYPE'),
             (self.source.replace('"Inventory"', 'get_subtype()'), 'CMDB_SUBTYPE'),
             (self.source.replace('"Inventory"', '"__PROJECT_SUBTYPE__"'), 'CMDB_SUBTYPE'),
             (self.source.replace('/opt/prod/acmeapp', '/opt/dev/acmeapp'), 'BASE_DIR'),
@@ -62,6 +62,46 @@ class MetadataTests(unittest.TestCase):
         for message in ('a\nb', 'x' * 256, '\x7f', '   '):
             with self.assertRaises(ValueError):
                 checker.validate(source, 'AcmeApp', CONSTANTS, message)
+
+    def test_classification_vocabulary_is_not_restricted(self):
+        for classification in ('application', 'Application', 'DBMS', 'Custom Software'):
+            with self.subTest(classification=classification):
+                source = self.source.replace('"application"', repr(classification))
+                values = checker.validate(source, 'AcmeApp', CONSTANTS)
+                self.assertEqual(values['CMDB_TYPE'], classification)
+
+    def test_network_literals_and_legacy_omission(self):
+        declaration = 'CMDB_NETWORK: Final[tuple[tuple[str, str, int], ...]] = ()'
+        source = self.source.replace(declaration, '')
+        checker.validate(source, 'AcmeApp', CONSTANTS)
+        source = self.source.replace(declaration, 'CMDB_NETWORK = (("http", "0.0.0.0", 18080), ("backend", "127.0.0.1", 18081))')
+        checker.validate('raise RuntimeError("never run")\n' + source, 'AcmeApp', CONSTANTS)
+        # Confirm both the release template and installed project's checker agree.
+        self.assertEqual((ROOT / 'scripts/check-cmdb.py').read_bytes(),
+                         (TEMPLATES / 'project/scripts/check-cmdb.py').read_bytes())
+
+    def test_invalid_network_declarations_are_rejected(self):
+        declaration = 'CMDB_NETWORK: Final[tuple[tuple[str, str, int], ...]] = ()'
+        cases = (
+            ('get_network()', None),
+            ('"http"', 'literal tuple or list'),
+            ('(("http", "127.0.0.1"),)', 'listener|entries'),
+            ('(("", "127.0.0.1", 80),)', 'use'),
+            ('((" http ", "127.0.0.1", 80),)', 'use'),
+            ('(("http", "127.0.0.1", 80), ("http", "0.0.0.0", 81))', 'duplicate'),
+            ('(("http", "localhost", 80),)', 'IPv4'),
+            ('(("http", "::1", 80),)', 'IPv4'),
+            ('(("http", 123, 80),)', 'IPv4'),
+            ('(("http", "127.0.0.1", True),)', 'port'),
+            ('(("http", "127.0.0.1", "80"),)', 'port'),
+            ('(("http", "127.0.0.1", 0),)', 'port'),
+            ('(("http", "127.0.0.1", 65536),)', 'port'),
+        )
+        for value, error in cases:
+            with self.subTest(value=value):
+                source = self.source.replace(declaration, 'CMDB_NETWORK = ' + value)
+                with self.assertRaisesRegex(ValueError, error or 'malformed'):
+                    checker.validate(source, 'AcmeApp', CONSTANTS)
 
 
 class ReleaseTests(unittest.TestCase):
@@ -189,7 +229,7 @@ class ReleaseTests(unittest.TestCase):
         self.git('switch', 'main')
         self.assert_rejected(('0.1.0', 'Release'), 'Run from a feature branch')
         self.git('switch', 'feat/maint-0.1.0')
-        self.write(CONSTANTS, (self.repo / CONSTANTS).read_text().replace('"Application"', '"application"'))
+        self.write(CONSTANTS, (self.repo / CONSTANTS).read_text().replace('"application"', '""'))
         self.commit('Invalid metadata')
         self.assert_rejected(('0.1.0', 'Release'), 'CMDB_TYPE')
 
