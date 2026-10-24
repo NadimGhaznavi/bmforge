@@ -6,7 +6,9 @@ language_name: English
 translation_key: bmforge-release-setup
 ---
 
-Prepare a new project's release tooling once. Use [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %}) for subsequent releases.
+**For greenfield Codex bootstrap projects, these files are already generated:** `scripts/new-release.sh`, the CMDB checker, version constants, `CHANGELOG.md` and disabled deployment lifecycle wrappers. Don't copy them again. Bootstrap never commits or publishes a release.
+
+For manually created projects, prepare the tooling once. Use [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %}) for subsequent releases.
 
 ## Prepare the Constants and Changelog
 
@@ -18,7 +20,7 @@ Create `CHANGELOG.md` with exactly one `## [Unreleased]` heading. The [changelog
 
 ## Install the Scripts
 
-Copy these files from BMForge into the new project:
+For manual projects without the Codex bootstrap, copy these files from BMForge:
 
 | BMForge source | Project destination |
 | --- | --- |
