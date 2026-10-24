@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-24 @ 10:54
+
 This release is named for the element **Phosphorus (P)**. Phosphorus was first isolated from urine in 1669 by an alchemist searching for the philosopher's stone. (Maybe it should be called **Phoolorus**?).
 
 ## [0.4.0] - 2026-10-24 @ 10:32
