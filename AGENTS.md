@@ -2,6 +2,10 @@
 
 BMForge is a **standalone engineering specification repository**, not a runtime library. Every application owns its implementation.
 
+## Codex component skills
+
+The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmforge-new-project/` and installs self-contained, pinned skills from `skills/bmforge-{project,http,zmq,db-server,git,visualization}/`. Its `manage.py check` is **read-only** and reports changes without applying them. Do not generate application code, deploy services, or pick components on the user's behalf during bootstrap. Keep installer tests hermetic and require user consent for any upgrade.
+
 ## Read only what the task needs
 
 1. Read `pages/engineering-contract.md` and `pages/classification.md` first. Build the smallest clear implementation that satisfies the requirement, and fail visibly when internal contracts cannot be met.
