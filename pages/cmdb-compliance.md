@@ -68,6 +68,10 @@ Directory and matched database targets appear in the Backups page's Application 
 
 Follow [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) for `CMDB_NETWORK`, runtime defaults, production overrides, and lifecycle verification. Declare every owned or managed listener, including internal and proxy listeners. Use an empty tuple for applications without listeners, such as BMForge.
 
+## Application Health Monitoring
+
+Follow [Application Health Checks]({{ site.baseurl }}{% link pages/health-checks.md %}) for running applications. CMDB should ask the **application** via its existing health interface and display green for success or red for failures and timeouts. The DB Server check happens inside the application using its configured database connection. CMDB must **not** open a direct MariaDB connection for this health check. Polling and status dashboard support in CMDB are planned separately; these specifications do not imply it already exists.
+
 ## Verify Discovery
 
 Copy the [metadata checker]({{ '/templates/project/scripts/check-cmdb.py' | relative_url }}) to `scripts/check-cmdb.py`. From the project root, run it with the project's actual name and path:

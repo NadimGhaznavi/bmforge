@@ -26,6 +26,8 @@ class ComponentBlueprintTests(unittest.TestCase):
             self.assertRegex(body, r'(?m)^spec_status: "(draft|published)"$')
             self.assertIn("## Acceptance checks", body)
             self.assertIn("components/reference/bmgeoip/", body)
+            self.assertIn('spec_version: "0.2.0"', body)
+            self.assertIn("pages/health-checks.md", body)
 
     def test_homepage_jekyll_links_resolve_locally(self):
         home = (ROOT / "index.md").read_text()
@@ -44,6 +46,16 @@ class ComponentBlueprintTests(unittest.TestCase):
         self.assertIn("Never add BMForge", agent)
         self.assertIn("public APIs", agent)
         self.assertIn("fail visibly", agent)
+
+    def test_health_contract_is_app_mediated(self):
+        health = (ROOT / "pages/health-checks.md").read_text()
+        self.assertIn("GET `/health`", health)
+        self.assertIn("HTTP 200", health)
+        self.assertIn("HTTP 503", health)
+        self.assertIn("does **not** connect directly to MariaDB", health)
+        self.assertIn("pages/health-checks.md", (ROOT / "index.md").read_text())
+        for filename in ("component-http.md", "component-zmq.md", "component-db-server.md"):
+            self.assertIn("health", (ROOT / "pages" / filename).read_text().lower())
 
     def test_reference_snapshots_are_local(self):
         base = ROOT / "components/reference/bmgeoip/bmgeoip"
