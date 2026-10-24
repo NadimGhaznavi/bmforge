@@ -11,12 +11,12 @@ The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmfo
 1. Read `pages/engineering-contract.md` and `pages/classification.md` first. Build the smallest clear implementation that satisfies the requirement, and fail visibly when internal contracts cannot be met.
 2. Follow `pages/component-constants.md` for stable domain-grouped identifiers and `pages/component-localization.md` for runtime UI/CLI messages from the first user-facing feature. These are **different** from `pages/multilingual-documentation.md` (Jekyll documentation).
 3. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the needed component specifications. For chart, map or graph capabilities, also read `pages/component-visualization.md`.
-3. Treat each selected component specification's **Approved runtime modules** section as a fixed implementation inventory. Copy/adapt only from that list. If it cannot meet the requirement, **pause and ask the user before adding packages or changing technologies**; don't silently swap in another framework.
-4. Use locally pinned reference examples for understanding, not runtime imports. HTTP/ZeroMQ may adapt `components/reference/bmgeoip/`; **DB Server must copy `components/templates/db-server/interface/DbMgr.py` unchanged**, passing app configuration and implementing domain `*Db` interfaces around it. Never fetch moving examples or transplant source-app business logic.
-5. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
-6. When creating a BMForge-derived component, apply the literal source marker specified in `pages/specification-lifecycle.md`, using the selected specification's ID and version.
-7. For a running application, implement the on-demand checks in `pages/health-checks.md` using existing HTTP/ZeroMQ interfaces and the application's own DB layer. Never give CMDB direct MariaDB access.
-8. Run the component's acceptance checks in the destination project and report what actually passed, failed, or was not tested. A copied example is not a completed component.
+4. Treat each selected component specification's **Approved runtime modules** section as a fixed implementation inventory. Copy/adapt only from that list. If it cannot meet the requirement, **pause and ask the user before adding packages or changing technologies**; don't silently swap in another framework.
+5. Use locally pinned reference examples for understanding, not runtime imports. HTTP/ZeroMQ may adapt `components/reference/bmgeoip/`; **DB Server must copy `components/templates/db-server/interface/DbMgr.py` unchanged**, passing app configuration and implementing domain `*Db` interfaces around it. Never fetch moving examples or transplant source-app business logic.
+6. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
+7. When creating a BMForge-derived component, apply the literal source marker specified in `pages/specification-lifecycle.md`, using the selected specification's ID and version.
+8. For a running application, implement the on-demand checks in `pages/health-checks.md` using existing HTTP/ZeroMQ interfaces and the application's own DB layer. Never give CMDB direct MariaDB access.
+9. Run the component's acceptance checks in the destination project and report what actually passed, failed, or was not tested. A copied example is not a completed component.
 
 ## Engineering rules
 
