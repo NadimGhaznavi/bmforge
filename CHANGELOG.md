@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Calcium (Ca)**. Known for it's presence in teeth and bones, it's also required to make your muscles move, to make your heart beat.
+
 ### Added
 
 - Define separate draft constants (`bmforge.constants`) and runtime application localization (`bmforge.localization`) specifications and Codex skills.
