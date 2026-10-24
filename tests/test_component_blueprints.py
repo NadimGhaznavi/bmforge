@@ -10,6 +10,7 @@ COMPONENTS = {
     "zmq": "bmforge.zmq-server",
     "db-server": "bmforge.db-server",
 }
+VERSIONS = {"http": "0.3.0", "zmq": "0.3.0", "db-server": "0.4.0"}
 
 
 class ComponentBlueprintTests(unittest.TestCase):
@@ -27,7 +28,7 @@ class ComponentBlueprintTests(unittest.TestCase):
             self.assertRegex(body, r'(?m)^spec_status: "(draft|published)"$')
             self.assertIn("## Acceptance checks", body)
             self.assertIn("components/reference/bmgeoip/", body)
-            self.assertIn('spec_version: "0.3.0"', body)
+            self.assertIn(f'spec_version: "{VERSIONS[name]}"', body)
             self.assertIn("pages/health-checks.md", body)
 
     def test_approved_module_inventory_is_explicit(self):
@@ -36,7 +37,7 @@ class ComponentBlueprintTests(unittest.TestCase):
                      "pathlib", "signal", "urllib.parse", "jinja2"),
             "zmq": ("collections.abc", "dataclasses", "json", "threading",
                     "typing", "zmq"),
-            "db-server": ("contextlib", "pathlib", "pymysql", "pymysql.cursors"),
+            "db-server": ("contextlib", "pymysql", "pymysql.cursors"),
         }
         for name, approved in expected.items():
             body = (ROOT / f"pages/component-{name}.md").read_text()
@@ -90,6 +91,33 @@ class ComponentBlueprintTests(unittest.TestCase):
         for module in expected:
             self.assertIn(f"| `{module}` |", contract)
         self.assertIn('BMFORGE_COMPONENT = {"id": "bmforge.git", "spec_version": "0.1.0"}', template)
+
+    def test_canonical_db_manager_and_classifications(self):
+        canonical = ROOT / "components/templates/db-server/interface/DbMgr.py"
+        self.assertTrue(canonical.is_file())
+        code = canonical.read_text()
+        syntax = ast.parse(code)
+        imports = set()
+        for node in ast.walk(syntax):
+            if isinstance(node, ast.Import):
+                imports.update(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom):
+                imports.add(node.module)
+        self.assertEqual(imports, {"contextlib", "pymysql", "pymysql.cursors"})
+        self.assertIn('BMFORGE_COMPONENT = {"id": "bmforge.db-server", "spec_version": "0.4.0"}', code)
+        self.assertNotIn("from bmgeoip", code)
+        self.assertNotIn("from mycount", code)
+        spec = (ROOT / "pages/component-db-server.md").read_text()
+        self.assertIn("components/templates/db-server/interface/DbMgr.py", spec)
+        self.assertIn("## Canonical implementation and layered DAL", spec)
+        roles = (ROOT / "pages/classification.md").read_text()
+        for role in ("Activity", "Interface", "Entity"):
+            self.assertIn(role, roles)
+        self.assertIn("pages/classification.md", (ROOT / "AGENTS.md").read_text())
+        self.assertIn("pages/classification.md", (ROOT / "index.md").read_text())
+        for path in ("mycount/activity/CollectVisit.py", "mycount/interface/VisitDb.py",
+                     "mycount/entity/Visit.py"):
+            self.assertTrue((ROOT / "components/reference/mycount" / path).is_file(), path)
 
     def test_reference_snapshots_are_local(self):
         base = ROOT / "components/reference/bmgeoip/bmgeoip"

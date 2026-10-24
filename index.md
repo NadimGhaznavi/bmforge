@@ -30,8 +30,10 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 
 | What Codex is doing | Authoritative starting point |
 | --- | --- |
-| Building an application | Root `AGENTS.md`, [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}), then selected [component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
+| Building an application | Root `AGENTS.md`, [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [class classification]({{ site.baseurl }}{% link pages/classification.md %}), then selected [component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
 | Implementing or improving a component | [Component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) and [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
+| Building the DAL or classifying application code | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) and [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
+| Selecting charts, maps or relationship graphs | [Approved display visualizations]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
 | Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
 | Making an application monitorable | [Application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}) |
@@ -47,15 +49,16 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 | --- | --- | --- |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
-| DB Server | `bmforge.db-server` | [Specification]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
+| DB Server | `bmforge.db-server` | [Canonical DbMgr and DAL layering]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Git | `bmforge.git` | [Publish and Commit]({{ site.baseurl }}{% link pages/component-git.md %}) |
+| Display visualizations | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
 
 ## Traceability and improvement
 
 Implementing modules carry a small, statically readable component ID and specification version. The [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) defines how to identify a gap, improve a contract, add a regression case, and version the change. The [decision record]({{ site.baseurl }}{% link DECISIONS.md %}) captures choices and unresolved work.
 
-**Current state:** the three contracts and locally pinned bmgeoip examples are a first draft awaiting validation in DevLog. Native Codex skill packaging and CMDB scanning of component tags are **planned, not implemented**. Existing CMDB declarations for files, databases, and listeners remain separate from architectural component tracing.
+**Current state:** the HTTP, ZeroMQ, DB Server, Git, and optional display-visualization contracts, canonical DB/Git templates, and pinned local examples are drafts awaiting validation in consuming applications. The visualization choices are grounded in pinned MyCount and CMDB code. Native Codex skill packaging and CMDB scanning of component tags are **planned, not implemented**. Existing CMDB declarations for files, databases, and listeners remain separate from architectural component tracing.
 
 ---
 
-[Changelog]({{ site.baseurl }}{% link CHANGELOG.md %}) · [BMForge repository](https://github.com/NadimGhaznavi/bmforge) · [Component work in PR #1](https://github.com/NadimGhaznavi/bmforge/pull/1)
+[Changelog]({{ site.baseurl }}{% link CHANGELOG.md %}) · [BMForge repository](https://github.com/NadimGhaznavi/bmforge) 

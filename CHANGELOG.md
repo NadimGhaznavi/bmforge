@@ -9,6 +9,22 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Argon (Ar)**. Argon takes up nearly 1% of the air we breathe and is used to shield welds from unwanted chemical reactions.
+
+### Added
+
+- Document the USDP-inspired Activity / Interface / Entity classification and package responsibility rules.
+- Supply a canonical application-independent MariaDB `DbMgr.py` to copy verbatim into consuming apps, with unit tests for connections, transactions, read-only mode and application-mediated health.
+- Pin MyCount Activity (`CollectVisit`), Interface (`VisitDb`) and Entity (`Visit`) files to illustrate real usage of the classification.
+- Define an optional display-visualization component with approved browser libraries: Plotly.js 4.1.1 for plots, Leaflet 1.9.4 for maps, and Cytoscape.js 3.34.3 for network/relationship graphs.
+- Pin unchanged MyCount and CMDB visualization reference files and locally bundle the approved Cytoscape.js artifact and licence for reuse.
+- Document capability selection, fixed versions, Codex approval boundaries and rendering acceptance checks separately from the Python HTTP component.
+
+### Changed
+
+- Specify the layered database access pattern: `activity` → domain `interface/*Db` → `interface/DbMgr` → MariaDB, with entities passed through layers.
+- Advance draft DB Server specification to `0.4.0`; DB connection settings are resolved by each app and injected, with no app-specific imports in the manager.
+
 ## [0.5.0] - 2026-10-24 @ 12:25
 
 ### Added

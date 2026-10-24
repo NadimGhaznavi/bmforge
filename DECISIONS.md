@@ -21,7 +21,7 @@ This file preserves design decisions that should not disappear into conversation
 
 **Traceability.** Component-owning modules declare a literal `BMFORGE_COMPONENT` with stable ID and specification version. Published specification versions must remain retrievable. A future CMDB source scanner can report application/spec relationships and outdated versions; a version marker does not prove compliance. See `pages/specification-lifecycle.md`.
 
-**Current scope.** HTTP, ZeroMQ REQ/REP, and DB Server (MariaDB-backed) contracts are draft `0.3.0` specifications with locally pinned bmgeoip examples. DevLog will test whether the contracts are sufficient.
+**Current scope.** HTTP and ZeroMQ remain draft `0.3.0`; DB Server is draft `0.4.0` with a canonical application-independent `DbMgr.py`, and Git is separately versioned. The implementations and pinned examples will be validated by consuming applications. DevLog will test whether the contracts are sufficient.
 
 ## 2026-10-24: minimal application health checks
 
@@ -29,11 +29,27 @@ This file preserves design decisions that should not disappear into conversation
 
 ## 2026-10-24: explicit approved runtime modules
 
-**Technology decisions.** Every component's specification defines the complete approved Python module inventory for its reusable infrastructure, with roles and local frozen examples. A consuming application's business activities are not covered by a component's module list. Codex must not add a new infrastructure package, switch to Django or another server, replace PyZMQ/PyMySQL, or change architecture merely to satisfy a task. If a required capability is missing, stop and obtain user approval, then change the specification or add another component before coding. Future plotting, mapping, GeoIP-client, and logging patterns are separate candidate components, not hidden dependencies of HTTP/ZeroMQ/DB Server. The original three draft contracts are advanced to `0.3.0`.
+**Technology decisions.** Every component's specification defines the complete approved Python module inventory for its reusable infrastructure, with roles and local frozen examples. A consuming application's business activities are not covered by a component's module list. Codex must not add a new infrastructure package, switch to Django or another server, replace PyZMQ/PyMySQL, or change architecture merely to satisfy a task. If a required capability is missing, stop and obtain user approval, then change the specification or add another component before coding. Plotting, mapping and network visualization now have a dedicated optional component; GeoIP-client and logging patterns remain separate candidates, not hidden dependencies of HTTP/ZeroMQ/DB Server. The original three draft contracts are advanced to `0.3.0`.
 
 ## 2026-10-24: Git component
 
 **Scope.** A separate Git component supports exactly two operations: `Publish` (approved generated files in a dedicated checkout, based on the frozen Snake Web `GitPublisher`) and `Commit` (`git add . -v`, `git commit -m <message>`, `git push` from the caller's repository root). Its standalone template and integration tests are versioned in BMForge. The implementation uses Python standard-library modules plus the Git CLI, not GitPython. Publishing checks and retries are deliberate features of the proven publisher; ordinary commit has no hidden fetch, merge or recovery behaviour. No Git server or monitor endpoint is required. Spec: `pages/component-git.md` (draft 0.1.0).
+
+## 2026-10-24: USDP-inspired class classification and canonical MariaDB DAL
+
+**Responsibility model.** New application code classifies substantial classes as **Activity** (business processing and orchestration), **Interface** (technology bridges and domain-level data access), or **Entity** (data values). These are the project's terms inspired by the Unified Software Development Process's responsibility separation, not framework base classes. Composition and clear source packages carry the classification; no class registry or metadata framework. See `pages/classification.md`.
+
+**MariaDB data access.** Each new database-backed app copies the exact canonical `components/templates/db-server/interface/DbMgr.py` into `<app>/interface/DbMgr.py`, unchanged. Project-specific configuration is supplied by the application. One or more domain interfaces (`VisitorDb`, `MiningDb`, `GeoIpDb`) own the SQL and use the shared manager by constructor composition. Activities call the domain interfaces; entities remain inert data. App-specific interfaces never acquire their own driver connections or bypass `DbMgr`. This is a revised draft DB Server contract `0.4.0`, not an instruction to retrofit all deployed apps immediately.
+
+**Provenance.** The original BMGeoIP reference remains a historical example, and MyCount `VisitDb`, `CollectVisit` and `Visit` are pinned locally to show the three roles. A future CMDB scanner can use the existing `BMFORGE_COMPONENT` marker for component-spec tracing; source classification does not require a new runtime marker.
+
+## 2026-10-24: approved display visualization libraries
+
+**Purpose.** Define the exact approved browser libraries for the visual capabilities already used across MyCount and CMDB: **Plotly.js 4.1.1** for plots, charts and time-series; **Leaflet 1.9.4** for geographic maps; and **Cytoscape.js 3.34.3** for interactive network and relationship graphs. The libraries are selected by need, not automatically attached to every HTTP server. Python's `plotly` package is not required because MyCount renders Plotly in the browser. Jinja2 remains a separate, optional HTTP rendering technology; CMDB uses basic placeholder substitution. See `pages/component-visualization.md` (draft specification 0.1.0).
+
+**Provenance and delivery.** The original MyCount templates and CMDB graph code are pinned inside BMForge at source commits `90574cd838ba43499a825c6a193b43cbc485c91c` and `43438d9c41949ef70a635884a9bd6885d5c5f22c`. Plotly.js and Leaflet are loaded through version-specific CDN URLs in MyCount; CMDB vendors Cytoscape.js and its licence locally, with exact assets copied into BMForge. These are source references and approved dependencies, not runtime cross-project imports.
+
+**Scope.** Codex must obtain owner approval to substitute or upgrade a visualization library, to add a frontend build/framework, or to introduce an alternative plotting backend. Browser visualization has no separate server, HTTP listener or health endpoint. Future CMDB asset/version scanning is separate work and is not added here.
 
 ## Work not yet implemented
 
