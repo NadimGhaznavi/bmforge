@@ -13,6 +13,7 @@ permalink: /CHANGELOG/
 
 - Synchronize static PEP 621 `pyproject.toml` `[project].version` with application `VERSION` in the canonical release script and BMForge's own release script, rejecting drift before branch merges.
 - Preserve tool-only `pyproject.toml` files and existing release-branch, tag, changelog and atomic-push behaviour; add release regression tests.
+- Clarify that client-only installed CMDB metadata must not claim server-owned databases or listeners.
 
 
 ## [0.9.0] - 2026-10-24 @ 17:55

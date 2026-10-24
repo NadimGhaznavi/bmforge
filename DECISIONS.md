@@ -87,6 +87,8 @@ This file preserves design decisions that should not disappear into conversation
 
 **Root cause from DevLog.** BMForge's release script updated the application constant but did not synchronize a package's PEP 621 `[project].version`. This created a potential disagreement between installed package metadata and CMDB's version. Preserve the release script's existing Git workflow; add an optional literal-version preflight check and update `pyproject.toml` in the same release commit as constants/changelog. Reject mismatched, duplicated or dynamic `[project].version` instead of silently shipping divergence. Projects with tool-only `pyproject.toml` files remain supported. Regression tests use disposable Git remotes. This decision belongs to **BMForge**, while application-specific deployment and release notes remain owned by DevLog.
 
+**Role-aware inventory observation.** DevLog also demonstrated that a client-only installation cannot advertise local server databases or listeners simply because the canonical source constants describe the complete application. Require installed CMDB declarations to reflect the installed role, without changing source identifiers or software version. This is a contract clarification, not a shared runtime dependency.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.
