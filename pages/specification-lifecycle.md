@@ -17,13 +17,13 @@ Every BMForge-derived component must place one literal marker in its **owning Py
 ```python
 BMFORGE_COMPONENT = {
     "id": "bmforge.zmq-server",
-    "spec_version": "0.1.0",
+    "spec_version": "0.3.0",
 }
 ```
 
 The stable ID identifies the BMForge component; the version identifies the specification used when the implementation was built or reviewed. It is **not** the application's release version. Tag the module that owns the component, not every helper file. The declaration must use literal strings so future discovery can parse it statically with Python AST, without importing or executing application code. No BMForge runtime import is required.
 
-A marker is a **provenance claim**, not proof of compliance. Tests establish whether the implementation satisfies that contract.
+A marker is a **provenance claim**, not proof of compliance. Tests establish whether the implementation satisfies that contract. Each component's approved runtime-module list is part of the versioned specification; changing the infrastructure modules requires user approval and a new specification version.
 
 ## Evolving a specification
 
@@ -33,7 +33,7 @@ A marker is a **provenance claim**, not proof of compliance. Tests establish whe
 4. Update the current specification page, its acceptance checks, and the [decision record]({{ site.baseurl }}{% link DECISIONS.md %}) when the change affects engineering policy or compatibility.
 5. Consumers adopt the new version intentionally, test it locally, and update their own module markers.
 
-Each component page declares its stable `component_id`, `spec_version`, and `spec_status` in page metadata. The three initial specifications are now **draft 0.2.0** contracts (including health checks) for DevLog validation, not yet published immutable releases.
+Each component page declares its stable `component_id`, `spec_version`, and `spec_status` in page metadata. The three initial specifications are now **draft 0.3.0** contracts (including approved runtime-module inventories and health checks) for DevLog validation, not yet published immutable releases.
 
 ## CMDB boundary and future visibility
 
