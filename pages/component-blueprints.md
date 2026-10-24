@@ -12,6 +12,8 @@ All implementations follow the [engineering contract]({{ site.baseurl }}{% link 
 
 BMForge is a **standalone specification and reference-code repository**, not a shared runtime library, package registry, or framework dependency. A new application owns its generated/copied code. Do not import BMForge or another project's Python modules in production. Cross-project integration is permitted only via the other project's explicitly documented public API.
 
+**Module lists are mandatory, not suggestions.** The **Approved runtime modules** section of each selected component is the complete technology inventory for that component's reusable infrastructure. Codex may supply local names, constants and bindings, but must pause for user approval if a requirement cannot be met with those modules. No ad hoc replacement with a new server, driver, ORM, broker, or UI library. Application-specific activities and separately approved components have their own dependencies.
+
 ## Codex workflow
 
 1. Select only the components requested by the application's requirements. Read each specification in full.
@@ -19,9 +21,10 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 3. Replace BMGeoIP-specific names, routes, configuration, schema, message methods, resource paths, and lifecycle hooks. Do not copy GeoIP business functionality into an unrelated application.
 4. Follow BMForge's existing runtime/network configuration, installation, and CMDB processes. The project owns its configuration, service units, tests, database schema, and deployment.
 5. Implement the acceptance checks in each chosen specification. Test failure handling, startup/shutdown, and real boundaries. Report checks run and any deviations.
-6. Avoid speculative infrastructure, layers, dependencies, and features. Ask before broadening scope.
-7. Implement the selected components' on-demand health checks via the application's existing interfaces. CMDB must ask the application rather than the database directly.
-8. Place the chosen component's literal `BMFORGE_COMPONENT` marker in its owning implementation module, using the ID and version shown by the component specification. This is provenance, not a runtime dependency or a compliance certificate.
+6. Match the selected specification's approved modules exactly for the component infrastructure. Do not add a third-party dependency, replace an approved library, or create a different implementation to satisfy an unstated preference. If the prescribed modules are insufficient, stop and ask the user to amend or add a component first.
+7. Avoid speculative infrastructure, layers, dependencies, and features. Ask before broadening scope.
+8. Implement the selected components' on-demand health checks via the application's existing interfaces. CMDB must ask the application rather than the database directly.
+9. Place the chosen component's literal `BMFORGE_COMPONENT` marker in its owning implementation module, using the ID and version shown by the component specification. This is provenance, not a runtime dependency or a compliance certificate.
 
 ## Blueprints
 
@@ -31,7 +34,7 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 
 ## Reference provenance
 
-The vendored example files in `components/reference/bmgeoip/` are copied from `NadimGhaznavi/bmgeoip` at commit `35c8745c7003a124dce5b5799b08b2d7c851fbfc` (24 October 2026). They are immutable examples from that revision, not live links, and must not be periodically synchronised without review. The source file layout is retained to show component boundaries and imports. Some examples depend on BMGeoIP-only modules intentionally not part of the component catalogue; implementation agents must replace those integrations, not attempt to run the snapshot as a standalone application. External library dependencies (Python standard library, pyzmq, PyMySQL, Jinja2) remain explicit installation requirements of the **generated application's** chosen components.
+The vendored example files in `components/reference/bmgeoip/` are copied from `NadimGhaznavi/bmgeoip` at commit `35c8745c7003a124dce5b5799b08b2d7c851fbfc` (24 October 2026). They are immutable examples from that revision, not live links, and must not be periodically synchronised without review. The source file layout is retained to show component boundaries and imports. Some examples depend on BMGeoIP-only modules intentionally not part of the component catalogue; implementation agents must replace those integrations, not attempt to run the snapshot as a standalone application. Each component contract names exactly which Python import modules are approved. Third-party package versions are installed and tracked in the **generated application's** dependency files, with deliberate upgrades.
 
 ## Component boundaries
 

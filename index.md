@@ -41,7 +41,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 
 ## Component specifications
 
-Each contract specifies behaviour and acceptance checks. Examples are **frozen inside BMForge**, then adapted into the new project's own code.
+Each contract specifies behaviour, a **fixed approved runtime-module inventory**, and acceptance checks. Codex adapts the **frozen local reference code** rather than choosing other frameworks. If the prescribed modules are insufficient, Codex must stop and ask for approval before changing the specification.
 
 | Component | Stable ID | Contract |
 | --- | --- | --- |

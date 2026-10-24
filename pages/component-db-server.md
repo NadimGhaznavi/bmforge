@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.db-server"
-spec_version: "0.2.0"
+spec_version: "0.3.0"
 spec_status: "draft"
 translation_key: bmforge-component-db-server
 ---
@@ -18,6 +18,25 @@ This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/e
 ## Intent and scope
 
 Provide a minimal application-owned database service layer backed by MariaDB using PyMySQL. This is application-side data access, not a managed MariaDB daemon. Separate connection/SQL execution mechanics from application schema and queries. Do not introduce an ORM, global connection pool, migration framework or remote service without a concrete requirement.
+
+## Approved runtime modules
+
+This is the **complete approved module inventory for the reusable DB Server infrastructure** in specification `0.3.0`.
+
+| Origin | Module | Purpose |
+| --- | --- | --- |
+| Python stdlib | `contextlib` | `contextmanager` for transaction commit and rollback |
+| Python stdlib | `pathlib` | `Path` for protected database configuration files |
+| Third-party | `pymysql` | MariaDB connection, bound SQL, queries, and transactions |
+| Third-party submodule | `pymysql.cursors` | `DictCursor` for dictionary result rows (part of PyMySQL, not another package) |
+
+**Approval boundary:** This list is binding for the reusable component infrastructure. Codex may rename local classes, configure ports and paths, and implement the application-owned handlers, but **must pause and ask the user** before adding, removing, or replacing an approved module or framework. Do not install another package as a workaround. User-approved changes belong in a revised BMForge specification before adoption.
+
+These are Python import modules, not a complete transitive dependency tree. The consuming application's dependency file records installed package versions. Application business logic and separately selected BMForge components are outside this list; they must not quietly change this component's technology choices.
+
+**Database technology:** MariaDB. Do not substitute PostgreSQL, SQLite, SQLAlchemy, Peewee, mysql-connector, an ORM, an alternate driver, or an application-external database service. A different database backend is a new component specification requiring user approval.
+
+**Not part of this component:** `GeoIpDb`, `GeoIpSource`, and IP-address processing in the pinned example implement BMGeoIP business logic, not generic DB Server infrastructure.
 
 ## Reference snapshot
 
@@ -46,3 +65,4 @@ Provide a minimal application-owned database service layer backed by MariaDB usi
 5. Invalid/missing configuration and a database outage yield explicit errors and do not leave a partially reported success.
 6. Application-internal DB health succeeds while the app can query through its own connection, fails on a simulated outage, and causes the application's aggregate `/health` to become unhealthy; no direct CMDB-to-MariaDB connection is used.
 7. Only the new application's schema and SQL are present; no BMForge/bmgeoip runtime imports. Verify CMDB declarations agree with deployment.
+8. Verify the DB Server uses the approved runtime modules and MariaDB only; any proposed replacement or addition was approved by the user before implementation.

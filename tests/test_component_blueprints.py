@@ -26,8 +26,25 @@ class ComponentBlueprintTests(unittest.TestCase):
             self.assertRegex(body, r'(?m)^spec_status: "(draft|published)"$')
             self.assertIn("## Acceptance checks", body)
             self.assertIn("components/reference/bmgeoip/", body)
-            self.assertIn('spec_version: "0.2.0"', body)
+            self.assertIn('spec_version: "0.3.0"', body)
             self.assertIn("pages/health-checks.md", body)
+
+    def test_approved_module_inventory_is_explicit(self):
+        expected = {
+            "http": ("argparse", "http.server", "ipaddress", "json", "logging",
+                     "pathlib", "signal", "urllib.parse", "jinja2"),
+            "zmq": ("collections.abc", "dataclasses", "json", "threading",
+                    "typing", "zmq"),
+            "db-server": ("contextlib", "pathlib", "pymysql", "pymysql.cursors"),
+        }
+        for name, approved in expected.items():
+            body = (ROOT / f"pages/component-{name}.md").read_text()
+            section = body.split("## Approved runtime modules\n", 1)[1].split("\n## ", 1)[0]
+            listed = re.findall(r"(?m)^\\| (?:Python stdlib|Third-party|Third-party submodule) \\| \`([^\`]+)\` \\|", section)
+            self.assertEqual(listed, list(approved), name)
+            self.assertIn("must pause and ask the user", section, name)
+            self.assertIn("Application business logic", section, name)
+            self.assertIn("## Reference snapshot", body)
 
     def test_homepage_jekyll_links_resolve_locally(self):
         home = (ROOT / "index.md").read_text()

@@ -6,15 +6,17 @@ BMForge is a **standalone engineering specification repository**, not a runtime 
 
 1. Read `pages/engineering-contract.md` first. Build the smallest clear implementation that satisfies the requirement, and fail visibly when internal contracts cannot be met.
 2. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the selected `pages/component-{http,zmq,db-server}.md` specifications.
-3. Use the **local, pinned** source examples under `components/reference/bmgeoip/`. Do not fetch moving bmgeoip source or transplant unrelated GeoIP functionality.
-4. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
-5. When creating a BMForge-derived component, apply the literal source marker specified in `pages/specification-lifecycle.md`, using the selected specification's ID and version.
-6. For a running application, implement the on-demand checks in `pages/health-checks.md` using existing HTTP/ZeroMQ interfaces and the application's own DB layer. Never give CMDB direct MariaDB access.
-7. Run the component's acceptance checks in the destination project and report what actually passed, failed, or was not tested. A copied example is not a completed component.
+3. Treat each selected component specification's **Approved runtime modules** section as a fixed implementation inventory. Copy/adapt only from that list. If it cannot meet the requirement, **pause and ask the user before adding packages or changing technologies**; don't silently swap in another framework.
+4. Use the **local, pinned** source examples under `components/reference/bmgeoip/`. Do not fetch moving bmgeoip source or transplant unrelated GeoIP functionality.
+5. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
+6. When creating a BMForge-derived component, apply the literal source marker specified in `pages/specification-lifecycle.md`, using the selected specification's ID and version.
+7. For a running application, implement the on-demand checks in `pages/health-checks.md` using existing HTTP/ZeroMQ interfaces and the application's own DB layer. Never give CMDB direct MariaDB access.
+8. Run the component's acceptance checks in the destination project and report what actually passed, failed, or was not tested. A copied example is not a completed component.
 
 ## Engineering rules
 
 - Validate untrusted inputs at external boundaries. Trust established internal contracts instead of repeating defensive checks.
+- Never introduce a new module, server framework, database driver, ORM, plotting library, or dependency to replace an approved component implementation without explicit user approval and a specification update.
 - Don't swallow exceptions or invent fallbacks, retries, workers, queues, abstractions, or optional features. Include additional complexity only for a named requirement or observed failure.
 - A critical distributed operation needs its defined result, timeout, and error semantics. Never claim success before it is known.
 - A failed required dependency or unexpected internal state must surface clearly. Gracefully reject invalid external requests without disguising internal defects.

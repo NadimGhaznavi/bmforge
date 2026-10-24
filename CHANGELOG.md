@@ -9,6 +9,15 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Added
+
+- Specify the exact approved runtime modules and their roles for HTTP Display Server, ZeroMQ REQ/REP, and DB Server.
+- Require Codex to obtain approval and revise the component specification before adding or substituting infrastructure libraries.
+
+### Changed
+
+- Advance the three draft component specifications to `0.3.0`; keep component-specific technology choices separate from application business logic.
+
 ## [0.4.1] - 2026-10-24 @ 10:54
 
 This release is named for the element **Phosphorus (P)**. Phosphorus was first isolated from urine in 1669 by an alchemist searching for the philosopher's stone. (Maybe it should be called **Phoolorus**?).

@@ -21,11 +21,15 @@ This file preserves design decisions that should not disappear into conversation
 
 **Traceability.** Component-owning modules declare a literal `BMFORGE_COMPONENT` with stable ID and specification version. Published specification versions must remain retrievable. A future CMDB source scanner can report application/spec relationships and outdated versions; a version marker does not prove compliance. See `pages/specification-lifecycle.md`.
 
-**Current scope.** HTTP, ZeroMQ REQ/REP, and DB Server (MariaDB-backed) contracts are draft `0.2.0` specifications with locally pinned bmgeoip examples. DevLog will test whether the contracts are sufficient.
+**Current scope.** HTTP, ZeroMQ REQ/REP, and DB Server (MariaDB-backed) contracts are draft `0.3.0` specifications with locally pinned bmgeoip examples. DevLog will test whether the contracts are sufficient.
 
 ## 2026-10-24: minimal application health checks
 
 **Monitoring.** Running applications answer on-demand health checks through their existing HTTP or ZeroMQ interface. HTTP `GET /health` returns `200` (green) or `503` (red) and identifies required component failures. The DB Server check runs inside the application on its configured connection; CMDB never logs into MariaDB for this check. No dedicated health service, background polling, retry engine, or self-recovery architecture. See `pages/health-checks.md`.
+
+## 2026-10-24: explicit approved runtime modules
+
+**Technology decisions.** Every component's specification defines the complete approved Python module inventory for its reusable infrastructure, with roles and local frozen examples. A consuming application's business activities are not covered by a component's module list. Codex must not add a new infrastructure package, switch to Django or another server, replace PyZMQ/PyMySQL, or change architecture merely to satisfy a task. If a required capability is missing, stop and obtain user approval, then change the specification or add another component before coding. Future plotting, mapping, GeoIP-client, and logging patterns are separate candidate components, not hidden dependencies of HTTP/ZeroMQ/DB Server. The original three draft contracts are advanced to `0.3.0`.
 
 ## Work not yet implemented
 
