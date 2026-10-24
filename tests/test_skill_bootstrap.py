@@ -61,7 +61,8 @@ class SkillBootstrapTests(unittest.TestCase):
                 path = self.source / original
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(f"# Frozen reference: {original}\n")
-        for original in (module.DB_TEMPLATE, module.GIT_TEMPLATE):
+        for original in (module.DB_TEMPLATE, module.GIT_TEMPLATE, module.CONSTANTS_TEMPLATE,
+                         module.LOCALIZER_TEMPLATE, module.TEXT_TEMPLATE, module.EN_CATALOG):
             path = self.source / original
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(f"# Canonical template {original}\n")
@@ -82,9 +83,10 @@ class SkillBootstrapTests(unittest.TestCase):
 
     def test_creates_pinned_local_skills_and_no_application(self):
         result = self.bootstrap()
-        self.assertIn("Installed 3 pinned", result.stdout)
+        self.assertIn("Installed 5 pinned", result.stdout)
         lock = json.loads((self.project / module.LOCK).read_text())
-        self.assertEqual(set(lock["skills"]), {"bmforge-project", "bmforge-http", "bmforge-db-server"})
+        self.assertEqual(set(lock["skills"]), {"bmforge-project", "bmforge-constants",
+                                               "bmforge-localization", "bmforge-http", "bmforge-db-server"})
         self.assertEqual(len(lock["source_commit"]), 40)
         self.assertEqual(lock["skills"]["bmforge-http"]["source_commit"], lock["source_commit"])
         self.assertTrue((self.project / "AGENTS.md").is_file())
@@ -97,7 +99,7 @@ class SkillBootstrapTests(unittest.TestCase):
     def test_empty_component_selection_installs_architecture_only(self):
         self.bootstrap("")
         lock = json.loads((self.project / module.LOCK).read_text())
-        self.assertEqual(list(lock["skills"]), ["bmforge-project"])
+        self.assertEqual(set(lock["skills"]), set(module.BASE_SKILLS))
 
     def test_read_only_check_is_idempotent(self):
         self.bootstrap()
@@ -196,10 +198,38 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("UPDATE CHECK UNAVAILABLE", unavailable.stderr)
         self.assertTrue((self.project / module.LOCK).is_file())
 
+    def test_baseline_constants_and_localization_are_pinned(self):
+        self.bootstrap("")
+        root = self.project / ".agents/skills"
+        self.assertTrue((root / "bmforge-constants/assets/DProject.py").is_file())
+        self.assertTrue((root / "bmforge-localization/assets/Localizer.py").is_file())
+        self.assertTrue((root / "bmforge-localization/assets/DText.py").is_file())
+        self.assertTrue((root / "bmforge-localization/assets/en.json").is_file())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_new_baseline_skill_changes_only_notify(self):
+        self.bootstrap("")
+        local = self.project / ".agents/skills/bmforge-localization/assets/en.json"
+        frozen = local.read_bytes()
+        source = self.source / module.EN_CATALOG
+        source.write_text(source.read_text() + "New string")
+        self.commit_source()
+        result = self.run_manager("check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-localization", result.stdout)
+        self.assertNotIn("UPDATE AVAILABLE bmforge-constants", result.stdout)
+        self.assertEqual(local.read_bytes(), frozen)
+
+    def test_default_skills_are_not_selectable_twice(self):
+        result = self.run_manager("init", "--components", "bmforge-localization")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Unknown component", result.stderr)
+        self.assertFalse((self.project / ".agents").exists())
+
     def test_full_catalog_installable(self):
-        selection = ",".join(k for k in module.SKILLS if k != "bmforge-project")
+        selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
         self.bootstrap(selection)
-        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 6)
+        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 8)
         self.assertEqual(self.run_manager("check").returncode, 0)
 
 

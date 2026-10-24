@@ -37,7 +37,7 @@ python3 ~/.agents/skills/bmforge-new-project/scripts/manage.py init \
     --components bmforge-http,bmforge-db-server
 ```
 
-Do **not** treat this example as a default. Leaving `--components` out installs only `bmforge-project`, the baseline engineering and classification skill. Existing `AGENTS.md` or `.agents/` files are never overwritten.
+Do **not** treat this example as a default. Leaving `--components` out installs the three **baseline standards**: `bmforge-project`, `bmforge-constants`, and `bmforge-localization`. They add instructions, English message catalogue examples and pinned templates, but generate no application code. Existing `AGENTS.md` or `.agents/` files are never overwritten.
 
 The repository then has:
 
@@ -51,6 +51,14 @@ AGENTS.md
     bmforge-project/
       SKILL.md
       references/
+    bmforge-constants/
+      SKILL.md
+      assets/DProject.py
+    bmforge-localization/
+      SKILL.md
+      assets/Localizer.py
+      assets/DText.py
+      assets/en.json
     bmforge-http/
       SKILL.md
       references/
@@ -67,13 +75,17 @@ Each installed component's source commit, spec version and content fingerprint a
 | Project-local skill | Purpose |
 | --- | --- |
 | `bmforge-project` | Engineering policy; Activity / Interface / Entity classification (always installed) |
+| `bmforge-constants` | Typed, domain-grouped constants; stable machine identifiers (always installed) |
+| `bmforge-localization` | Request-scoped locale selection and English source catalogue (always installed) |
 | `bmforge-http` | Standard-library HTTP display server and optional Jinja2 |
 | `bmforge-zmq` | PyZMQ REQ/REP server and message dispatch contract |
 | `bmforge-db-server` | Unchanged canonical MariaDB `DbMgr.py` plus domain `*Db` interfaces |
 | `bmforge-git` | Commit-all/push or managed-file publishing |
 | `bmforge-visualization` | Plotly.js charts, Leaflet maps, Cytoscape.js topology graphs |
 
-Add a component later, explicitly:
+**Existing projects:** Updating the global bootstrap skill or pinned project-local skills still requires explicit review and approval. The read-only checker will report available changes to the manager and skill bundles; it does not retrofit the new baseline into previously bootstrapped projects. A fresh bootstrap includes the new baseline automatically.
+
+Add an optional component later, explicitly:
 
 ```sh
 python3 .agents/bmforge/manage.py add --project . --components bmforge-zmq

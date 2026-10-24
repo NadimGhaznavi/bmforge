@@ -57,6 +57,14 @@ This file preserves design decisions that should not disappear into conversation
 
 **Updates.** The project carries an independent manager and lock of per-skill content fingerprints and source commits. A read-only `check` compares installed skill content against fresh BMForge main and notifies Codex of relevant changes, local modifications or unavailable checks. It **never silently upgrades**. The bootstrap tool has no implicit upgrade command; upgrades require user approval and separate review. Adding *new* skills is an explicit command that will not overwrite existing ones. See `pages/codex-skills.md`.
 
+## 2026-10-24: constants and runtime localization from greenfield
+
+**Constants.** Specify domain-grouped `<app>/constants/D<Name>.py` classes with stdlib `typing.Final`, `enum.StrEnum` and `enum.IntEnum`, using Snake Lab and BMGeoIP as frozen examples. Do not introduce an elaborate constants metaclass or treat incidental literals as magic; machine-facing identifiers remain stable regardless of display language. The `bmforge-constants` contract is draft `0.1.0`.
+
+**Runtime localization.** Every new application prepares stable `DText` message keys, an English UTF-8 JSON catalogue and a standard-library, request-scoped `Localizer` from the beginning. Manual choice takes precedence over language preferences, language fallback uses explicit parent tags only, and missing translated messages fall back to English. No automatic translation, Jekyll dependencies, extra Python packages or invented second-language catalogues. The minimal-mistakes fork and blog are pinned as design references, but their *static Jekyll documentation* translation process remains separate. The `bmforge.localization` contract is draft `0.1.0`.
+
+**Bootstrap.** `bmforge-project`, `bmforge-constants`, and `bmforge-localization` are the three greenfield baseline skills; optional HTTP, ZMQ, DB, Git and visualization components remain explicitly selected. Existing installed projects retain their pinned skills. The update checker continues to notify only and never auto-upgrades.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.

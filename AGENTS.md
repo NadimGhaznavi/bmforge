@@ -4,12 +4,13 @@ BMForge is a **standalone engineering specification repository**, not a runtime 
 
 ## Codex component skills
 
-The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmforge-new-project/` and installs self-contained, pinned skills from `skills/bmforge-{project,http,zmq,db-server,git,visualization}/`. Its `manage.py check` is **read-only** and reports changes without applying them. Do not generate application code, deploy services, or pick components on the user's behalf during bootstrap. Keep installer tests hermetic and require user consent for any upgrade.
+The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmforge-new-project/` and installs self-contained, pinned skills from `skills/bmforge-{project,constants,localization,http,zmq,db-server,git,visualization}/`. Its `manage.py check` is **read-only** and reports changes without applying them. Always install the minimal project/constant/localization **policy baseline**; add infrastructure components only by explicit selection. Do not generate application code or deploy services during bootstrap. Keep installer tests hermetic and require user consent for any upgrade.
 
 ## Read only what the task needs
 
 1. Read `pages/engineering-contract.md` and `pages/classification.md` first. Build the smallest clear implementation that satisfies the requirement, and fail visibly when internal contracts cannot be met.
-2. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the needed component specifications. For chart, map or graph capabilities, also read `pages/component-visualization.md`.
+2. Follow `pages/component-constants.md` for stable domain-grouped identifiers and `pages/component-localization.md` for runtime UI/CLI messages from the first user-facing feature. These are **different** from `pages/multilingual-documentation.md` (Jekyll documentation).
+3. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the needed component specifications. For chart, map or graph capabilities, also read `pages/component-visualization.md`.
 3. Treat each selected component specification's **Approved runtime modules** section as a fixed implementation inventory. Copy/adapt only from that list. If it cannot meet the requirement, **pause and ask the user before adding packages or changing technologies**; don't silently swap in another framework.
 4. Use locally pinned reference examples for understanding, not runtime imports. HTTP/ZeroMQ may adapt `components/reference/bmgeoip/`; **DB Server must copy `components/templates/db-server/interface/DbMgr.py` unchanged**, passing app configuration and implementing domain `*Db` interfaces around it. Never fetch moving examples or transplant source-app business logic.
 5. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
@@ -30,4 +31,4 @@ The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmfo
 
 For Git publishing or commits, read `pages/component-git.md` and copy `components/templates/git/Git.py` into the application's own namespace. Use only its approved modules. The frozen Snake Web `GitPublisher.py` is a source reference, not a runtime dependency. Do not invent release automation, switch Git libraries, or alter the prescribed commit commands.
 
-For current status and unresolved work, read `DECISIONS.md`. Skills and CMDB component scanning are planned, not yet present.
+For current status and unresolved work, read `DECISIONS.md`. Native component skills are available; CMDB component scanning is planned, not yet present.
