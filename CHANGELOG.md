@@ -11,6 +11,17 @@ permalink: /CHANGELOG/
 
 ### Fixed
 
+- Require ZeroMQ input validation to reject escaped lone Unicode surrogates without terminating a REQ/REP worker; add malformed-then-valid acceptance checks (draft ZMQ spec 0.3.1).
+- Require role-and-operation-specific installation preflight, including accurate `--check` results for missing server provisioning commands (draft installation spec 0.1.1).
+
+### Added
+
+- Add a safe, read-only `setup-branches --dry-run` plus user-approved local `setup-branches` for the first `dev` and `feat/maint-0.1.0` branches after the project's initial commit; never commit or push automatically.
+- Add bootstrap branch-safety regression tests and update the Codex runbook.
+
+
+### Fixed
+
 - Synchronize static PEP 621 `pyproject.toml` `[project].version` with application `VERSION` in the canonical release script and BMForge's own release script, rejecting drift before branch merges.
 - Preserve tool-only `pyproject.toml` files and existing release-branch, tag, changelog and atomic-push behaviour; add release regression tests.
 - Clarify that client-only installed CMDB metadata must not claim server-owned databases or listeners.

@@ -10,7 +10,7 @@ COMPONENTS = {
     "zmq": "bmforge.zmq-server",
     "db-server": "bmforge.db-server",
 }
-VERSIONS = {"http": "0.3.0", "zmq": "0.3.0", "db-server": "0.4.0"}
+VERSIONS = {"http": "0.3.0", "zmq": "0.3.1", "db-server": "0.4.0"}
 
 
 class ComponentBlueprintTests(unittest.TestCase):
@@ -118,6 +118,14 @@ class ComponentBlueprintTests(unittest.TestCase):
         for path in ("mycount/activity/CollectVisit.py", "mycount/interface/VisitDb.py",
                      "mycount/entity/Visit.py"):
             self.assertTrue((ROOT / "components/reference/mycount" / path).is_file(), path)
+
+    def test_zmq_rejects_bad_unicode_without_worker_failure(self):
+        spec = (ROOT / "pages/component-zmq.md").read_text()
+        self.assertIn("lone UTF-16 surrogates", spec)
+        self.assertIn("same server", spec)
+        skill = (ROOT / "skills/bmforge-zmq/SKILL.md").read_text()
+        self.assertIn("escaped lone Unicode surrogates", skill)
+        self.assertIn("0.3.1", skill)
 
     def test_reference_snapshots_are_local(self):
         base = ROOT / "components/reference/bmgeoip/bmgeoip"

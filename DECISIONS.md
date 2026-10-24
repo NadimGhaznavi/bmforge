@@ -89,6 +89,16 @@ This file preserves design decisions that should not disappear into conversation
 
 **Role-aware inventory observation.** DevLog also demonstrated that a client-only installation cannot advertise local server databases or listeners simply because the canonical source constants describe the complete application. Require installed CMDB declarations to reflect the installed role, without changing source identifiers or software version. This is a contract clarification, not a shared runtime dependency.
 
+## 2026-10-24: contract-directed invalid input, preflight and release branches
+
+**ZeroMQ boundary.** DevLog's independent audit demonstrated that syntactically valid JSON with a lone escaped Unicode surrogate can reach application code, fail UTF-8 encoding, and be treated as a fatal worker error. Extend the ZMQ draft specification to `0.3.1`: the transport must reject all invalid Unicode scalar values, including nested values and object keys, with `invalid_request` and continue serving. A subsequent valid request on the same listener is mandatory acceptance evidence. Application handler failures remain visibly fatal.
+
+**Role-aware installation preflight.** A fresh DevLog server installation omitted the required `mariadb` executable from its preflight, allowing a false-positive `--check` and failure after side effects. Revise the installation draft specification to `0.1.1`: preflight must validate every executable required by the selected role **and operation**, before host changes, including the dry-run path. Client-only installation and non-provisioning upgrades must not require server DB administration commands.
+
+**Safe local Git branch bootstrap.** The Git release contract prescribes `main → dev → feat/maint-...`, but the new-project skill originally left all branch setup manual. Add a project-local `setup-branches` action to `manage.py`, explicitly offered **after a reviewed first commit on local `main`**. Provide a read-only `--dry-run` and refuse uncommitted/unborn or existing/remote-tracked refs. The action creates local `dev` and the approved feature branch, **without committing, tagging, pushing or modifying the remote**. No automatic branch setup occurs during initial file generation.
+
+**Application implementation:** Fix the two DevLog defects in DevLog's own repository with its own tests and changelog. Preserve project-local pinned skills and the BMForge update-notification policy; do not silently upgrade consuming applications.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.
