@@ -14,4 +14,5 @@ Read `references/engineering-contract.md`, `references/classification.md`, `refe
 - Infrastructure modules and browser libraries are fixed by the selected skill's local `references/specification.md`. Ask before deviating, introducing alternatives or adding unrelated frameworks.
 - Each application owns its copied/adapted implementation and tests. Do not import BMForge or another application's runtime code.
 - Run `python3 .agents/bmforge/manage.py check --project .` before the first BMForge-derived edit in a Codex session; notify the user about available versions. Checking does not authorise applying them.
+- Bootstrap already generated the configured `scripts/new-release.sh`, version metadata, changelog, CMDB checker and disabled lifecycle scripts. Refer to `references/release-setup.md` and `references/creating-a-release.md` when the user asks to release; never create an alternative release system or run it without authorisation.
 - Derive the smallest coherent plan, test acceptance criteria, and keep user-controlled release operations outside this skill.
