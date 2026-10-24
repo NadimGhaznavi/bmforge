@@ -109,6 +109,32 @@ python3 .agents/bmforge/manage.py add --project . --components bmforge-zmq
 
 The `add` operation refuses to replace an installed skill.
 
+## Initialize the standard release branches
+
+The **file-generation** step intentionally does not commit or push project files.
+After reviewing the generated source, create/confirm the first commit on **local
+`main`**. For a truly empty Git repository, initialize it explicitly with
+`git init -b main` before BMForge bootstrap; otherwise work from an existing
+local `main`, incorporating remote changes before setup.
+
+Once the scaffold is committed and the working tree is clean:
+
+```sh
+python3 .agents/bmforge/manage.py setup-branches --project . --dry-run
+python3 .agents/bmforge/manage.py setup-branches --project .
+```
+
+The first call is read-only; the second, only with the user's authorization,
+creates **local** `dev` and `feat/maint-0.1.0` from `main` and checks out the
+feature branch. The first feature name is configurable using
+`--feature feat/maint-0.2.0`. No initial commit, Git push, remote branch,
+merge, release, or tag is generated. It refuses partial/existing local or
+remote-tracking refs, dirty repositories and a missing `main` commit rather
+than assuming ownership of an existing history. Push local branches to
+`origin` only with the user's separate approval.
+
+
+
 ## Update notification, not automatic upgrades
 
 The generated `AGENTS.md` directs Codex to perform one **read-only update check** before the first BMForge-derived coding change in a session:

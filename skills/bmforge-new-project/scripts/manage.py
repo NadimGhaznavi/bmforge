@@ -274,9 +274,13 @@ deployment-disabled install/upgrade/uninstall stubs. Complete and test these
 stubs through `bmforge-installation` once the application topology is known.
 Every successful installation must create the application-owned BASE_DIR and
 last-successful `.deployment-version`, even for a client or custom library.
-Do not run release or deployment tools, make branches, commit, tag or push
-without explicit user authorization. Read the pinned project skill's
-release-setup and creating-a-release references before release work.
+Do not run release or deployment tools, commit, tag or push without explicit
+user authorization. Once the user reviews and commits the scaffold on local
+main, use `python3 .agents/bmforge/manage.py setup-branches --project . --dry-run`
+to preview, then `setup-branches` with user approval to create local dev and
+feat/maint-0.1.0. It never commits or pushes. Never re-create existing refs.
+Read the pinned project's release-setup and creating-a-release references
+before release work.
 """
 
 
@@ -384,7 +388,11 @@ def start_init(args):
     for name in names:
         print(f"  {name} ({versions[name]})")
     print(f"Prepared {len(scaffolding)} existing BMForge release templates for {args.name}, including scripts/new-release.sh")
-    print("Release tooling is not executed; set up and commit the project before publishing.")
+    print("Release tooling is not executed; review and commit the scaffold on local main.")
+    print("After explicit approval, create local dev/feature branches with:")
+    print("  python3 .agents/bmforge/manage.py setup-branches --project . --dry-run")
+    print("  python3 .agents/bmforge/manage.py setup-branches --project .")
+    print("No remote branches are pushed automatically.")
     print("Check updates with:")
     print("  python3 .agents/bmforge/manage.py check --project .")
 
@@ -480,21 +488,75 @@ def start_check(args):
     return 1 if modified or manager_changed else 0
 
 
+def ref_exists(root, reference):
+    """Check an exact Git ref without interpreting its name as a pattern."""
+    result = subprocess.run(
+        ["git", "show-ref", "--verify", "--quiet", reference],
+        cwd=root, capture_output=True, text=True, timeout=90,
+    )
+    if result.returncode not in (0, 1):
+        raise SetupError(f"Cannot inspect Git ref {reference}: {result.stderr.strip()}")
+    return result.returncode == 0
+
+
+def start_setup_branches(args):
+    """Create local release branches after the user's reviewed initial commit."""
+    root = project_root(args.project)
+    load_lock(root)  # Only operate on a project that BMForge actually initialized.
+    main = "main"
+    feature = args.feature
+    if feature in (main, "dev") or not feature.startswith("feat/"):
+        raise SetupError("Use a distinct feat/ branch name for the first feature")
+    git("check-ref-format", "--branch", feature, cwd=root)
+    if not ref_exists(root, "refs/heads/main"):
+        raise SetupError("Commit the bootstrap scaffold on a local main branch before setting up release branches")
+    if git("symbolic-ref", "--quiet", "--short", "HEAD", cwd=root) != main:
+        raise SetupError("Switch to local main before setting up release branches")
+    if git("status", "--porcelain", "--untracked-files=all", cwd=root):
+        raise SetupError("Commit or stash all project changes before setting up release branches")
+    for name in ("dev", feature):
+        if ref_exists(root, f"refs/heads/{name}"):
+            raise SetupError(f"Local {name} already exists; inspect existing branches instead of overwriting")
+        if ref_exists(root, f"refs/remotes/origin/{name}"):
+            raise SetupError(f"origin/{name} already exists; inspect and track it instead of creating a divergent branch")
+    if args.dry_run:
+        print(f"READY to create local dev and {feature} from main. Nothing changed.")
+        return
+    git("branch", "dev", "main", cwd=root)
+    try:
+        git("switch", "-c", feature, "dev", cwd=root)
+    except (SetupError, OSError, subprocess.TimeoutExpired):
+        # Both names were absent at preflight. Roll back only new local refs.
+        if ref_exists(root, f"refs/heads/{feature}"):
+            git("branch", "-D", feature, cwd=root)
+        git("branch", "-D", "dev", cwd=root)
+        raise
+    print(f"Created local dev and {feature} at the initial main commit.")
+    print("No commit, remote branch, tag or push was created by this command.")
+
+
 def main(argv=None):
     parser = ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="action", required=True)
-    for action in ("init", "add", "check"):
+    for action in ("init", "add", "check", "setup-branches"):
         cmd = sub.add_parser(action)
         cmd.add_argument("--project", default=".", help="Existing Git repository root")
-        cmd.add_argument("--source", help="BMForge checkout or Git remote (default: published main)")
-        if action != "check":
+        if action in ("init", "add", "check"):
+            cmd.add_argument("--source", help="BMForge checkout or Git remote (default: published main)")
+        if action in ("init", "add"):
             cmd.add_argument("--components", default="", help="Comma-separated component skill names")
         if action == "init":
             cmd.add_argument("--name", required=True, help="Canonical application class name, e.g. SnakeLab")
             cmd.add_argument("--subtype", default="Application", help="CMDB application subtype")
+        if action == "setup-branches":
+            cmd.add_argument("--feature", default="feat/maint-0.1.0",
+                             help="Initial feature branch (default: feat/maint-0.1.0)")
+            cmd.add_argument("--dry-run", action="store_true",
+                             help="Validate branch setup without writing refs")
     args = parser.parse_args(argv)
     try:
-        return {"init": start_init, "add": start_add, "check": start_check}[args.action](args) or 0
+        return {"init": start_init, "add": start_add, "check": start_check,
+                "setup-branches": start_setup_branches}[args.action](args) or 0
     except (SetupError, OSError, subprocess.TimeoutExpired) as error:
         print(f"BMForge: {error}", file=sys.stderr)
         return 2

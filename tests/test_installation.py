@@ -217,7 +217,7 @@ class InstallationTests(unittest.TestCase):
 
     def test_starter_declares_installation_component_marker(self):
         self.assertEqual(starter.BMFORGE_COMPONENT,
-                         {"id": "bmforge.installation", "spec_version": "0.1.0"})
+                         {"id": "bmforge.installation", "spec_version": "0.1.1"})
 
     def test_entry_point_help_works_from_another_directory(self):
         for name in ['install.sh', 'upgrade.sh', 'uninstall.sh']:

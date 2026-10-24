@@ -28,7 +28,7 @@ class InstallationContractTests(unittest.TestCase):
     def test_installation_is_baseline_and_component_is_versioned(self):
         spec = SPEC.read_text()
         self.assertIn('component_id: "bmforge.installation"', spec)
-        self.assertIn('spec_version: "0.1.0"', spec)
+        self.assertIn('spec_version: "0.1.1"', spec)
         self.assertIn("## Approved implementation technology", spec)
         self.assertIn("install-server.sh", spec)
         self.assertIn(".deployment-version", spec)
@@ -55,7 +55,7 @@ class InstallationContractTests(unittest.TestCase):
                          {"argparse", "importlib.util", "json", "os", "pathlib",
                           "shutil", "tempfile"})
         self.assertIn(
-            'BMFORGE_COMPONENT = {"id": "bmforge.installation", "spec_version": "0.1.0"}',
+            'BMFORGE_COMPONENT = {"id": "bmforge.installation", "spec_version": "0.1.1"}',
             program)
         self.assertIn("DEPLOYMENT_READY = False", program)
         self.assertIn('VERSION_MARKER = ".deployment-version"', program)
@@ -76,6 +76,15 @@ class InstallationContractTests(unittest.TestCase):
         self.assertIn("tests/test_deployment.py", SPEC.read_text())
         # DevLog at this pinned revision does not implement uninstall.
         self.assertFalse((REF / "scripts/uninstall.sh").exists())
+
+    def test_role_specific_command_preflight_is_required(self):
+        contract = SPEC.read_text()
+        self.assertIn("Operation-specific dependency preflight", contract)
+        self.assertIn("same prerequisite checks", contract)
+        self.assertIn("mariadb", contract)
+        skill = (ROOT / "skills/bmforge-installation/SKILL.md").read_text()
+        self.assertIn("role-and-operation-specific", skill)
+        self.assertIn("--check", skill)
 
     def test_baseline_skill_bundles_spec_and_reference(self):
         manager = (ROOT / "skills/bmforge-new-project/scripts/manage.py").read_text()

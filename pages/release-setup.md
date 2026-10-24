@@ -35,6 +35,26 @@ Deployment impact tracking is configured separately. Leave `dependency_rules` an
 
 ## Establish the Branches
 
+For projects initialized through the **Codex bootstrap**, the project-local
+manager handles the initial *local* release branching after a user-reviewed
+commit on `main`:
+
+```sh
+python3 .agents/bmforge/manage.py setup-branches --project . --dry-run
+python3 .agents/bmforge/manage.py setup-branches --project .
+```
+
+The first command checks prerequisites without changing refs. The second
+creates `dev` and `feat/maint-0.1.0`, both based on the initial `main`
+commit, and switches to the feature branch. It does **not** commit, publish
+a branch to `origin`, configure a remote or create a release. Explicitly
+review and commit the generated scaffold first. Do not re-create or overwrite
+existing branches: reconcile existing `dev`/feature remote refs separately.
+
+For projects that were **not** initialized through the Codex bootstrap, use
+the original manual commands below.
+
+
 Start with a committed initial project on `main` and an `origin` remote. Create the development and first feature branches:
 
 ```sh

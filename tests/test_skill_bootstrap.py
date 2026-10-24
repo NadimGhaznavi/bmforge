@@ -79,8 +79,15 @@ class SkillBootstrapTests(unittest.TestCase):
 
     def run_manager(self, action, *more):
         identity = ("--name", "AcmeApp", "--subtype", "Inventory") if action == "init" else ()
+        source = ("--source", self.source) if action != "setup-branches" else ()
         return command("python3", MANAGER, action, "--project", self.project,
-                       "--source", self.source, *identity, *more)
+                       *source, *identity, *more)
+
+    def initial_commit(self):
+        git(self.project, "add", ".")
+        git(self.project, "-c", "user.name=BMForge Test",
+            "-c", "user.email=test@example.invalid", "commit", "-qm", "Initial scaffold")
+        git(self.project, "branch", "-M", "main")
 
     def bootstrap(self, skills="bmforge-http,bmforge-db-server"):
         result = self.run_manager("init", "--components", skills)
@@ -333,6 +340,68 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("UPDATE AVAILABLE bmforge-installation", result.stdout)
         self.assertIn("No updates were applied", result.stdout)
         self.assertEqual(spec.read_bytes(), original)
+
+    def test_branch_setup_requires_a_committed_scaffold(self):
+        self.bootstrap("")
+        result = self.run_manager("setup-branches")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Commit the bootstrap scaffold", result.stderr)
+        self.assertEqual(git(self.project, "branch", "--list", "dev"), "")
+
+    def test_branch_setup_dry_run_and_creation_do_not_commit_or_push(self):
+        self.bootstrap("")
+        self.initial_commit()
+        initial_sha = git(self.project, "rev-parse", "main")
+        check = self.run_manager("setup-branches", "--dry-run")
+        self.assertEqual(check.returncode, 0, check.stderr)
+        self.assertIn("READY to create local dev", check.stdout)
+        self.assertEqual(git(self.project, "branch", "--list", "dev"), "")
+        result = self.run_manager("setup-branches")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("No commit, remote branch, tag or push", result.stdout)
+        self.assertEqual(git(self.project, "rev-parse", "main"), initial_sha)
+        self.assertEqual(git(self.project, "rev-parse", "dev"), initial_sha)
+        self.assertEqual(git(self.project, "rev-parse", "feat/maint-0.1.0"), initial_sha)
+        self.assertEqual(git(self.project, "branch", "--show-current"), "feat/maint-0.1.0")
+        self.assertEqual(git(self.project, "status", "--porcelain"), "")
+        self.assertEqual(git(self.project, "remote"), "")
+
+    def test_branch_setup_refuses_dirty_tree_and_existing_branches(self):
+        self.bootstrap("")
+        self.initial_commit()
+        (self.project / "pending.txt").write_text("unfinished")
+        dirty = self.run_manager("setup-branches")
+        self.assertEqual(dirty.returncode, 2)
+        self.assertIn("Commit or stash", dirty.stderr)
+        self.assertEqual(git(self.project, "branch", "--list", "dev"), "")
+        (self.project / "pending.txt").unlink()
+        git(self.project, "branch", "dev", "main")
+        existing = self.run_manager("setup-branches")
+        self.assertEqual(existing.returncode, 2)
+        self.assertIn("already exists", existing.stderr)
+        self.assertEqual(git(self.project, "branch", "--show-current"), "main")
+
+    def test_branch_setup_refuses_existing_remote_refs_and_wrong_branch(self):
+        self.bootstrap("")
+        self.initial_commit()
+        git(self.project, "update-ref", "refs/remotes/origin/dev", "HEAD")
+        remote = self.run_manager("setup-branches")
+        self.assertEqual(remote.returncode, 2)
+        self.assertIn("origin/dev already exists", remote.stderr)
+        git(self.project, "update-ref", "-d", "refs/remotes/origin/dev")
+        git(self.project, "switch", "-c", "other")
+        wrong = self.run_manager("setup-branches")
+        self.assertEqual(wrong.returncode, 2)
+        self.assertIn("Switch to local main", wrong.stderr)
+
+    def test_branch_setup_validates_feature_name_before_creating_refs(self):
+        self.bootstrap("")
+        self.initial_commit()
+        for name in ("dev", "topic", "feat/../bad", "feat/invalid..name"):
+            result = self.run_manager("setup-branches", "--feature", name)
+            self.assertEqual(result.returncode, 2)
+        self.assertEqual(git(self.project, "branch", "--list", "dev"), "")
+        self.assertEqual(git(self.project, "branch", "--show-current"), "main")
 
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
