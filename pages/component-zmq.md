@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.zmq-server"
-spec_version: "0.1.0"
+spec_version: "0.2.0"
 spec_status: "draft"
 translation_key: bmforge-component-zmq
 ---
@@ -13,7 +13,7 @@ translation_key: bmforge-component-zmq
 
 **Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
 
-This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and [traceability rules]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
+This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [health check contract]({{ site.baseurl }}{% link pages/health-checks.md %}), and [traceability rules]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
 
 ## Intent and scope
 
@@ -35,6 +35,7 @@ Implement a locally owned `pyzmq` request/reply listener for small JSON control 
 - A versioned UTF-8 JSON envelope includes `protocol_version` (integer), `sender` (nonempty string), `target` (string or null), `method` (nonempty string), and `payload` (object). Reject incompatible versions or invalid shapes. Bound message size for the application's threat model.
 - Replies preserve correlation context from the request when available. Define success `status: ok` and error `status: error`, with structured `error.code` and `error.message`. Application handlers define supported `method` values, argument validation, authorisation if required and business operations.
 - Shut down promptly on service stop, release the port, and report fatal errors. Client implementations need a receive timeout and defined retry/reconnect policy, because a failed REQ exchange can require rebuilding a REQ socket.
+- Reserve `method: "health"` with empty object payload on the existing REQ/REP endpoint. A working listener/handler replies with the usual `status: "ok"` envelope; an unavailable listener must fail the bounded client call. Do not add an HTTP server, background supervisor, or automatic recovery solely for monitoring. The application's HTTP `/health` may call this method to report ZeroMQ status to CMDB.
 - Do not add a generic dispatcher, discovery service, persistence layer, or asynchronous broker without a requirement.
 
 ## Acceptance checks
@@ -44,4 +45,5 @@ Implement a locally owned `pyzmq` request/reply listener for small JSON control 
 3. A handler exception is handled according to documented failure policy, never a silent hang.
 4. Bind conflict is reported during startup; forced worker failure is observable by its supervisor.
 5. Shutdown releases sockets and threads; client timeout/recovery is tested.
-6. Application code does not import bmgeoip or BMForge at runtime; its message methods and payload schemas are documented locally.
+6. A `health` request gets a normal success reply while the ZeroMQ handler is usable; a stopped listener times out/fails within the configured bound and cannot be reported healthy by the application.
+7. Application code does not import bmgeoip or BMForge at runtime; its message methods and payload schemas are documented locally.

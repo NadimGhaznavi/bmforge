@@ -9,17 +9,22 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Phosphorus (P)**. Phosphorus was first isolated from urine in 1669 by an alchemist searching for the philosopher's stone. (Maybe it should be called **Phoolorus**?).
+
 ## [0.4.0] - 2026-10-24 @ 10:32
 
 This release is named for the element **Silicon (Si)**. Silicon is the backbone of modern computer chips and is the second most abundant element in Earth's crust.
 
 ### Added
 
+- Specify simple, on-demand application health checks for HTTP, ZeroMQ, and application-mediated DB Server monitoring; CMDB sees green/red without direct MariaDB access.
 - Establish the lean, fail-fast engineering contract and specification traceability policy for component-owning modules.
 - Record BMForge architecture decisions and explicitly track Codex skills and CMDB component scanning as future work.
 
 ### Changed
 
+- Advance the three draft component specifications to `0.2.0` for the new health-check contract.
+- Name the database component `db-server` while retaining its MariaDB implementation contract.
 - Reorganize the website for task-first Codex navigation and mark the initial HTTP, ZeroMQ, and MariaDB contracts as draft version 0.1.0.
 
 ## [0.3.0] - 2026-10-21 @ 03:47

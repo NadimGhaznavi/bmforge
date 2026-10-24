@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.http-server"
-spec_version: "0.1.0"
+spec_version: "0.2.0"
 spec_status: "draft"
 translation_key: bmforge-component-http
 ---
@@ -13,7 +13,7 @@ translation_key: bmforge-component-http
 
 **Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
 
-This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and [traceability rules]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
+This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [health check contract]({{ site.baseurl }}{% link pages/health-checks.md %}), and [traceability rules]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
 
 ## Intent and scope
 
@@ -35,7 +35,7 @@ These contain GeoIP-specific routes, data-loader integration, globals, and filen
 - Return accurate status codes, `Content-Type`, UTF-8 where applicable, `Content-Length`, `Cache-Control: no-store` where appropriate, and `X-Content-Type-Options: nosniff`.
 - For JSON writes, validate method, path, Content-Type, request length, schema, and user-supplied fields; reject malformed or oversized requests with 4xx rather than uncontrolled exceptions. Consider origin/access policy for state-changing endpoints; same-origin checks are not authentication.
 - Use Jinja2 HTML autoescaping and fail on missing template values; keep templates, static assets and route data application-owned. Never embed secrets in rendered output or public diagnostics.
-- Implement `/health` (process alive) and `/ready` (service capable of serving its essential dependencies). If they differ, readiness must actually check dependencies rather than return a fixed success.
+- Serve `GET /health` on the existing HTTP listener as the application's CMDB-facing check: `200` when its required components are usable, `503` when a known required component is unavailable. Return the small component-status JSON defined by Application Health Checks. A fixed `200` for a running process is insufficient. Do not add a separate `/ready` implementation without a concrete requirement.
 - Cleanly close the HTTP listener and any owned background workers during termination, including SIGTERM. No orphaned threads.
 - Keep application-specific business logic out of the generic HTTP mechanics. Use typed interfaces or injected collaborators where useful without inventing extra layers.
 
@@ -44,6 +44,6 @@ These contain GeoIP-specific routes, data-loader integration, globals, and filen
 1. Bind to a test loopback address and ephemeral port; GET known path returns correct body, type and length; HEAD omits body.
 2. Unknown route is 404; unsupported mutation and malformed/oversized JSON do not crash the server.
 3. HTML user-provided values are escaped; static assets cannot traverse outside allowed paths.
-4. `/health` and `/ready` follow documented semantics during normal operation and simulated dependency failure.
+4. `GET /health` returns `200` and component statuses when required components are usable; a simulated ZeroMQ or application DB failure returns `503` with the failed component identified. No direct database probe by CMDB and no new HTTP listener.
 5. Address-in-use, invalid port and graceful shutdown are tested; service exits without lingering workers.
 6. Confirm the installed application exposes its declared address/port, respects production overrides, and has no runtime import of BMForge/bmgeoip.
