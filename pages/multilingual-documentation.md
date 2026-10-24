@@ -6,6 +6,8 @@ language_name: English
 translation_key: bmforge-multilingual-documentation
 ---
 
+**This page governs static Jekyll documentation, not application runtime localization.** For all new application's interface and CLI messages, see [Application Localization]({{ site.baseurl }}{% link pages/component-localization.md %}), which prepares stable keys and an English source catalogue from the first release.
+
 Translate documentation only after the project is complete, when its interface and content have settled. During development, prepare the English metadata and configuration using [Jekyll Setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}). This avoids maintaining translations while the project is still evolving.
 
 ## Organize the Translations
