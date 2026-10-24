@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Scandium (Sc)**. Small additions of scandium can make aluminium alloys stronger and lighter for aerospace applications.
+
 ### Added
 
 - Bootstrap an executable project-specific `scripts/new-release.sh` by adapting the existing BMForge release template without changing its Git release workflow.
