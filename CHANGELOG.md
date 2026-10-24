@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-24 @ 10:32
+
 This release is named for the element **Silicon (Si)**. Silicon is the backbone of modern computer chips and is the second most abundant element in Earth's crust.
 
 ### Added
