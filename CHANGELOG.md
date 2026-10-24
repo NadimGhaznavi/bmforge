@@ -9,6 +9,17 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Added
+
+- Specify the exact approved runtime modules and their roles for HTTP Display Server, ZeroMQ REQ/REP, and DB Server.
+- Require Codex to obtain approval and revise the component specification before adding or substituting infrastructure libraries.
+- Introduce a `Git` component (`bmforge.git`, draft spec 0.1.0) with two operations: managed-file publishing and repository-wide add/commit/push.
+- Copy the original Snake Web `GitPublisher` into a pinned local snapshot; provide a standalone Git CLI template and local Git integration tests.
+
+### Changed
+
+- Advance the three draft component specifications to `0.3.0`; keep component-specific technology choices separate from application business logic.
+
 ## [0.4.1] - 2026-10-24 @ 10:54
 
 This release is named for the element **Phosphorus (P)**. Phosphorus was first isolated from urine in 1669 by an alchemist searching for the philosopher's stone. (Maybe it should be called **Phoolorus**?).

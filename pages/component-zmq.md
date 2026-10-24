@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.zmq-server"
-spec_version: "0.2.0"
+spec_version: "0.3.0"
 spec_status: "draft"
 translation_key: bmforge-component-zmq
 ---
@@ -18,6 +18,25 @@ This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/e
 ## Intent and scope
 
 Implement a locally owned `pyzmq` request/reply listener for small JSON control and query messages. This blueprint covers **REQ/REP only**. Do not silently substitute PUB/SUB, PUSH/PULL, queues or distributed brokers. Specify a different transport separately when application requirements demand it.
+
+## Approved runtime modules
+
+This is the **complete approved module inventory for the reusable ZeroMQ REQ/REP Server infrastructure** in specification `0.3.0`.
+
+| Origin | Module | Purpose |
+| --- | --- | --- |
+| Python stdlib | `collections.abc` | `Callable` handler interface |
+| Python stdlib | `dataclasses` | `dataclass` and `field` for the message envelope |
+| Python stdlib | `json` | Encode and decode the versioned message payload |
+| Python stdlib | `threading` | `Thread` and `Event` for the socket-owning worker lifecycle |
+| Python stdlib | `typing` | `Any` annotation in the envelope |
+| Third-party | `zmq` | PyZMQ `Context`, REP socket, polling, timeout and cleanup |
+
+**Approval boundary:** This list is binding for the reusable component infrastructure. Codex may rename local classes, configure ports and paths, and implement the application-owned handlers, but **must pause and ask the user** before adding, removing, or replacing an approved module or framework. Do not install another package as a workaround. User-approved changes belong in a revised BMForge specification before adoption.
+
+These are Python import modules, not a complete transitive dependency tree. The consuming application's dependency file records installed package versions. Application business logic and separately selected BMForge components are outside this list; they must not quietly change this component's technology choices.
+
+**Not part of this component:** `pymysql`, the BMGeoIP `GeoIpLookup` class, and application-specific `LookupHandler` behaviour in the snapshot are business integration, not additional approved transport modules. Do not substitute asyncio, a broker, a raw-socket protocol, or different ZeroMQ communication patterns. A new transport pattern needs its own approved specification.
 
 ## Reference snapshot
 
@@ -47,3 +66,4 @@ Implement a locally owned `pyzmq` request/reply listener for small JSON control 
 5. Shutdown releases sockets and threads; client timeout/recovery is tested.
 6. A `health` request gets a normal success reply while the ZeroMQ handler is usable; a stopped listener times out/fails within the configured bound and cannot be reported healthy by the application.
 7. Application code does not import bmgeoip or BMForge at runtime; its message methods and payload schemas are documented locally.
+8. Verify the ZeroMQ transport uses the approved runtime modules only; any proposed replacement or addition was approved by the user before implementation.

@@ -41,13 +41,14 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 
 ## Component specifications
 
-Each contract specifies behaviour and acceptance checks. Examples are **frozen inside BMForge**, then adapted into the new project's own code.
+Each contract specifies behaviour, a **fixed approved runtime-module inventory**, and acceptance checks. Codex adapts the **frozen local reference code** rather than choosing other frameworks. If the prescribed modules are insufficient, Codex must stop and ask for approval before changing the specification.
 
 | Component | Stable ID | Contract |
 | --- | --- | --- |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
 | DB Server | `bmforge.db-server` | [Specification]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
+| Git | `bmforge.git` | [Publish and Commit]({{ site.baseurl }}{% link pages/component-git.md %}) |
 
 ## Traceability and improvement
 

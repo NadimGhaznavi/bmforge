@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.http-server"
-spec_version: "0.2.0"
+spec_version: "0.3.0"
 spec_status: "draft"
 translation_key: bmforge-component-http
 ---
@@ -18,6 +18,28 @@ This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/e
 ## Intent and scope
 
 Provide a small, locally owned HTTP service using Python's `ThreadingHTTPServer`, `BaseHTTPRequestHandler`, and (when HTML is needed) Jinja2 templates with autoescaping. Do not introduce Flask, FastAPI, a frontend build, authentication framework, or extra infrastructure unless required by the consumer.
+
+## Approved runtime modules
+
+This is the **complete approved module inventory for the reusable HTTP Display Server infrastructure** in specification `0.3.0`.
+
+| Origin | Module | Purpose |
+| --- | --- | --- |
+| Python stdlib | `argparse` | CLI host and port options |
+| Python stdlib | `http.server` | `ThreadingHTTPServer`, `BaseHTTPRequestHandler` and HTTP lifecycle |
+| Python stdlib | `ipaddress` | Validate the configured IPv4 bind address |
+| Python stdlib | `json` | JSON requests and the `/health` response |
+| Python stdlib | `logging` | Report actionable request or lifecycle failures |
+| Python stdlib | `pathlib` | Resolve templates and static assets |
+| Python stdlib | `signal` | SIGTERM shutdown handling |
+| Python stdlib | `urllib.parse` | URL and query-string parsing |
+| Third-party | `jinja2` | `Environment`, `FileSystemLoader`, `StrictUndefined`, `select_autoescape` for server-rendered HTML |
+
+**Approval boundary:** This list is binding for the reusable component infrastructure. Codex may rename local classes, configure ports and paths, and implement the application-owned handlers, but **must pause and ask the user** before adding, removing, or replacing an approved module or framework. Do not install another package as a workaround. User-approved changes belong in a revised BMForge specification before adoption.
+
+These are Python import modules, not a complete transitive dependency tree. The consuming application's dependency file records installed package versions. Application business logic and separately selected BMForge components are outside this list; they must not quietly change this component's technology choices.
+
+**Not part of this component:** PyMySQL imports in the BMGeoIP HTTP handler belong to the GeoIP application's database operations, not HTTP transport. Plotly and Leaflet are application presentation capabilities, not implicit HTTP dependencies. Select or define those components explicitly if needed. Do not replace this implementation with Django, Flask, FastAPI, Werkzeug, Gunicorn, NGINX, or another server framework without user approval.
 
 ## Reference snapshot
 
@@ -47,3 +69,4 @@ These contain GeoIP-specific routes, data-loader integration, globals, and filen
 4. `GET /health` returns `200` and component statuses when required components are usable; a simulated ZeroMQ or application DB failure returns `503` with the failed component identified. No direct database probe by CMDB and no new HTTP listener.
 5. Address-in-use, invalid port and graceful shutdown are tested; service exits without lingering workers.
 6. Confirm the installed application exposes its declared address/port, respects production overrides, and has no runtime import of BMForge/bmgeoip.
+7. Verify the HTTP implementation uses the approved runtime modules only; any proposed replacement or addition was approved by the user before implementation.

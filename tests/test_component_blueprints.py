@@ -1,5 +1,6 @@
 """Check the contract, navigation and local component reference inventory."""
 from pathlib import Path
+import ast
 import re
 import unittest
 
@@ -26,8 +27,25 @@ class ComponentBlueprintTests(unittest.TestCase):
             self.assertRegex(body, r'(?m)^spec_status: "(draft|published)"$')
             self.assertIn("## Acceptance checks", body)
             self.assertIn("components/reference/bmgeoip/", body)
-            self.assertIn('spec_version: "0.2.0"', body)
+            self.assertIn('spec_version: "0.3.0"', body)
             self.assertIn("pages/health-checks.md", body)
+
+    def test_approved_module_inventory_is_explicit(self):
+        expected = {
+            "http": ("argparse", "http.server", "ipaddress", "json", "logging",
+                     "pathlib", "signal", "urllib.parse", "jinja2"),
+            "zmq": ("collections.abc", "dataclasses", "json", "threading",
+                    "typing", "zmq"),
+            "db-server": ("contextlib", "pathlib", "pymysql", "pymysql.cursors"),
+        }
+        for name, approved in expected.items():
+            body = (ROOT / f"pages/component-{name}.md").read_text()
+            section = body.split("## Approved runtime modules\n", 1)[1].split("\n## ", 1)[0]
+            listed = re.findall(r"(?m)^\| (?:Python stdlib|Third-party|Third-party submodule) \| `([^`]+)` \|", section)
+            self.assertEqual(listed, list(approved), name)
+            self.assertIn("must pause and ask the user", section, name)
+            self.assertIn("Application business logic", section, name)
+            self.assertIn("## Reference snapshot", body)
 
     def test_homepage_jekyll_links_resolve_locally(self):
         home = (ROOT / "index.md").read_text()
@@ -56,6 +74,22 @@ class ComponentBlueprintTests(unittest.TestCase):
         self.assertIn("pages/health-checks.md", (ROOT / "index.md").read_text())
         for filename in ("component-http.md", "component-zmq.md", "component-db-server.md"):
             self.assertIn("health", (ROOT / "pages" / filename).read_text().lower())
+
+    def test_git_template_has_only_approved_imports(self):
+        template = (ROOT / "components/templates/git/Git.py").read_text()
+        syntax = ast.parse(template)
+        modules = set()
+        for node in ast.walk(syntax):
+            if isinstance(node, ast.Import):
+                modules.update(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom):
+                modules.add(node.module)
+        expected = {"contextlib", "fcntl", "os", "pathlib", "subprocess", "tempfile"}
+        self.assertEqual(modules, expected)
+        contract = (ROOT / "pages/component-git.md").read_text()
+        for module in expected:
+            self.assertIn(f"| `{module}` |", contract)
+        self.assertIn('BMFORGE_COMPONENT = {"id": "bmforge.git", "spec_version": "0.1.0"}', template)
 
     def test_reference_snapshots_are_local(self):
         base = ROOT / "components/reference/bmgeoip/bmgeoip"
