@@ -8,6 +8,8 @@ translation_key: bmforge-component-blueprints
 
 # Component Blueprints
 
+All implementations follow the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}). For stable IDs, version tags, and specification changes see [traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
+
 BMForge is a **standalone specification and reference-code repository**, not a shared runtime library, package registry, or framework dependency. A new application owns its generated/copied code. Do not import BMForge or another project's Python modules in production. Cross-project integration is permitted only via the other project's explicitly documented public API.
 
 ## Codex workflow
@@ -18,6 +20,7 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 4. Follow BMForge's existing runtime/network configuration, installation, and CMDB processes. The project owns its configuration, service units, tests, database schema, and deployment.
 5. Implement the acceptance checks in each chosen specification. Test failure handling, startup/shutdown, and real boundaries. Report checks run and any deviations.
 6. Avoid speculative infrastructure, layers, dependencies, and features. Ask before broadening scope.
+7. Place the chosen component's literal `BMFORGE_COMPONENT` marker in its owning implementation module, using the ID and version shown by the component specification. This is provenance, not a runtime dependency or a compliance certificate.
 
 ## Blueprints
 

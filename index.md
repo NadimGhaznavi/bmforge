@@ -9,70 +9,50 @@ translation_key: bmforge-home
 
 ![BMForge Logo](/pages/images/bmforge.png)
 
-BMForge is a **standalone software development toolkit for coding agents**. It collects proven engineering standards, component specifications, pinned reference implementations, and project setup/deployment tools so that new applications can be built quickly and consistently.
+# BMForge
 
-**BMForge is not a shared runtime library.** Every application owns its code and can evolve independently. Applications integrate with one another only through explicitly documented public APIs. Reference code is stored **inside BMForge** and copied/adapted into the consuming project, never imported from another project's repository.
+**Build small. Fail visibly. Own the implementation.**
 
-## Start here: task-to-resource guide
+BMForge is an engineering contract for coding agents. It defines how applications are built, tested, released, and integrated with the local environment. It is **not a shared runtime library**: each application owns its code. Separate applications interact only through documented public APIs.
 
-| Your task | Start with | Then use |
+## The engineering contract
+
+Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) before implementing anything.
+
+- **Lean by default:** build only what is required. Every abstraction, service, retry, and fallback needs a reason.
+- **Trust contracts:** validate at external boundaries; don't revalidate trusted internal data at every layer.
+- **Fail visibly:** broken internal assumptions, unavailable required resources, and unsuccessful operations must not look like success.
+- **Respect distributed boundaries:** explicit acknowledgements and timeouts where delivery matters; no invented resiliency architecture.
+- **Verify behaviour:** test the selected component contracts and meaningful failure paths, not imaginary requirements.
+
+## Start a task
+
+| What Codex is doing | Authoritative starting point |
+| --- | --- |
+| Building an application | Root `AGENTS.md`, [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}), then selected [component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
+| Implementing or improving a component | [Component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) and [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
+| Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
+| Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
+| Installing or upgrading | [Installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
+| Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
+| Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
+
+## Component specifications
+
+Each contract specifies behaviour and acceptance checks. Examples are **frozen inside BMForge**, then adapted into the new project's own code.
+
+| Component | Stable ID | Contract |
 | --- | --- | --- |
-| Build an application from known components | [Component Blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) | The selected component specifications and local reference code |
-| Set up a new Python project or maintain an installation | [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) | [Runtime Configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}), [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
-| Add a listener or configure service endpoints | [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) | The relevant HTTP or ZeroMQ component specification |
-| Create or publish a release | [Release Setup]({{ site.baseurl }}{% link pages/release-setup.md %}) | [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [Deployment Impact Tracking]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
-| Publish a website or documentation | [Jekyll Setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) | [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
-| Maintain project history | [Changelog Maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) | [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %}) |
+| HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
+| ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
+| MariaDB access | `bmforge.mariadb-access` | [Database]({{ site.baseurl }}{% link pages/component-database.md %}) |
 
-## Components
+## Traceability and improvement
 
-These are **specifications for creating application-owned components**, with local examples and acceptance checks, rather than installed or shared packages.
+Implementing modules carry a small, statically readable component ID and specification version. The [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) defines how to identify a gap, improve a contract, add a regression case, and version the change. The [decision record](https://github.com/NadimGhaznavi/bmforge/blob/feature/component-blueprints/DECISIONS.md) captures choices and unresolved work.
 
-| Component | Specification | Local reference |
-| --- | --- | --- |
-| HTTP Display Server | [HTTP Server]({{ site.baseurl }}{% link pages/component-http.md %}) | `components/reference/bmgeoip/bmgeoip/server/` |
-| ZeroMQ REQ/REP Server | [ZeroMQ Server]({{ site.baseurl }}{% link pages/component-zmq.md %}) | `components/reference/bmgeoip/bmgeoip/zmq/` |
-| MariaDB Data Access | [Database Access]({{ site.baseurl }}{% link pages/component-database.md %}) | `components/reference/bmgeoip/bmgeoip/interface/` |
-
-Read [Component Blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) first for the agent workflow, architectural boundaries, snapshot provenance, and definition of done. Each component page defines its own required behaviour and acceptance tests.
-
-## Project standards and processes
-
-**Project configuration and operations**
-
-- [Runtime Configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %})
-- [Network Configuration]({{ site.baseurl }}{% link pages/network-configuration.md %})
-- [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %})
-- [Installation Scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %})
-- [Install, Upgrade, and Uninstall BMForge]({{ site.baseurl }}{% link pages/installing-bmforge.md %})
-
-**Release and maintenance**
-
-- [Release Setup]({{ site.baseurl }}{% link pages/release-setup.md %})
-- [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %})
-- [Deployment Impact Tracking]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %})
-- [Changelog Maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %})
-
-**Websites and documentation**
-
-- [Jekyll Setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %})
-- [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %})
-- [Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %})
-
-## Guidance for Codex
-
-1. Read the repository's [`AGENTS.md`](https://github.com/NadimGhaznavi/bmforge/blob/main/AGENTS.md) and the resource matched to the requested task above.
-2. Read only the relevant detailed specifications and their **local** reference code. Do not fetch moving upstream examples or introduce cross-project runtime imports.
-3. Follow existing configuration, CMDB, installation, and release rules instead of inventing alternative conventions.
-4. Implement in the consuming project's own namespace and test against the component's acceptance checks.
-5. Keep project-specific exceptions and requirements in that project's own documentation. Request clarification before materially expanding scope.
-
-## Current scope
-
-BMForge currently covers **project setup and deployment**, **network and runtime configuration**, **CMDB discovery**, **releases and changelogs**, **Jekyll-based publishing**, **multilingual documentation**, and the three initial **HTTP, ZeroMQ, and MariaDB component blueprints**.
-
-The component blueprints are being introduced together as the first specification-driven building blocks. Their practical completeness will be assessed when an independent application implements them. BMForge's reference files are examples for adaptation, not an executable standalone service.
+**Current state:** the three contracts and locally pinned bmgeoip examples are a first draft awaiting validation in DevLog. Native Codex skill packaging and CMDB scanning of component tags are **planned, not implemented**. Existing CMDB declarations for files, databases, and listeners remain separate from architectural component tracing.
 
 ---
 
-[Changelog]({{ site.baseurl }}{% link CHANGELOG.md %}) · [BMForge repository](https://github.com/NadimGhaznavi/bmforge)
+[Changelog]({{ site.baseurl }}{% link CHANGELOG.md %}) · [BMForge repository](https://github.com/NadimGhaznavi/bmforge) · [Component work in PR #1](https://github.com/NadimGhaznavi/bmforge/pull/1)

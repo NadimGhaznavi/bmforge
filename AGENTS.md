@@ -1,14 +1,23 @@
 # BMForge agent guidance
 
-BMForge is an independent repository of software-development standards, component specifications, and pinned reference implementations. It is **not** a shared runtime library.
+BMForge is a **standalone engineering specification repository**, not a runtime library. Every application owns its implementation.
 
-For component-driven tasks:
+## Read only what the task needs
 
-1. Read `pages/component-blueprints.md`, then only the requested component pages in `pages/component-{http,zmq,database}.md`.
-2. Read their **local**, version-pinned examples under `components/reference/bmgeoip/` for tested patterns. Do not visit or import the original project to obtain implementation code. The reference files intentionally contain application-specific code and may not run in isolation; adapt them, do not copy unrelated business logic.
-3. Implement and maintain the code in the destination application's own package. Never add BMForge or a source-example project as a runtime dependency. Separate applications may interact using documented public APIs.
-4. Use existing BMForge runtime configuration, network configuration, CMDB discovery, installation and release standards. Do not duplicate those standards in new components.
-5. Verify the component's acceptance checklist with application-local tests. Make errors visible; do not report an untested installation as complete.
-6. Avoid speculative services, abstractions and features beyond the application's declared scope. If an architectural choice would substantially expand scope, ask before implementing it.
+1. Read `pages/engineering-contract.md` first. Build the smallest clear implementation that satisfies the requirement, and fail visibly when internal contracts cannot be met.
+2. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the selected `pages/component-{http,zmq,database}.md` specifications.
+3. Use the **local, pinned** source examples under `components/reference/bmgeoip/`. Do not fetch moving bmgeoip source or transplant unrelated GeoIP functionality.
+4. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
+5. When creating a BMForge-derived component, apply the literal source marker specified in `pages/specification-lifecycle.md`, using the selected specification's ID and version.
+6. Run the component's acceptance checks in the destination project and report what actually passed, failed, or was not tested. A copied example is not a completed component.
 
-Reference provenance and update policy are documented on `pages/component-blueprints.md`. Changes to the pinned snapshots require an intentional review and matching specification/test updates.
+## Engineering rules
+
+- Validate untrusted inputs at external boundaries. Trust established internal contracts instead of repeating defensive checks.
+- Don't swallow exceptions or invent fallbacks, retries, workers, queues, abstractions, or optional features. Include additional complexity only for a named requirement or observed failure.
+- A critical distributed operation needs its defined result, timeout, and error semantics. Never claim success before it is known.
+- A failed required dependency or unexpected internal state must surface clearly. Gracefully reject invalid external requests without disguising internal defects.
+- When improving BMForge, distinguish implementation bugs from contract gaps. Update acceptance checks and specification versions intentionally; record policy-level decisions in `DECISIONS.md`.
+- Ask before materially expanding an application's scope. This project is not a licence to build unrequested infrastructure.
+
+For current status and unresolved work, read `DECISIONS.md`. Skills and CMDB component scanning are planned, not yet present.

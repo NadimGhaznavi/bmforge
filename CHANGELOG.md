@@ -9,6 +9,15 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Added
+
+- Establish the lean, fail-fast engineering contract and specification traceability policy for component-owning modules.
+- Record BMForge architecture decisions and explicitly track Codex skills and CMDB component scanning as future work.
+
+### Changed
+
+- Reorganize the website for task-first Codex navigation and mark the initial HTTP, ZeroMQ, and MariaDB contracts as draft version 0.1.0.
+
 ## [0.3.0] - 2026-10-21 @ 03:47
 
 This release is named for the element **Boron (B)**. Boron compounds help give heat-resistant borosilicate glass its remarkable durability!

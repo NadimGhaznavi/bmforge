@@ -3,10 +3,17 @@ title: ZeroMQ Request/Reply Component
 lang: en
 locale: en-US
 language_name: English
+component_id: "bmforge.zmq-server"
+spec_version: "0.1.0"
+spec_status: "draft"
 translation_key: bmforge-component-zmq
 ---
 
 # ZeroMQ Request/Reply Server
+
+**Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
+
+This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and [traceability rules]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
 
 ## Intent and scope
 
