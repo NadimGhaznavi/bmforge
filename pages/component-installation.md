@@ -91,7 +91,7 @@ Server-only and library-only applications continue using ordinary `install.sh`, 
 5. Where selected, `install-server.sh` installs the service and any local client deliberately; separate client and server dependencies and tests remain separate.
 6. Upgrades retain client/server roles and record the new version only after verification. Failures do not falsely report success; an application with rolling activation verifies its rollback or recovery contract.
 7. Uninstall removes managed files, units and launchers for each supported role while retaining data and configuration, including repeat-uninstall and reinstall cases.
-8. Installation metadata and `pyproject.toml` package version (when present) match the literal `D<Name>.VERSION`. Successful installation markers never claim an uninstalled or failed version.
+8. Installation metadata and `pyproject.toml` package version (when present) match the literal `D<Name>.VERSION`. The standard `new-release.sh` updates both together and rejects drift before merging. Successful installation markers never claim an uninstalled or failed version.
 9. No alternate installer framework, direct app-to-app imports or new dependencies were introduced without explicit approval. Tested installation and release processes remain separate.
 
 ---

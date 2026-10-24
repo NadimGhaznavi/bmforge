@@ -83,6 +83,10 @@ This file preserves design decisions that should not disappear into conversation
 
 **Version and failure integrity.** Where a package also declares a `pyproject.toml` version, validate that it matches `D<Name>.VERSION`; only advance installed-version markers after verification. A release preflight that merely checks scripts are executable does not certify deployment readiness. Keep BMForge's read-only skill update mechanism and original release workflow unchanged.
 
+## 2026-10-24: package metadata follows the canonical release version
+
+**Root cause from DevLog.** BMForge's release script updated the application constant but did not synchronize a package's PEP 621 `[project].version`. This created a potential disagreement between installed package metadata and CMDB's version. Preserve the release script's existing Git workflow; add an optional literal-version preflight check and update `pyproject.toml` in the same release commit as constants/changelog. Reject mismatched, duplicated or dynamic `[project].version` instead of silently shipping divergence. Projects with tool-only `pyproject.toml` files remain supported. Regression tests use disposable Git remotes. This decision belongs to **BMForge**, while application-specific deployment and release notes remain owned by DevLog.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.

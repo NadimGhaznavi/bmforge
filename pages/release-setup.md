@@ -27,7 +27,7 @@ For manual projects without the Codex bootstrap, copy these files from BMForge:
 | [Release script]({{ '/templates/project/scripts/new-release.sh' | relative_url }}) | `scripts/new-release.sh` |
 | [Metadata checker]({{ '/templates/project/scripts/check-cmdb.py' | relative_url }}) | `scripts/check-cmdb.py` |
 
-Make `scripts/new-release.sh` executable. It requires Bash, Git, Python 3.10 or newer, and standard GNU command-line tools. It reads and edits metadata without importing application code.
+Make `scripts/new-release.sh` executable. It requires Bash, Git, Python 3.10 or newer, and standard GNU command-line tools. Projects with a static PEP 621 `[project].version` in `pyproject.toml` get version synchronization automatically; that version must initially match the literal application `VERSION`. It reads and edits metadata without importing application code.
 
 Replace `__PROJECT_NAME__` and `__PROJECT_SLUG__` in the script's settings block with the canonical application name and its lowercase form. Review the version path, changelog path, remote, and branch names. The standard defaults are `origin`, `dev`, `main`, and `feat/maint-`.
 
