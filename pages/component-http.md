@@ -39,7 +39,7 @@ This is the **complete approved module inventory for the reusable HTTP Display S
 
 These are Python import modules, not a complete transitive dependency tree. The consuming application's dependency file records installed package versions. Application business logic and separately selected BMForge components are outside this list; they must not quietly change this component's technology choices.
 
-**Not part of this component:** PyMySQL imports in the BMGeoIP HTTP handler belong to the GeoIP application's database operations, not HTTP transport. Plotly and Leaflet are application presentation capabilities, not implicit HTTP dependencies. Select or define those components explicitly if needed. Do not replace this implementation with Django, Flask, FastAPI, Werkzeug, Gunicorn, NGINX, or another server framework without user approval.
+**Not part of this component:** PyMySQL imports in the BMGeoIP HTTP handler belong to the GeoIP application's database operations, not HTTP transport. Plotly.js, Leaflet and Cytoscape.js are *optional browser presentation capabilities* specified separately in [Display Visualizations]({{ site.baseurl }}{% link pages/component-visualization.md %}), never implicit HTTP dependencies. Select only those the application actually needs. Do not replace this implementation with Django, Flask, FastAPI, Werkzeug, Gunicorn, NGINX, or another server framework without user approval.
 
 ## Reference snapshot
 
