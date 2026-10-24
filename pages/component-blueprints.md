@@ -15,7 +15,7 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 ## Codex workflow
 
 1. Select only the components requested by the application's requirements. Read each specification in full.
-2. Use the pinned code under `components/reference/bmgeoip/` as a **local reference snapshot**. Inspect it without fetching upstream repositories. Adapt and copy the necessary implementation into the new application's namespace. The snapshot intentionally contains application-specific details, not a drop-in generic library.
+2. For HTTP, ZeroMQ, or DB Server, use the pinned code under `components/reference/bmgeoip/` as a **local reference snapshot**. Inspect it without fetching upstream repositories. Adapt and copy the necessary implementation into the new application's namespace. The snapshot intentionally contains application-specific details, not a drop-in generic library.
 3. Replace BMGeoIP-specific names, routes, configuration, schema, message methods, resource paths, and lifecycle hooks. Do not copy GeoIP business functionality into an unrelated application.
 4. Follow BMForge's existing runtime/network configuration, installation, and CMDB processes. The project owns its configuration, service units, tests, database schema, and deployment.
 5. Implement the acceptance checks in each chosen specification. Test failure handling, startup/shutdown, and real boundaries. Report checks run and any deviations.

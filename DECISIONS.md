@@ -27,6 +27,10 @@ This file preserves design decisions that should not disappear into conversation
 
 **Monitoring.** Running applications answer on-demand health checks through their existing HTTP or ZeroMQ interface. HTTP `GET /health` returns `200` (green) or `503` (red) and identifies required component failures. The DB Server check runs inside the application on its configured connection; CMDB never logs into MariaDB for this check. No dedicated health service, background polling, retry engine, or self-recovery architecture. See `pages/health-checks.md`.
 
+## 2026-10-24: Git component
+
+**Scope.** A separate Git component supports exactly two operations: `Publish` (approved generated files in a dedicated checkout, based on the frozen Snake Web `GitPublisher`) and `Commit` (`git add . -v`, `git commit -m <message>`, `git push` from the caller's repository root). Its standalone template and integration tests are versioned in BMForge. The implementation uses Python standard-library modules plus the Git CLI, not GitPython. Publishing checks and retries are deliberate features of the proven publisher; ordinary commit has no hidden fetch, merge or recovery behaviour. No Git server or monitor endpoint is required. Spec: `pages/component-git.md` (draft 0.1.0).
+
 ## Work not yet implemented
 
 - Package component and project workflows as native Codex skills. Keep one authoritative contract per component and include all required local references.
