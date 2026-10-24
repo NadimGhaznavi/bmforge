@@ -9,6 +9,17 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Added
+
+- Document the USDP-inspired Activity / Interface / Entity classification and package responsibility rules.
+- Supply a canonical application-independent MariaDB `DbMgr.py` to copy verbatim into consuming apps, with unit tests for connections, transactions, read-only mode and application-mediated health.
+- Pin MyCount Activity (`CollectVisit`), Interface (`VisitDb`) and Entity (`Visit`) files to illustrate real usage of the classification.
+
+### Changed
+
+- Specify the layered database access pattern: `activity` → domain `interface/*Db` → `interface/DbMgr` → MariaDB, with entities passed through layers.
+- Advance draft DB Server specification to `0.4.0`; DB connection settings are resolved by each app and injected, with no app-specific imports in the manager.
+
 ## [0.5.0] - 2026-10-24 @ 12:25
 
 ### Added

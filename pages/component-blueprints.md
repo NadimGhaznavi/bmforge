@@ -8,7 +8,7 @@ translation_key: bmforge-component-blueprints
 
 # Component Blueprints
 
-All implementations follow the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and, for running applications, [application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}). For stable IDs, version tags, and specification changes see [traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
+All implementations follow [Activity / Interface / Entity classification]({{ site.baseurl }}{% link pages/classification.md %}) and the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and, for running applications, [application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}). For stable IDs, version tags, and specification changes see [traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
 
 BMForge is a **standalone specification and reference-code repository**, not a shared runtime library, package registry, or framework dependency. A new application owns its generated/copied code. Do not import BMForge or another project's Python modules in production. Cross-project integration is permitted only via the other project's explicitly documented public API.
 
@@ -17,9 +17,9 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 ## Codex workflow
 
 1. Select only the components requested by the application's requirements. Read each specification in full.
-2. For HTTP, ZeroMQ, or DB Server, use the pinned code under `components/reference/bmgeoip/` as a **local reference snapshot**. Inspect it without fetching upstream repositories. Adapt and copy the necessary implementation into the new application's namespace. The snapshot intentionally contains application-specific details, not a drop-in generic library.
-3. Replace BMGeoIP-specific names, routes, configuration, schema, message methods, resource paths, and lifecycle hooks. Do not copy GeoIP business functionality into an unrelated application.
-4. Follow BMForge's existing runtime/network configuration, installation, and CMDB processes. The project owns its configuration, service units, tests, database schema, and deployment.
+2. For HTTP and ZeroMQ, inspect the pinned examples under `components/reference/bmgeoip/` as **local reference snapshots**, then adapt the relevant mechanics into the application. For MariaDB, copy `components/templates/db-server/interface/DbMgr.py` **unchanged** into the application and build only the required domain `*Db` interfaces above it. Use the Git component's own standalone template for Git. Never fetch moving upstream source.
+3. Replace BMGeoIP-specific names, routes, configuration, schema, message methods, resource paths and lifecycle hooks in adapted HTTP/ZeroMQ code. Never copy GeoIP business functionality into an unrelated application. For the DB Server, supply the application's resolved configuration **without editing the canonical manager**. Keep business SQL only in new domain `*Db` interfaces.
+4. Classify application classes as `activity/`, `interface/`, or `entity/` by responsibility before implementing them, following the [classification contract]({{ site.baseurl }}{% link pages/classification.md %}). Use composition, not an invented class hierarchy. Follow BMForge's existing runtime/network configuration, installation, and CMDB processes. The project owns its configuration, service units, tests, database schema, and deployment.
 5. Implement the acceptance checks in each chosen specification. Test failure handling, startup/shutdown, and real boundaries. Report checks run and any deviations.
 6. Match the selected specification's approved modules exactly for the component infrastructure. Do not add a third-party dependency, replace an approved library, or create a different implementation to satisfy an unstated preference. If the prescribed modules are insufficient, stop and ask the user to amend or add a component first.
 7. Avoid speculative infrastructure, layers, dependencies, and features. Ask before broadening scope.
@@ -38,6 +38,6 @@ The vendored example files in `components/reference/bmgeoip/` are copied from `N
 
 ## Component boundaries
 
-The HTTP server owns request/response mechanics; application handlers own routes, HTML, API behaviour and policy. The ZMQ transport owns socket/message lifecycle; application handlers own command semantics. The database manager owns connection/transaction mechanics; application data access owns tables and SQL. Do not make these components depend on one another unless the new application's explicit data flow requires it.
+The HTTP server owns request/response mechanics; application handlers own routes, HTML, API behaviour and policy. The ZMQ transport owns socket/message lifecycle; application handlers own command semantics. The canonical database manager owns connection/transaction mechanics; one or more application-specific `interface/*Db.py` classes own SQL, schema and record mapping. `activity/` coordinates named operations and `entity/` holds data. Do not make components depend on one another unless an explicit application data flow requires it.
 
 **Completion rule:** a component is delivered only after it runs and passes its specified acceptance checks in the consuming project. Documentation or copied files alone do not qualify.

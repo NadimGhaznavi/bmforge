@@ -21,7 +21,7 @@ This file preserves design decisions that should not disappear into conversation
 
 **Traceability.** Component-owning modules declare a literal `BMFORGE_COMPONENT` with stable ID and specification version. Published specification versions must remain retrievable. A future CMDB source scanner can report application/spec relationships and outdated versions; a version marker does not prove compliance. See `pages/specification-lifecycle.md`.
 
-**Current scope.** HTTP, ZeroMQ REQ/REP, and DB Server (MariaDB-backed) contracts are draft `0.3.0` specifications with locally pinned bmgeoip examples. DevLog will test whether the contracts are sufficient.
+**Current scope.** HTTP and ZeroMQ remain draft `0.3.0`; DB Server is draft `0.4.0` with a canonical application-independent `DbMgr.py`, and Git is separately versioned. The implementations and pinned examples will be validated by consuming applications. DevLog will test whether the contracts are sufficient.
 
 ## 2026-10-24: minimal application health checks
 
@@ -34,6 +34,14 @@ This file preserves design decisions that should not disappear into conversation
 ## 2026-10-24: Git component
 
 **Scope.** A separate Git component supports exactly two operations: `Publish` (approved generated files in a dedicated checkout, based on the frozen Snake Web `GitPublisher`) and `Commit` (`git add . -v`, `git commit -m <message>`, `git push` from the caller's repository root). Its standalone template and integration tests are versioned in BMForge. The implementation uses Python standard-library modules plus the Git CLI, not GitPython. Publishing checks and retries are deliberate features of the proven publisher; ordinary commit has no hidden fetch, merge or recovery behaviour. No Git server or monitor endpoint is required. Spec: `pages/component-git.md` (draft 0.1.0).
+
+## 2026-10-24: USDP-inspired class classification and canonical MariaDB DAL
+
+**Responsibility model.** New application code classifies substantial classes as **Activity** (business processing and orchestration), **Interface** (technology bridges and domain-level data access), or **Entity** (data values). These are the project's terms inspired by the Unified Software Development Process's responsibility separation, not framework base classes. Composition and clear source packages carry the classification; no class registry or metadata framework. See `pages/classification.md`.
+
+**MariaDB data access.** Each new database-backed app copies the exact canonical `components/templates/db-server/interface/DbMgr.py` into `<app>/interface/DbMgr.py`, unchanged. Project-specific configuration is supplied by the application. One or more domain interfaces (`VisitorDb`, `MiningDb`, `GeoIpDb`) own the SQL and use the shared manager by constructor composition. Activities call the domain interfaces; entities remain inert data. App-specific interfaces never acquire their own driver connections or bypass `DbMgr`. This is a revised draft DB Server contract `0.4.0`, not an instruction to retrofit all deployed apps immediately.
+
+**Provenance.** The original BMGeoIP reference remains a historical example, and MyCount `VisitDb`, `CollectVisit` and `Visit` are pinned locally to show the three roles. A future CMDB scanner can use the existing `BMFORGE_COMPONENT` marker for component-spec tracing; source classification does not require a new runtime marker.
 
 ## Work not yet implemented
 
