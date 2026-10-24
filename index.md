@@ -61,7 +61,7 @@ Read [Component Blueprints]({{ site.baseurl }}{% link pages/component-blueprints
 
 ## Guidance for Codex
 
-1. Read the repository's [`AGENTS.md`](https://github.com/NadimGhaznavi/bmforge/blob/feature/component-blueprints/AGENTS.md) and the resource matched to the requested task above.
+1. Read the repository's [`AGENTS.md`](https://github.com/NadimGhaznavi/bmforge/blob/main/AGENTS.md) and the resource matched to the requested task above.
 2. Read only the relevant detailed specifications and their **local** reference code. Do not fetch moving upstream examples or introduce cross-project runtime imports.
 3. Follow existing configuration, CMDB, installation, and release rules instead of inventing alternative conventions.
 4. Implement in the consuming project's own namespace and test against the component's acceptance checks.
