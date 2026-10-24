@@ -9,6 +9,17 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Calcium (Ca)**. Known for it's presence in teeth and bones, it's also required to make your muscles move, to make your heart beat.
+
+### Added
+
+- Define separate draft constants (`bmforge.constants`) and runtime application localization (`bmforge.localization`) specifications and Codex skills.
+- Pin source examples from Snake Lab and BMGeoIP for typed constant groups, and Minimal Mistakes plus the blog for language-selection and translation-display patterns.
+- Provide an application-owned, standard-library `Localizer.py`, stable `DText` keys and an English JSON catalogue for new apps.
+- Install constants and localization as part of the greenfield baseline, without auto-upgrading existing projects or changing the approval-only update policy.
+- Add localization and bootstrap tests for locale resolution, translation fallback, protected placeholders, pinned assets and notification-only updates.
+
+
 ## [0.7.0] - 2026-10-24 @ 14:25
 
 This release is named for the element **Potassium (K)**. Potassium is essential for nerve signals and muscle function, including keeping your heart beating normally.

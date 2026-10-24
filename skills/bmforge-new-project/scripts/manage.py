@@ -19,6 +19,21 @@ SOURCE_URL = "https://github.com/NadimGhaznavi/bmforge.git"
 SOURCE_BRANCH = "main"
 SKILLS = {
     "bmforge-project": (None, ()),
+    "bmforge-constants": ("pages/component-constants.md", (
+        "components/reference/snake-lab/snakelab/constants/DGame.py",
+        "components/reference/snake-lab/snakelab/constants/DSQL.py",
+        "components/reference/snake-lab/snakelab/constants/DMyLog.py",
+        "components/reference/snake-lab/snakelab/constants/DSnakeLab.py",
+        "components/reference/bmgeoip/bmgeoip/constants/DBMGeoIP.py",
+        "components/reference/bmgeoip/bmgeoip/constants/DGeoIp.py",
+        "components/reference/bmgeoip/bmgeoip/constants/DZMQ.py",
+    )),
+    "bmforge-localization": ("pages/component-localization.md", (
+        "components/reference/minimal-mistakes/_includes/language-selector.html",
+        "components/reference/minimal-mistakes/assets/js/multilingual.js",
+        "components/reference/blog/_data/taxonomy_translations.yml",
+        "components/reference/blog/es/index.md",
+    )),
     "bmforge-http": ("pages/component-http.md", (
         "components/reference/bmgeoip/bmgeoip/server/BMGeoIPServer.py",
         "components/reference/bmgeoip/bmgeoip/server/BMGeoIPHandler.py",
@@ -49,6 +64,7 @@ SKILLS = {
         "components/reference/cmdb/cmdb/server/static/vendor/cytoscape-LICENSE",
     )),
 }
+BASE_SKILLS = ("bmforge-project", "bmforge-constants", "bmforge-localization")
 COMMON = (
     "pages/engineering-contract.md",
     "pages/classification.md",
@@ -58,6 +74,10 @@ COMMON = (
 HEALTH = "pages/health-checks.md"
 DB_TEMPLATE = "components/templates/db-server/interface/DbMgr.py"
 GIT_TEMPLATE = "components/templates/git/Git.py"
+CONSTANTS_TEMPLATE = "templates/project/constants/DProject.py"
+LOCALIZER_TEMPLATE = "components/templates/localization/interface/Localizer.py"
+TEXT_TEMPLATE = "components/templates/constants/DText.py"
+EN_CATALOG = "components/templates/localization/locales/en.json"
 LOCK = Path(".agents/bmforge/lock.json")
 MANAGER = Path(".agents/bmforge/manage.py")
 
@@ -105,7 +125,7 @@ def selected_names(value):
     names = [p.strip() for p in value.split(",") if p.strip()] if value else []
     if len(names) != len(set(names)):
         raise SetupError("Duplicate component selection")
-    unknown = sorted(set(names) - (set(SKILLS) - {"bmforge-project"}))
+    unknown = sorted(set(names) - (set(SKILLS) - set(BASE_SKILLS)))
     if unknown:
         raise SetupError("Unknown component(s): " + ", ".join(unknown))
     return names
@@ -126,6 +146,12 @@ def bundle(source, name):
         files["assets/DbMgr.py"] = DB_TEMPLATE
     if name == "bmforge-git":
         files["assets/Git.py"] = GIT_TEMPLATE
+    if name == "bmforge-constants":
+        files["assets/DProject.py"] = CONSTANTS_TEMPLATE
+    if name == "bmforge-localization":
+        files["assets/Localizer.py"] = LOCALIZER_TEMPLATE
+        files["assets/DText.py"] = TEXT_TEMPLATE
+        files["assets/en.json"] = EN_CATALOG
     result = {}
     for destination, original in files.items():
         path = source / original
@@ -201,8 +227,12 @@ Report available changes or an unavailable check to the user. **Do not apply
 updates**, reinstall skills, or replace approved technologies without explicit
 user authorization. Continue using the pinned skills unless instructed otherwise.
 
-Read `.agents/skills/bmforge-project/SKILL.md` for architecture, then invoke only
-relevant component skills under `.agents/skills/`. Follow each skill's local
+Read `.agents/skills/bmforge-project/SKILL.md` for architecture. Every new app
+also follows the pinned `bmforge-constants` and `bmforge-localization` skills:
+centralize stable programmatic identifiers and prepare English localization keys
+from its first user-facing feature. Add real translations only when provided or
+requested, never by guessing. Invoke other component skills as needed.
+Follow each selected skill's local
 `references/specification.md` and approved module inventory. Never invent another
 framework, database driver or plotting library as a shortcut.
 
@@ -215,7 +245,7 @@ def start_init(args):
     root = project_root(args.project)
     if (root / ".agents").exists() or (root / "AGENTS.md").exists():
         raise SetupError("Refusing to overwrite existing .agents/ or AGENTS.md")
-    names = ["bmforge-project", *selected_names(args.components)]
+    names = [*BASE_SKILLS, *selected_names(args.components)]
     with source_checkout(args.source) as (source, revision):
         bundles = {name: bundle(source, name) for name in names}
         versions = {name: spec_version(source, name) for name in names}
