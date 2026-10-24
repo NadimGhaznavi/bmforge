@@ -14,6 +14,10 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 
 Display-visualization libraries are selected by requested **capability** (chart, geographic map or relationship graph) under the [visualization component]({{ site.baseurl }}{% link pages/component-visualization.md %}); they do not become dependencies of every HTTP server. **Module lists are mandatory, not suggestions.** The **Approved runtime modules** section of each selected component is the complete technology inventory for that component's reusable infrastructure. Codex may supply local names, constants and bindings, but must pause for user approval if a requirement cannot be met with those modules. No ad hoc replacement with a new server, driver, ORM, broker, or UI library. Application-specific activities and separately approved components have their own dependencies.
 
+## Project-local Codex skills
+
+Use the [Codex bootstrap]({{ site.baseurl }}{% link pages/codex-skills.md %}) to install selected skills under the consuming application's `.agents/skills/`. Each skill packages the relevant, immutable local reference snapshot and the authoritative contract as it was at installation. Pinned skills remain unchanged until the user approves an update; the installed manager only **checks and notifies**.
+
 ## Codex workflow
 
 1. Select only the components requested by the application's requirements. Read each specification in full.
