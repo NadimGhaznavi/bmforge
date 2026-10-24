@@ -5,7 +5,7 @@ BMForge is a **standalone engineering specification repository**, not a runtime 
 ## Read only what the task needs
 
 1. Read `pages/engineering-contract.md` and `pages/classification.md` first. Build the smallest clear implementation that satisfies the requirement, and fail visibly when internal contracts cannot be met.
-2. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the selected `pages/component-{http,zmq,db-server}.md` specifications.
+2. Use `index.md` to find the relevant process. For components, read `pages/component-blueprints.md` and only the needed component specifications. For chart, map or graph capabilities, also read `pages/component-visualization.md`.
 3. Treat each selected component specification's **Approved runtime modules** section as a fixed implementation inventory. Copy/adapt only from that list. If it cannot meet the requirement, **pause and ask the user before adding packages or changing technologies**; don't silently swap in another framework.
 4. Use locally pinned reference examples for understanding, not runtime imports. HTTP/ZeroMQ may adapt `components/reference/bmgeoip/`; **DB Server must copy `components/templates/db-server/interface/DbMgr.py` unchanged**, passing app configuration and implementing domain `*Db` interfaces around it. Never fetch moving examples or transplant source-app business logic.
 5. Follow existing BMForge configuration, CMDB, install, and release processes when those concerns apply. Never add BMForge or an example project as a runtime dependency. Independent applications interact through documented public APIs.
@@ -17,7 +17,7 @@ BMForge is a **standalone engineering specification repository**, not a runtime 
 
 - Classify substantial classes explicitly: `activity/` orchestrates work, `interface/` owns external and domain data access, `entity/` carries data. Domain `*Db` classes compose with the unchanged `DbMgr`. Do not put SQL in activity or entity classes.
 - Validate untrusted inputs at external boundaries. Trust established internal contracts instead of repeating defensive checks.
-- Never introduce a new module, server framework, database driver, ORM, plotting library, or dependency to replace an approved component implementation without explicit user approval and a specification update.
+- Never introduce a new module, server framework, database driver, ORM, plotting library, or dependency to replace an approved component implementation without explicit user approval and a specification update. Charts use Plotly.js, geographic maps use Leaflet, and relationship graphs use Cytoscape.js at the versions listed in `pages/component-visualization.md`; select only the libraries the application requires.
 - Don't swallow exceptions or invent fallbacks, retries, workers, queues, abstractions, or optional features. Include additional complexity only for a named requirement or observed failure.
 - A critical distributed operation needs its defined result, timeout, and error semantics. Never claim success before it is known.
 - A failed required dependency or unexpected internal state must surface clearly. Gracefully reject invalid external requests without disguising internal defects.

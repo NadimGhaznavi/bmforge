@@ -20,7 +20,7 @@ translation_key: bmforge-engineering-contract
 6. **Catch exceptions only to act.** Handle a known external error, release owned resources, add useful context, or perform specified recovery. Otherwise let it propagate. Do not blanket-catch exceptions, silently swallow errors, or return fake defaults.
 7. **Test contracts, not speculation.** Verify normal behaviour, named acceptance checks, meaningful trust-boundary failures, and required startup/shutdown conditions. Keep tests proportional to the component.
 8. **Classify by responsibility.** Follow [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}): interface classes bridge technology or domain data access, activity classes orchestrate application operations, and entities hold values. Do not blend SQL, workflow and entity state into one class.
-9. **Preserve approved runtime choices.** Component module inventories are binding. Do not replace or add infrastructure libraries, drivers or frameworks to solve a task without user approval and an updated component specification. Configure the known pattern rather than re-architecting it.
+9. **Preserve approved runtime choices.** Component module inventories are binding. [Display visualization choices]({{ site.baseurl }}{% link pages/component-visualization.md %}) are likewise fixed by actual chart, map or graph requirements, not by Codex preferences. Do not replace or add infrastructure libraries, drivers or frameworks to solve a task without user approval and an updated component specification. Configure the known pattern rather than re-architecting it.
 
 ## What failure should look like
 

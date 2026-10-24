@@ -12,7 +12,7 @@ All implementations follow [Activity / Interface / Entity classification]({{ sit
 
 BMForge is a **standalone specification and reference-code repository**, not a shared runtime library, package registry, or framework dependency. A new application owns its generated/copied code. Do not import BMForge or another project's Python modules in production. Cross-project integration is permitted only via the other project's explicitly documented public API.
 
-**Module lists are mandatory, not suggestions.** The **Approved runtime modules** section of each selected component is the complete technology inventory for that component's reusable infrastructure. Codex may supply local names, constants and bindings, but must pause for user approval if a requirement cannot be met with those modules. No ad hoc replacement with a new server, driver, ORM, broker, or UI library. Application-specific activities and separately approved components have their own dependencies.
+Display-visualization libraries are selected by requested **capability** (chart, geographic map or relationship graph) under the [visualization component]({{ site.baseurl }}{% link pages/component-visualization.md %}); they do not become dependencies of every HTTP server. **Module lists are mandatory, not suggestions.** The **Approved runtime modules** section of each selected component is the complete technology inventory for that component's reusable infrastructure. Codex may supply local names, constants and bindings, but must pause for user approval if a requirement cannot be met with those modules. No ad hoc replacement with a new server, driver, ORM, broker, or UI library. Application-specific activities and separately approved components have their own dependencies.
 
 ## Codex workflow
 
@@ -31,10 +31,13 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 - [HTTP Display Server]({{ site.baseurl }}{% link pages/component-http.md %})
 - [ZeroMQ Request/Reply Server]({{ site.baseurl }}{% link pages/component-zmq.md %})
 - [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %})
+- [Display Visualizations: charts, maps and graphs]({{ site.baseurl }}{% link pages/component-visualization.md %})
 
 ## Reference provenance
 
 The vendored example files in `components/reference/bmgeoip/` are copied from `NadimGhaznavi/bmgeoip` at commit `35c8745c7003a124dce5b5799b08b2d7c851fbfc` (24 October 2026). They are immutable examples from that revision, not live links, and must not be periodically synchronised without review. The source file layout is retained to show component boundaries and imports. Some examples depend on BMGeoIP-only modules intentionally not part of the component catalogue; implementation agents must replace those integrations, not attempt to run the snapshot as a standalone application. Each component contract names exactly which Python import modules are approved. Third-party package versions are installed and tracked in the **generated application's** dependency files, with deliberate upgrades.
+
+The visualization component has frozen local MyCount Plotly/Leaflet and CMDB Cytoscape source examples under `components/reference/`. Its approved JavaScript libraries are independent of the Python HTTP transport's module list and require explicit selection by application need.
 
 ## Component boundaries
 
