@@ -50,6 +50,8 @@ The baseline records ownership in `.installation-manifest.json` and the last suc
 
 Release publication and host deployment are separate processes. Run installation or upgrades from the intended release checkout. The release script checks that the three lifecycle entry points are executable, have valid shell syntax, and are committed; it does not run them or certify their project-specific behavior.
 
+For installed running services, use their existing [application health check]({{ site.baseurl }}{% link pages/health-checks.md %}) when verifying startup or restart. A healthy process or listening port alone does not certify required application dependencies. Do not add a second probe service.
+
 For selective upgrades, include lifecycle scripts and their dependencies in [Deployment Impact Tracking]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}). Preserve the last successful version before replacing application files, execute the planned work, and publish success bookkeeping after health checks.
 
 Verify first installation, reinstallation, upgrades, repeat uninstallation, retained configuration and data, removed obsolete files, readable CMDB metadata, invalid paths, and interrupted work. Run filesystem checks in temporary directories and service or database checks in an appropriate disposable environment. Verify a real CMDB scan after deployment, including runtime configuration, declared component paths, and same-host database connections. Test declared backups and effective listener bindings separately; discovery does not check directory existence or application health.
