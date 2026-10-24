@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-24 @ 15:10
+
 This release is named for the element **Calcium (Ca)**. Known for it's presence in teeth and bones, it's also required to make your muscles move, to make your heart beat.
 
 ### Added
