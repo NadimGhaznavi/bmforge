@@ -24,6 +24,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 - **Fail visibly:** broken internal assumptions, unavailable required resources, and unsuccessful operations must not look like success.
 - **Respect distributed boundaries:** explicit acknowledgements and timeouts where delivery matters; no invented resiliency architecture.
 - **Verify behaviour:** test the selected component contracts and meaningful failure paths, not imaginary requirements.
+- **Expose health:** running applications provide a simple, on-demand health result for monitoring.
 
 ## Start a task
 
@@ -33,6 +34,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Implementing or improving a component | [Component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) and [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
 | Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
+| Making an application monitorable | [Application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}) |
 | Installing or upgrading | [Installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
 | Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
@@ -45,7 +47,7 @@ Each contract specifies behaviour and acceptance checks. Examples are **frozen i
 | --- | --- | --- |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
-| MariaDB access | `bmforge.mariadb-access` | [Database]({{ site.baseurl }}{% link pages/component-database.md %}) |
+| DB Server | `bmforge.db-server` | [Specification]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 
 ## Traceability and improvement
 

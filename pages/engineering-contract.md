@@ -30,7 +30,7 @@ translation_key: bmforge-engineering-contract
 | Required ZeroMQ exchange times out | Report failure to the caller; retry only if the application contract explicitly permits it. |
 | Database transaction fails | Roll back that transaction and propagate the error; never report a successful commit. |
 
-A health or readiness check reports actual state; it is not a mandate to build a self-healing system. Security at exposed boundaries is mandatory where applicable, but redundant internal validation is not security.
+A health check reports actual application state; it is not a mandate to build a self-healing system. Follow [Application Health Checks]({{ site.baseurl }}{% link pages/health-checks.md %}): one existing interface, no monitoring background workers, and no direct CMDB-to-MariaDB probe. Security at exposed boundaries is mandatory where applicable, but redundant internal validation is not security.
 
 ## Scope gate for Codex
 

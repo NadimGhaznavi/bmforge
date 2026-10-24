@@ -33,7 +33,7 @@ A marker is a **provenance claim**, not proof of compliance. Tests establish whe
 4. Update the current specification page, its acceptance checks, and the [decision record]({{ site.baseurl }}{% link DECISIONS.md %}) when the change affects engineering policy or compatibility.
 5. Consumers adopt the new version intentionally, test it locally, and update their own module markers.
 
-Each component page declares its stable `component_id`, `spec_version`, and `spec_status` in page metadata. The three initial specifications are **draft 0.1.0** contracts for DevLog validation, not yet published immutable releases.
+Each component page declares its stable `component_id`, `spec_version`, and `spec_status` in page metadata. The three initial specifications are now **draft 0.2.0** contracts (including health checks) for DevLog validation, not yet published immutable releases.
 
 ## CMDB boundary and future visibility
 
