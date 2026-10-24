@@ -9,6 +9,17 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-24 @ 14:25
+
+This release is named for the element **Potassium (K)**. Potassium is essential for nerve signals and muscle function, including keeping your heart beating normally.
+
+### Added
+
+- Add a global `bmforge-new-project` Codex bootstrap skill and six project-local skills for architecture, HTTP, ZeroMQ, MariaDB, Git and display visualizations.
+- Add a pinned per-project skill manager and source-content lock file; read-only update checks report changes without applying updates.
+- Add a concise greenfield skill setup guide and twelve hermetic tests for skill selection, pinning, safe installation and update notification.
+
+
 ## [0.6.0] - 2026-10-24 @ 13:45
 
 This release is named for the element **Argon (Ar)**. Argon takes up nearly 1% of the air we breathe and is used to shield welds from unwanted chemical reactions.

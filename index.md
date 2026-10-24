@@ -31,6 +31,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | What Codex is doing | Authoritative starting point |
 | --- | --- |
 | Building an application | Root `AGENTS.md`, [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [class classification]({{ site.baseurl }}{% link pages/classification.md %}), then selected [component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
+| Bootstrapping an empty project with Codex skills | [Install pinned Codex component skills]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
 | Implementing or improving a component | [Component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) and [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
 | Building the DAL or classifying application code | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) and [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Selecting charts, maps or relationship graphs | [Approved display visualizations]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
@@ -40,6 +41,10 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Installing or upgrading | [Installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
 | Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
+
+## Codex skill packaging
+
+Start from the [greenfield bootstrap skill]({{ site.baseurl }}{% link pages/codex-skills.md %}) to install only requested, pinned component skills into a new application's `.agents/skills/`. The project gets its own `AGENTS.md` and **read-only update notices**, never automatic upgrades or application generation.
 
 ## Component specifications
 
