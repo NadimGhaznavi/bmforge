@@ -3,7 +3,7 @@
 Engineering standards, component specifications, and frozen reference implementations for Codex-driven projects. **No shared runtime code.**
 
 - Start with [AGENTS.md](AGENTS.md) and the [engineering contract](pages/engineering-contract.md).
-- [Install Codex component skills](pages/codex-skills.md) from the global greenfield bootstrap into a new repository; constants and application localization now accompany the base skill, while pinned updates remain notification-only.
+- [Install Codex component skills](pages/codex-skills.md) from the global bootstrap; constants, localization and a configured `scripts/new-release.sh` release scaffold are included, with read-only update notices.
 - Read the distinct [constants](pages/component-constants.md) and [runtime localization](pages/component-localization.md) specifications.
 - Find tasks and website documentation in [index.md](index.md).
 - Build using the [component blueprints](pages/component-blueprints.md) and their pinned local examples.

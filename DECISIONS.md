@@ -65,6 +65,14 @@ This file preserves design decisions that should not disappear into conversation
 
 **Bootstrap.** `bmforge-project`, `bmforge-constants`, and `bmforge-localization` are the three greenfield baseline skills; optional HTTP, ZMQ, DB, Git and visualization components remain explicitly selected. Existing installed projects retain their pinned skills. The update checker continues to notify only and never auto-upgrades.
 
+## 2026-10-24: release scaffolding during greenfield bootstrap
+
+**Reuse the original wheel.** The bootstrap now adapts `templates/project/scripts/new-release.sh` with the user's explicit canonical Python application name, preserving its tested feature → dev → main workflow, annotated tags and atomic release push. This is the same mature process running in Snake Lab, BMGeoIP, CMDB, MyCount and other applications. Repository slugs are not reliable application names, so the name is required.
+
+**Prerequisites, not release execution.** Bootstrap copies the existing changelog, CMDB checker, literal version metadata, and the executable lifecycle scripts plus the disabled install.py template. It makes no branch changes, commits, pushes, tags, deployments or release invocations. Pre-existing files and symlink destinations are never overwritten.
+
+**Pinned and notification-only.** Original release templates and guides are included inside `bmforge-project` so project-local update checks report template changes. Generated files are application-owned and are never automatically replaced. Already initialized projects retain their pinned content until an approved, reviewed upgrade.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.

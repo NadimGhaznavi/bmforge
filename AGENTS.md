@@ -4,7 +4,7 @@ BMForge is a **standalone engineering specification repository**, not a runtime 
 
 ## Codex component skills
 
-The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmforge-new-project/` and installs self-contained, pinned skills from `skills/bmforge-{project,constants,localization,http,zmq,db-server,git,visualization}/`. Its `manage.py check` is **read-only** and reports changes without applying them. Always install the minimal project/constant/localization **policy baseline**; add infrastructure components only by explicit selection. Do not generate application code or deploy services during bootstrap. Keep installer tests hermetic and require user consent for any upgrade.
+The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmforge-new-project/` and installs self-contained, pinned skills from `skills/bmforge-{project,constants,localization,http,zmq,db-server,git,visualization}/`. Its `manage.py check` is **read-only** and reports changes without applying them. Always install the project/constant/localization baseline and the canonical release-tooling scaffold. Require a canonical `--name` to configure `scripts/new-release.sh` and its existing prerequisites. Never run the release script, commit, tag, push, create branches or deploy during bootstrap. Add other infrastructure only by explicit selection. Keep installer tests hermetic and require user consent for any upgrade.
 
 ## Read only what the task needs
 

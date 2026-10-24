@@ -9,6 +9,7 @@ from contextlib import contextmanager
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -78,6 +79,16 @@ CONSTANTS_TEMPLATE = "templates/project/constants/DProject.py"
 LOCALIZER_TEMPLATE = "components/templates/localization/interface/Localizer.py"
 TEXT_TEMPLATE = "components/templates/constants/DText.py"
 EN_CATALOG = "components/templates/localization/locales/en.json"
+RELEASE_TEMPLATES = {
+    "scripts/new-release.sh": "templates/project/scripts/new-release.sh",
+    "scripts/check-cmdb.py": "templates/project/scripts/check-cmdb.py",
+    "scripts/install.py": "templates/project/scripts/install.py",
+    "scripts/install.sh": "templates/project/scripts/install.sh",
+    "scripts/upgrade.sh": "templates/project/scripts/upgrade.sh",
+    "scripts/uninstall.sh": "templates/project/scripts/uninstall.sh",
+    "CHANGELOG.md": "templates/project/CHANGELOG.md",
+}
+RELEASE_GUIDES = ("pages/release-setup.md", "pages/creating-a-release.md")
 LOCK = Path(".agents/bmforge/lock.json")
 MANAGER = Path(".agents/bmforge/manage.py")
 
@@ -138,6 +149,11 @@ def bundle(source, name):
         files["references/" + Path(common).name] = common
     if spec:
         files["references/specification.md"] = spec
+    if name == "bmforge-project":
+        for destination, original in RELEASE_TEMPLATES.items():
+            files["assets/release/" + destination] = original
+        for guide in RELEASE_GUIDES:
+            files["references/" + Path(guide).name] = guide
     if name in ("bmforge-http", "bmforge-zmq", "bmforge-db-server"):
         files["references/health-checks.md"] = HEALTH
     for snapshot in snapshots:
@@ -238,7 +254,72 @@ framework, database driver or plotting library as a shortcut.
 
 Component selection and application-specific behaviour belong to this project's
 requirements. A pinned skill is an instruction bundle, not executable app code.
+
+Bootstrap provided `scripts/new-release.sh` with metadata, changelog and disabled
+installation stubs. Do not run the release tool, make branches, commit, tag, push,
+or deploy without explicit user authorization. Read the pinned project skill's
+release-setup and creating-a-release references before release work.
 """
+
+
+def release_scaffold(bundles, name, subtype):
+    """Adapt the established BMForge release templates without inventing a new script."""
+    if (not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name)
+            or re.search(r"__[A-Z_]+__", name)):
+        raise SetupError("--name must be a canonical Python class name, e.g. SnakeLab")
+    if (not isinstance(subtype, str) or not subtype.strip() or len(subtype) > 255
+            or any(ord(char) < 32 or ord(char) == 127 for char in subtype)
+            or re.search(r"__[A-Z_]+__", subtype)):
+        raise SetupError("--subtype must be a nonempty literal description without controls")
+    slug = name.lower()
+    files = {}
+    for destination in RELEASE_TEMPLATES:
+        template = bundles["bmforge-project"]["assets/release/" + destination]
+        text = template.decode("utf-8")
+        text = text.replace("__PROJECT_NAME__", name).replace("__PROJECT_SLUG__", slug)
+        if "__PROJECT_" in text:
+            raise SetupError(f"Unresolved project placeholder in {destination}")
+        files[destination] = text.encode("utf-8")
+    template = bundles["bmforge-constants"]["assets/DProject.py"].decode("utf-8")
+    if template.count("class DProject:") != 1 or template.count('"__PROJECT_SUBTYPE__"') != 1:
+        raise SetupError("Canonical project constants template has changed unexpectedly")
+    text = template.replace("class DProject:", f"class D{name}:")
+    text = text.replace("__PROJECT_SLUG__", slug)
+    text = text.replace('"__PROJECT_SUBTYPE__"', json.dumps(subtype, ensure_ascii=False))
+    if "__PROJECT_" in text:
+        raise SetupError("Unresolved project placeholder in constants")
+    files[f"{slug}/constants/D{name}.py"] = text.encode("utf-8")
+    return files
+
+
+def check_scaffold_destinations(root, files):
+    """Refuse to overwrite any pre-existing project file or traverse symlinks."""
+    for relative in files:
+        path = root / relative
+        if path.exists() or path.is_symlink():
+            raise SetupError(f"Release scaffold already exists; refusing overwrite: {relative}")
+        directory = path.parent
+        while directory != root:
+            if directory.is_symlink() or (directory.exists() and not directory.is_dir()):
+                raise SetupError(f"Unsafe existing parent for release file: {relative}")
+            directory = directory.parent
+
+
+def write_scaffold(root, files, created_files, created_directories):
+    for relative, content in files.items():
+        target = root / relative
+        missing = []
+        directory = target.parent
+        while directory != root and not directory.exists():
+            missing.append(directory)
+            directory = directory.parent
+        for directory in reversed(missing):
+            directory.mkdir()
+            created_directories.append(directory)
+        created_files.append(target)
+        target.write_bytes(content)
+        if relative.endswith(".sh"):
+            target.chmod(0o755)
 
 
 def start_init(args):
@@ -250,7 +331,11 @@ def start_init(args):
         bundles = {name: bundle(source, name) for name in names}
         versions = {name: spec_version(source, name) for name in names}
         manager_source = (source / "skills/bmforge-new-project/scripts/manage.py").read_bytes()
+        scaffolding = release_scaffold(bundles, args.name, args.subtype)
+    check_scaffold_destinations(root, scaffolding)
     base = root / ".agents"
+    created_files = []
+    created_directories = []
     try:
         (root / LOCK.parent).mkdir(parents=True)
         (root / MANAGER).write_bytes(manager_source)
@@ -267,15 +352,22 @@ def start_init(args):
                                "source_commit": revision}
                        for name, files in bundles.items()},
         })
+        write_scaffold(root, scaffolding, created_files, created_directories)
         (root / "AGENTS.md").write_text(root_agents(), encoding="utf-8")
     except BaseException:
+        for path in reversed(created_files):
+            path.unlink(missing_ok=True)
+        for directory in reversed(created_directories):
+            directory.rmdir()
         if base.exists():
             shutil.rmtree(base)
         raise
     print(f"Installed {len(names)} pinned BMForge skill(s) from {revision[:12]}:")
     for name in names:
         print(f"  {name} ({versions[name]})")
-    print("No application code was generated. Check updates with:")
+    print(f"Prepared {len(scaffolding)} existing BMForge release templates for {args.name}, including scripts/new-release.sh")
+    print("Release tooling is not executed; set up and commit the project before publishing.")
+    print("Check updates with:")
     print("  python3 .agents/bmforge/manage.py check --project .")
 
 
@@ -379,6 +471,9 @@ def main(argv=None):
         cmd.add_argument("--source", help="BMForge checkout or Git remote (default: published main)")
         if action != "check":
             cmd.add_argument("--components", default="", help="Comma-separated component skill names")
+        if action == "init":
+            cmd.add_argument("--name", required=True, help="Canonical application class name, e.g. SnakeLab")
+            cmd.add_argument("--subtype", default="Application", help="CMDB application subtype")
     args = parser.parse_args(argv)
     try:
         return {"init": start_init, "add": start_add, "check": start_check}[args.action](args) or 0

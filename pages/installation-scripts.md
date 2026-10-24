@@ -6,7 +6,7 @@ language_name: English
 translation_key: bmforge-installation-scripts
 ---
 
-Every project provides executable `scripts/install.sh`, `scripts/upgrade.sh`, and `scripts/uninstall.sh`. Establish these entry points during project setup and implement their project-specific work as the application takes shape.
+Every project provides executable `scripts/install.sh`, `scripts/upgrade.sh`, and `scripts/uninstall.sh`. The Codex greenfield bootstrap already copies the existing templates plus `scripts/install.py` and `scripts/new-release.sh`; deployment is deliberately disabled (`DEPLOYMENT_READY = False`) until the app's installation contract is implemented. For manual projects, establish these entry points during setup.
 
 ## Define the Lifecycle
 

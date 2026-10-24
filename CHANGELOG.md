@@ -9,6 +9,18 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-24 @ 17:19
+
+This release is named for the element **Scandium (Sc)**. Small additions of scandium can make aluminium alloys stronger and lighter for aerospace applications.
+
+### Added
+
+- Bootstrap an executable project-specific `scripts/new-release.sh` by adapting the existing BMForge release template without changing its Git release workflow.
+- Create its prerequisites from standard templates: version constants, changelog, CMDB checker and executable, deployment-disabled lifecycle scripts.
+- Require a canonical application `--name`, refuse pre-existing or symlinked targets, and keep release-template updates notification-only.
+- Add bootstrap tests for permissions, Bash syntax, exact template adaptation, metadata validity and read-only update checks.
+
+
 ## [0.8.0] - 2026-10-24 @ 15:10
 
 This release is named for the element **Calcium (Ca)**. Known for it's presence in teeth and bones, it's also required to make your muscles move, to make your heart beat.

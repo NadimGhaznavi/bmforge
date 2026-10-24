@@ -48,10 +48,14 @@ class SkillBootstrapTests(unittest.TestCase):
         manager = self.source / "skills/bmforge-new-project/scripts/manage.py"
         manager.parent.mkdir(parents=True)
         manager.write_bytes(MANAGER.read_bytes())
-        for common in (*module.COMMON, module.HEALTH):
+        for common in (*module.COMMON, module.HEALTH, *module.RELEASE_GUIDES):
             path = self.source / common
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(f"# {path.name}\n")
+        for original in module.RELEASE_TEMPLATES.values():
+            path = self.source / original
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes((ROOT / original).read_bytes())
         for name, (spec, references) in module.SKILLS.items():
             if spec:
                 path = self.source / spec
@@ -73,8 +77,9 @@ class SkillBootstrapTests(unittest.TestCase):
         git(self.source, "commit", "-qm", "Update source")
 
     def run_manager(self, action, *more):
+        identity = ("--name", "AcmeApp", "--subtype", "Inventory") if action == "init" else ()
         return command("python3", MANAGER, action, "--project", self.project,
-                       "--source", self.source, *more)
+                       "--source", self.source, *identity, *more)
 
     def bootstrap(self, skills="bmforge-http,bmforge-db-server"):
         result = self.run_manager("init", "--components", skills)
@@ -225,6 +230,89 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("Unknown component", result.stderr)
         self.assertFalse((self.project / ".agents").exists())
+
+    def test_bootstrap_installs_configured_release_tooling(self):
+        result = self.bootstrap("")
+        self.assertIn("scripts/new-release.sh", result.stdout)
+        release = self.project / "scripts/new-release.sh"
+        script = release.read_text()
+        self.assertTrue(release.stat().st_mode & 0o111)
+        self.assertIn('readonly project_name="AcmeApp"', script)
+        self.assertIn('readonly version_file="acmeapp/constants/DAcmeApp.py"', script)
+        self.assertNotIn("__PROJECT_", script)
+        for name in ("install.sh", "upgrade.sh", "uninstall.sh"):
+            file = self.project / "scripts" / name
+            self.assertTrue(file.stat().st_mode & 0o111, name)
+            self.assertEqual(command("bash", "-n", file).returncode, 0, name)
+        for name in ("install.py", "check-cmdb.py"):
+            self.assertTrue((self.project / "scripts" / name).is_file())
+        changelog = self.project / "CHANGELOG.md"
+        self.assertEqual(changelog.read_text(), (ROOT / "templates/project/CHANGELOG.md").read_text())
+        constants = self.project / "acmeapp/constants/DAcmeApp.py"
+        self.assertTrue(constants.is_file())
+        self.assertIn("class DAcmeApp:", constants.read_text())
+        self.assertIn('CMDB_SUBTYPE: Final[str] = "Inventory"', constants.read_text())
+        self.assertNotIn("__PROJECT_", constants.read_text())
+        self.assertEqual(command("bash", "-n", release).returncode, 0)
+        help_result = command("bash", release, "--help")
+        self.assertEqual(help_result.returncode, 0, help_result.stderr)
+        self.assertIn("Likely next version: 0.0.1", help_result.stdout)
+        validate = command("python3", "-B", self.project / "scripts/check-cmdb.py",
+                           "--name", "AcmeApp", "acmeapp/constants/DAcmeApp.py",
+                           cwd=self.project)
+        self.assertEqual(validate.returncode, 0, validate.stderr)
+        self.assertTrue(git(self.project, "status", "--porcelain").startswith("??"))
+
+    def test_release_scripts_preserve_upstream_logic(self):
+        self.bootstrap("")
+        expected = (ROOT / "templates/project/scripts/new-release.sh").read_text()
+        actual = (self.project / "scripts/new-release.sh").read_text()
+        self.assertEqual(actual, expected.replace("__PROJECT_NAME__", "AcmeApp")
+                         .replace("__PROJECT_SLUG__", "acmeapp"))
+        self.assertIn("git push --atomic", actual)
+        self.assertIn("Create annotated tag", actual)
+
+    def test_refuses_existing_release_file_without_writing_skills(self):
+        (self.project / "CHANGELOG.md").write_text("Owner's changelog\n")
+        result = self.run_manager("init")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("refusing overwrite: CHANGELOG.md", result.stderr)
+        self.assertEqual((self.project / "CHANGELOG.md").read_text(), "Owner's changelog\n")
+        self.assertFalse((self.project / ".agents").exists())
+        self.assertFalse((self.project / "scripts").exists())
+
+    def test_refuses_symlinked_release_script_parent(self):
+        sibling = self.project.parent / "foreign-scripts"
+        sibling.mkdir()
+        (self.project / "scripts").symlink_to(sibling, target_is_directory=True)
+        result = self.run_manager("init")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Unsafe existing parent", result.stderr)
+        self.assertFalse((self.project / ".agents").exists())
+        self.assertEqual(list(sibling.iterdir()), [])
+
+    def test_invalid_project_name_and_placeholder_subtype(self):
+        for options, message in (
+            (("--name", "Bad-Name"), "canonical Python class name"),
+            (("--subtype", "__PROJECT_SUBTYPE__"), "--subtype"),
+        ):
+            result = self.run_manager("init", *options)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn(message, result.stderr)
+            self.assertFalse((self.project / ".agents").exists())
+
+    def test_new_release_template_update_is_notice_only(self):
+        self.bootstrap("")
+        release = self.project / "scripts/new-release.sh"
+        before = release.read_bytes()
+        new = self.source / "templates/project/scripts/new-release.sh"
+        new.write_bytes(new.read_bytes() + b"\n# Updated upstream release template\n")
+        self.commit_source()
+        result = self.run_manager("check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-project", result.stdout)
+        self.assertIn("No updates were applied", result.stdout)
+        self.assertEqual(before, release.read_bytes())
 
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
