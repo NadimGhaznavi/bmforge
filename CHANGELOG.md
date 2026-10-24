@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Potassium (K)**. Potassium is essential for nerve signals and muscle function, including keeping your heart beating normally.
+
 ### Added
 
 - Add a global `bmforge-new-project` Codex bootstrap skill and six project-local skills for architecture, HTTP, ZeroMQ, MariaDB, Git and display visualizations.
