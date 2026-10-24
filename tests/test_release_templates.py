@@ -209,6 +209,42 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(self.git('status', '--porcelain'), '')
         self.assertNotIn('refs/heads/feat/maint-0.1.1', self.git('ls-remote', 'origin'))
 
+    def test_optional_pyproject_version_advances_with_application_version(self):
+        self.write('pyproject.toml', (
+            '[build-system]\nrequires = ["setuptools"]\n'
+            '[project]\nname = "acmeapp"\nversion = "0.0.1" # preserve\n'
+            '[project.scripts]\nacmeapp = "acmeapp.cli:main"\n'
+        ))
+        self.commit('Declare packaged application version')
+        result = self.release('0.1.0', 'Package version sync')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        contents = (self.repo / 'pyproject.toml').read_text()
+        self.assertIn('version = "0.1.0" # preserve', contents)
+        self.assertIn('acmeapp = "acmeapp.cli:main"', contents)
+        self.assertEqual(self.git('show', 'main:pyproject.toml'), contents)
+        self.assertEqual(self.git('show', 'v0.1.0:pyproject.toml'), contents)
+        self.assertIn('VERSION: Final[str] = "0.1.0"', (self.repo / CONSTANTS).read_text())
+
+    def test_pyproject_version_drift_blocks_release_before_merges(self):
+        self.write('pyproject.toml', '[project]\nname = "acmeapp"\nversion = "2.3.4"\n')
+        self.commit('Add inconsistent package metadata')
+        self.assert_rejected(('0.1.0', 'Release'), 'Package version')
+        self.assertEqual(self.git('show', 'HEAD:pyproject.toml'),
+                         (self.repo / 'pyproject.toml').read_text())
+
+    def test_dynamic_pyproject_version_is_not_silently_ignored(self):
+        self.write('pyproject.toml', '[project]\nname = "acmeapp"\ndynamic = ["version"]\n')
+        self.commit('Use unsupported dynamic version')
+        self.assert_rejected(('0.1.0', 'Release'), 'must define exactly one literal version')
+
+    def test_tool_only_pyproject_does_not_add_package_metadata(self):
+        self.write('pyproject.toml', '[tool.ruff]\nline-length = 100\n')
+        self.commit('Configure an unrelated build tool')
+        result = self.release('0.1.0', 'Tool-only metadata')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((self.repo / 'pyproject.toml').read_text(),
+                         '[tool.ruff]\nline-length = 100\n')
+
     def test_prerelease_and_explicit_next_branch(self):
         result = self.release('0.1.0-rc.1+build.01', '-Candidate', 'feat/next')
         self.assertEqual(result.returncode, 0, result.stderr)
