@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-24 @ 17:55
+
 This release is named for the element **Titanium (Ti)**. Titanium combines high strength with low density and excellent corrosion resistance, making it valuable in aircraft and implants.
 
 
