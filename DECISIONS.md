@@ -1,3 +1,12 @@
+---
+title: BMForge Design Decisions
+lang: en
+locale: en-US
+language_name: English
+translation_key: bmforge-decisions
+permalink: /decisions/
+---
+
 # BMForge decision record
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.

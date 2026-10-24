@@ -49,7 +49,7 @@ Each contract specifies behaviour and acceptance checks. Examples are **frozen i
 
 ## Traceability and improvement
 
-Implementing modules carry a small, statically readable component ID and specification version. The [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) defines how to identify a gap, improve a contract, add a regression case, and version the change. The [decision record](https://github.com/NadimGhaznavi/bmforge/blob/feature/component-blueprints/DECISIONS.md) captures choices and unresolved work.
+Implementing modules carry a small, statically readable component ID and specification version. The [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) defines how to identify a gap, improve a contract, add a regression case, and version the change. The [decision record]({{ site.baseurl }}{% link DECISIONS.md %}) captures choices and unresolved work.
 
 **Current state:** the three contracts and locally pinned bmgeoip examples are a first draft awaiting validation in DevLog. Native Codex skill packaging and CMDB scanning of component tags are **planned, not implemented**. Existing CMDB declarations for files, databases, and listeners remain separate from architectural component tracing.
 
