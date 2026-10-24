@@ -6,7 +6,7 @@ language_name: English
 translation_key: bmforge-release-setup
 ---
 
-**For greenfield Codex bootstrap projects, these files are already generated:** `scripts/new-release.sh`, the CMDB checker, version constants, `CHANGELOG.md` and disabled deployment lifecycle wrappers. Don't copy them again. Bootstrap never commits or publishes a release.
+**For greenfield Codex bootstrap projects, these files are already generated:** `scripts/new-release.sh`, the CMDB checker, version constants, `CHANGELOG.md` and disabled deployment lifecycle wrappers. Don't copy them again. Bootstrap never commits or publishes a release. The mandatory [Installation Lifecycle skill]({{ site.baseurl }}{% link pages/component-installation.md %}) requires the application developer to finish and test install, upgrade and uninstall, including a successful installed-version marker, before treating the app as release-ready. Merely having executable shell scripts does not establish readiness.
 
 For manually created projects, prepare the tooling once. Use [Creating a Release]({{ site.baseurl }}{% link pages/creating-a-release.md %}) for subsequent releases.
 

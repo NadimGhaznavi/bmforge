@@ -4,11 +4,11 @@ from typing import Final
 
 
 class DBMForge:
-    VERSION: Final[str] = "0.8.2"
+    VERSION: Final[str] = "0.9.0"
     CMDB_TYPE: Final[str] = "Application"
     CMDB_SUBTYPE: Final[str] = "SDLC Framework"
     CMDB_SUPPLIER: Final[str] = "Nadim-Daniel"
-    CMDB_CODENAME: Final[str] = "Scandium"
+    CMDB_CODENAME: Final[str] = "Titanium"
     CMDB_COMPONENTS = ()
     CMDB_DATABASES = ()
     CMDB_NETWORK: Final[tuple[tuple[str, str, int], ...]] = ()

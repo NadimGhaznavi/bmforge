@@ -182,6 +182,43 @@ class InstallationTests(unittest.TestCase):
                 operation.apply('install')
         self.assertFalse(self.destination.exists())
 
+    def test_minimal_library_install_always_records_version_and_identity(self):
+        """Reuse the existing file installer for a small metadata-only footprint."""
+        with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
+             patch.object(starter, 'DEPLOYMENT_READY', True), \
+             patch.object(starter, 'COPY_TREES', ()), \
+             patch.object(starter, 'COPY_FILES', ('bmforge/constants/DBMForge.py',)):
+            source = 'bmforge/constants/DBMForge.py'
+            operation = starter.Installation(self.checkout, destination=self.destination)
+            operation.apply('install', check=True)
+            self.assertFalse(self.destination.exists())
+            operation.apply('install')
+            self.assertEqual((self.destination / starter.VERSION_MARKER).read_text().strip(), self.version)
+            self.assertEqual((self.destination / source).read_bytes(), self.constants.read_bytes())
+            manifest = json.loads((self.destination / starter.MANIFEST).read_text())
+            self.assertEqual(manifest['files'], [source])
+            self.assertFalse((self.destination / 'scripts').exists())
+            self.assertFalse((self.destination / 'systemd').exists())
+            retained = self.destination / 'conf/preferences.json'
+            retained.parent.mkdir(parents=True)
+            retained.write_text('{"locale":"fr"}')
+            self.change_version()
+            operation = starter.Installation(self.checkout, destination=self.destination)
+            operation.apply('upgrade')
+            self.assertEqual((self.destination / starter.VERSION_MARKER).read_text().strip(), '9.9.9')
+            self.assertEqual(retained.read_text(), '{"locale":"fr"}')
+            operation.apply('uninstall')
+            self.assertFalse((self.destination / starter.VERSION_MARKER).exists())
+            self.assertFalse((self.destination / source).exists())
+            self.assertEqual(retained.read_text(), '{"locale":"fr"}')
+            manifest = json.loads((self.destination / starter.MANIFEST).read_text())
+            self.assertTrue(manifest['removed'])
+            self.assertEqual(manifest['files'], [])
+
+    def test_starter_declares_installation_component_marker(self):
+        self.assertEqual(starter.BMFORGE_COMPONENT,
+                         {"id": "bmforge.installation", "spec_version": "0.1.0"})
+
     def test_entry_point_help_works_from_another_directory(self):
         for name in ['install.sh', 'upgrade.sh', 'uninstall.sh']:
             result = subprocess.run([str(self.checkout / 'scripts' / name), '--help'],

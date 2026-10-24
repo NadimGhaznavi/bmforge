@@ -73,12 +73,22 @@ This file preserves design decisions that should not disappear into conversation
 
 **Pinned and notification-only.** Original release templates and guides are included inside `bmforge-project` so project-local update checks report template changes. Generated files are application-owned and are never automatically replaced. Already initialized projects retain their pinned content until an approved, reviewed upgrade.
 
+## 2026-10-24: use DevLog to close installation lifecycle gaps
+
+**Observed evidence.** The first BMForge skill consumer, DevLog, reuses the canonical DbMgr and Localizer unchanged and follows the approved UI/ZeroMQ/DAL contracts. Its deployment required extra application-specific work: a client-only `install.sh -server HOST`, a separate `install-server.sh`, a saved `conf/installation.json` role, and role-preserving upgrades. The pinned GitHub revision has **no `uninstall.sh`**. This demonstrates a missing *installation completion requirement*, not a reason to transplant DevLog's deployment helper as a mandatory library.
+
+**Fourth greenfield baseline.** Install `bmforge-installation` alongside project, constants and localization. The new contract requires all three lifecycle operations to be implemented and tested after actual application requirements are known. Bootstrap still creates **inert** installer scripts, never touches an installed host, and never triggers release publication.
+
+**Minimal and split roles.** Every successful installation, including a client or custom library, owns `D<Name>.BASE_DIR` and records a last-successful `.deployment-version`, a readable CMDB constants file and a managed-file ownership record. Adapt the existing BMForge `install.py` for source-only or metadata-minimal distribution. Optional separate `install-server.sh` and client/server role-aware deployment are only for applications whose requirements demand them. Client upgrades never silently acquire server dependencies or services; uninstall must be implemented for every supported role. Pin DevLog source as reference evidence, not a runtime dependency, and do not change DevLog.
+
+**Version and failure integrity.** Where a package also declares a `pyproject.toml` version, validate that it matches `D<Name>.VERSION`; only advance installed-version markers after verification. A release preflight that merely checks scripts are executable does not certify deployment readiness. Keep BMForge's read-only skill update mechanism and original release workflow unchanged.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.
 - Implement CMDB-side polling of application health endpoints and simple red/green reporting; BMForge defines the application contract only.
 - Add optional static CMDB component discovery and comparison reporting. Do not conflate architectural component metadata with `CMDB_COMPONENTS` filesystem backup declarations.
-- Validate the three contracts through DevLog, then publish immutable specification revisions and improve only the gaps the implementation exposes.
+- Continue using real application implementations to validate component and lifecycle contracts, and publish immutable specification revisions after validation.
 
 ## Changing a decision
 
