@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Silicon (Si)**. Silicon is the backbone of modern computer chips and is the second most abundant element in Earth's crust.
+
 ### Added
 
 - Establish the lean, fail-fast engineering contract and specification traceability policy for component-owning modules.
