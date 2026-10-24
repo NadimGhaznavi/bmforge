@@ -45,6 +45,8 @@ CMDB trims the four optional metadata strings. Missing or invalid optional value
 
 ## Declare Persistent Data
 
+`CMDB_COMPONENTS` identifies persistent filesystem data for CMDB inventory and backups. It is **not** the architectural component-to-specification metadata described in [specification traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
+
 Use empty tuples when the project has no filesystem data components or databases. Otherwise declare literal `(name, value)` pairs, as in MyCount:
 
 ```python
