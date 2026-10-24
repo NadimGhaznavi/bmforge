@@ -23,4 +23,6 @@ BMForge is a **standalone engineering specification repository**, not a runtime 
 - When improving BMForge, distinguish implementation bugs from contract gaps. Update acceptance checks and specification versions intentionally; record policy-level decisions in `DECISIONS.md`.
 - Ask before materially expanding an application's scope. This project is not a licence to build unrequested infrastructure.
 
+For Git publishing or commits, read `pages/component-git.md` and copy `components/templates/git/Git.py` into the application's own namespace. Use only its approved modules. The frozen Snake Web `GitPublisher.py` is a source reference, not a runtime dependency. Do not invent release automation, switch Git libraries, or alter the prescribed commit commands.
+
 For current status and unresolved work, read `DECISIONS.md`. Skills and CMDB component scanning are planned, not yet present.

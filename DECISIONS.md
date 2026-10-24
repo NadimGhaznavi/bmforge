@@ -31,6 +31,10 @@ This file preserves design decisions that should not disappear into conversation
 
 **Technology decisions.** Every component's specification defines the complete approved Python module inventory for its reusable infrastructure, with roles and local frozen examples. A consuming application's business activities are not covered by a component's module list. Codex must not add a new infrastructure package, switch to Django or another server, replace PyZMQ/PyMySQL, or change architecture merely to satisfy a task. If a required capability is missing, stop and obtain user approval, then change the specification or add another component before coding. Future plotting, mapping, GeoIP-client, and logging patterns are separate candidate components, not hidden dependencies of HTTP/ZeroMQ/DB Server. The original three draft contracts are advanced to `0.3.0`.
 
+## 2026-10-24: Git component
+
+**Scope.** A separate Git component supports exactly two operations: `Publish` (approved generated files in a dedicated checkout, based on the frozen Snake Web `GitPublisher`) and `Commit` (`git add . -v`, `git commit -m <message>`, `git push` from the caller's repository root). Its standalone template and integration tests are versioned in BMForge. The implementation uses Python standard-library modules plus the Git CLI, not GitPython. Publishing checks and retries are deliberate features of the proven publisher; ordinary commit has no hidden fetch, merge or recovery behaviour. No Git server or monitor endpoint is required. Spec: `pages/component-git.md` (draft 0.1.0).
+
 ## Work not yet implemented
 
 - Package component and project workflows as native Codex skills. Keep one authoritative contract per component and include all required local references.
