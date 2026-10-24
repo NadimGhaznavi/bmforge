@@ -26,7 +26,7 @@ BMForge is a **standalone specification and reference-code repository**, not a s
 
 - [HTTP Display Server]({{ site.baseurl }}{% link pages/component-http.md %})
 - [ZeroMQ Request/Reply Server]({{ site.baseurl }}{% link pages/component-zmq.md %})
-- [MariaDB Data Access]({{ site.baseurl }}{% link pages/component-database.md %})
+- [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %})
 
 ## Reference provenance
 

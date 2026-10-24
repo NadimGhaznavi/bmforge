@@ -45,7 +45,7 @@ Each contract specifies behaviour and acceptance checks. Examples are **frozen i
 | --- | --- | --- |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
-| MariaDB access | `bmforge.mariadb-access` | [Database]({{ site.baseurl }}{% link pages/component-database.md %}) |
+| DB Server | `bmforge.db-server` | [Specification]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 
 ## Traceability and improvement
 

@@ -16,6 +16,7 @@ permalink: /CHANGELOG/
 
 ### Changed
 
+- Name the database component `db-server` while retaining its MariaDB implementation contract.
 - Reorganize the website for task-first Codex navigation and mark the initial HTTP, ZeroMQ, and MariaDB contracts as draft version 0.1.0.
 
 ## [0.3.0] - 2026-10-21 @ 03:47

@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = {
     "http": "bmforge.http-server",
     "zmq": "bmforge.zmq-server",
-    "database": "bmforge.mariadb-access",
+    "db-server": "bmforge.db-server",
 }
 
 

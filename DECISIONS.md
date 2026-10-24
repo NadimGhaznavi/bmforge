@@ -21,7 +21,7 @@ This file preserves design decisions that should not disappear into conversation
 
 **Traceability.** Component-owning modules declare a literal `BMFORGE_COMPONENT` with stable ID and specification version. Published specification versions must remain retrievable. A future CMDB source scanner can report application/spec relationships and outdated versions; a version marker does not prove compliance. See `pages/specification-lifecycle.md`.
 
-**Current scope.** HTTP, ZeroMQ REQ/REP, and MariaDB contracts are draft `0.1.0` specifications with locally pinned bmgeoip examples. DevLog will test whether the contracts are sufficient.
+**Current scope.** HTTP, ZeroMQ REQ/REP, and DB Server (MariaDB-backed) contracts are draft `0.1.0` specifications with locally pinned bmgeoip examples. DevLog will test whether the contracts are sufficient.
 
 ## Work not yet implemented
 

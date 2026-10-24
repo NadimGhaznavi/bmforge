@@ -1,15 +1,15 @@
 ---
-title: MariaDB Data Access Component
+title: DB Server Component
 lang: en
 locale: en-US
 language_name: English
-component_id: "bmforge.mariadb-access"
+component_id: "bmforge.db-server"
 spec_version: "0.1.0"
 spec_status: "draft"
-translation_key: bmforge-component-database
+translation_key: bmforge-component-db-server
 ---
 
-# MariaDB Data Access
+# DB Server
 
 **Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
 
@@ -17,7 +17,7 @@ This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/e
 
 ## Intent and scope
 
-Provide a minimal application-owned MariaDB connection and transaction interface using PyMySQL. Separate connection/SQL execution mechanics from application schema and queries. Do not introduce an ORM, global connection pool, migration framework or remote service without a concrete requirement.
+Provide a minimal application-owned database service layer backed by MariaDB using PyMySQL. This is application-side data access, not a managed MariaDB daemon. Separate connection/SQL execution mechanics from application schema and queries. Do not introduce an ORM, global connection pool, migration framework or remote service without a concrete requirement.
 
 ## Reference snapshot
 
