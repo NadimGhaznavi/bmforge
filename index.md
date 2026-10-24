@@ -46,6 +46,15 @@ Projects reference BMForge from their `AGENTS.md`. Project-specific instructions
 
 ---
 
+## Components
+
+- [Component Blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %})
+  - [HTTP Display Server]({{ site.baseurl }}{% link pages/component-http.md %})
+  - [ZeroMQ Request/Reply Server]({{ site.baseurl }}{% link pages/component-zmq.md %})
+  - [MariaDB Data Access]({{ site.baseurl }}{% link pages/component-database.md %})
+
+---
+
 ## Using BMForge
 
 [Install, Upgrade, and Uninstall]({{ site.baseurl }}{% link pages/installing-bmforge.md %})
