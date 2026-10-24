@@ -9,6 +9,9 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Titanium (Ti)**. Titanium combines high strength with low density and excellent corrosion resistance, making it valuable in aircraft and implants.
+
+
 ### Added
 
 - Promote install/upgrade/uninstall completion to a **fourth mandatory greenfield skill** (`bmforge-installation`, draft spec 0.1.0), while keeping bootstrap itself deployment-disabled.
