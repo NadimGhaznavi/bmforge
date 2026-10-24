@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Argon (Ar)**. Argon takes up nearly 1% of the air we breathe and is used to shield welds from unwanted chemical reactions.
+
 ### Added
 
 - Document the USDP-inspired Activity / Interface / Entity classification and package responsibility rules.
