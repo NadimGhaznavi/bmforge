@@ -19,7 +19,7 @@ translation_key: bmforge-engineering-contract
 5. **Handle real distributed failures.** For required remote operations, use the necessary timeout, acknowledgement, and error reporting. Recovery and retries must be explicit, bounded, and justified by the operation's semantics, not added reflexively.
 6. **Catch exceptions only to act.** Handle a known external error, release owned resources, add useful context, or perform specified recovery. Otherwise let it propagate. Do not blanket-catch exceptions, silently swallow errors, or return fake defaults.
 7. **Test contracts, not speculation.** Verify normal behaviour, named acceptance checks, meaningful trust-boundary failures, and required startup/shutdown conditions. Keep tests proportional to the component.
-8. **Preserve approved runtime choices.** Component module inventories are binding. Do not replace or add infrastructure libraries, drivers or frameworks to solve a task without user approval and an updated component specification. Configure the known pattern rather than re-architecting it.
+8. **Preserve approved runtime choices.** Component module inventories are binding. [Display visualization choices]({{ site.baseurl }}{% link pages/component-visualization.md %}) are likewise fixed by actual chart, map or graph requirements, not by Codex preferences. Do not replace or add infrastructure libraries, drivers or frameworks to solve a task without user approval and an updated component specification. Configure the known pattern rather than re-architecting it.
 
 ## What failure should look like
 
