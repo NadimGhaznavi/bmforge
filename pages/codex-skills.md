@@ -38,7 +38,7 @@ python3 ~/.agents/skills/bmforge-new-project/scripts/manage.py init \
     --components bmforge-http,bmforge-db-server
 ```
 
-Do **not** treat the example name or component choice as defaults. Required `--name` is a Python class name (e.g. `SnakeLab`), never a guessed repository slug; optional `--subtype` sets the CMDB subtype, default `Application`. Leaving `--components` out installs the three **baseline standards**: `bmforge-project`, `bmforge-constants`, and `bmforge-localization`. They add instructions, English message catalogue examples and pinned templates, but generate no application code. Existing `AGENTS.md` or `.agents/` files are never overwritten.
+Do **not** treat the example name or component choice as defaults. Required `--name` is a Python class name (e.g. `SnakeLab`), never a guessed repository slug; optional `--subtype` sets the CMDB subtype, default `Application`. Leaving `--components` out installs the four **baseline standards**: `bmforge-project`, `bmforge-constants`, `bmforge-localization` and `bmforge-installation`. They add instructions, English message catalogue examples and pinned templates, but generate no application code. Existing `AGENTS.md` or `.agents/` files are never overwritten.
 
 The repository then has:
 
@@ -70,6 +70,10 @@ scripts/
       assets/Localizer.py
       assets/DText.py
       assets/en.json
+    bmforge-installation/
+      SKILL.md
+      references/specification.md
+      references/source/devlog/
     bmforge-http/
       SKILL.md
       references/
@@ -79,7 +83,7 @@ scripts/
       assets/DbMgr.py
 ```
 
-Each installed component's source commit, spec version and content fingerprint are recorded in `lock.json`. The original release templates are included in the pinned `bmforge-project` skill, so changes upstream are **reported as available**, never applied to generated project-owned release files. Components are available locally even if BMForge is later offline. There are **no runtime imports from BMForge**, and no ports, databases, application features or running services are created by installing skills. Release files are prepared **but never executed**. Configure the app's deployment, Git origin and main/dev/feature branches, and commit the project before publishing a release. See [Release Setup]({{ site.baseurl }}{% link pages/release-setup.md %}).
+Each installed component's source commit, spec version and content fingerprint are recorded in `lock.json`. The original release templates are included in the pinned `bmforge-project` skill, so changes upstream are **reported as available**, never applied to generated project-owned release files. Components are available locally even if BMForge is later offline. There are **no runtime imports from BMForge**, and no ports, databases, application features or running services are created by installing skills. Release files are prepared **but never executed**. Once the application exists, the baseline [Installation Lifecycle skill]({{ site.baseurl }}{% link pages/component-installation.md %}) requires Codex to complete and test all three installation operations before the first release. Every successful installation records its version under the application-owned `/opt/prod` directory, even when installing only a custom library or CLI. Configure the app's deployment, Git origin and main/dev/feature branches, and commit the project before publishing a release. See [Release Setup]({{ site.baseurl }}{% link pages/release-setup.md %}).
 
 ## Available skills
 
@@ -88,6 +92,7 @@ Each installed component's source commit, spec version and content fingerprint a
 | `bmforge-project` | Engineering policy; Activity / Interface / Entity classification (always installed) |
 | `bmforge-constants` | Typed, domain-grouped constants; stable machine identifiers (always installed) |
 | `bmforge-localization` | Request-scoped locale selection and English source catalogue (always installed) |
+| `bmforge-installation` | Install/upgrade/uninstall completion, versioned `/opt/prod` identity and optional split client/server roles (always installed) |
 | `bmforge-http` | Standard-library HTTP display server and optional Jinja2 |
 | `bmforge-zmq` | PyZMQ REQ/REP server and message dispatch contract |
 | `bmforge-db-server` | Unchanged canonical MariaDB `DbMgr.py` plus domain `*Db` interfaces |

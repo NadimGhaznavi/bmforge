@@ -40,13 +40,13 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
 | Making an application monitorable | [Application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}) |
-| Installing or upgrading | [Installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
+| Installing, upgrading or uninstalling | [Installation Lifecycle contract]({{ site.baseurl }}{% link pages/component-installation.md %}), [installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
 | Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
 
 ## Codex skill packaging
 
-Start from the [greenfield bootstrap skill]({{ site.baseurl }}{% link pages/codex-skills.md %}) to install the pinned **project, constants and localization** baseline, plus only the other components the user requests, into a new application's `.agents/skills/`. The project gets its own `AGENTS.md` and **read-only update notices**, never automatic upgrades or application generation.
+Start from the [greenfield bootstrap skill]({{ site.baseurl }}{% link pages/codex-skills.md %}) to install the pinned **project, constants, localization and installation** baseline, plus only the other components the user requests, into a new application's `.agents/skills/`. The project gets its own `AGENTS.md` and **read-only update notices**, never automatic upgrades or application generation.
 
 ## Component specifications
 
@@ -61,6 +61,7 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 | Display visualizations | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
 | Constants | `bmforge.constants` | [Domain-grouped fixed values]({{ site.baseurl }}{% link pages/component-constants.md %}) |
 | Application localization | `bmforge.localization` | [English source and multilingual runtime UI]({{ site.baseurl }}{% link pages/component-localization.md %}) |
+| Installation lifecycle | `bmforge.installation` | [Install/upgrade/uninstall, versioned footprint and client/server roles]({{ site.baseurl }}{% link pages/component-installation.md %}) |
 
 ## Traceability and improvement
 

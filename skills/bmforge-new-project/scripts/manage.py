@@ -35,6 +35,14 @@ SKILLS = {
         "components/reference/blog/_data/taxonomy_translations.yml",
         "components/reference/blog/es/index.md",
     )),
+    "bmforge-installation": ("pages/component-installation.md", (
+        "components/reference/devlog/scripts/deploy.py",
+        "components/reference/devlog/scripts/install.sh",
+        "components/reference/devlog/scripts/install-server.sh",
+        "components/reference/devlog/scripts/upgrade.sh",
+        "components/reference/devlog/tests/test_deployment.py",
+        "components/reference/devlog/docs/architecture.md",
+    )),
     "bmforge-http": ("pages/component-http.md", (
         "components/reference/bmgeoip/bmgeoip/server/BMGeoIPServer.py",
         "components/reference/bmgeoip/bmgeoip/server/BMGeoIPHandler.py",
@@ -65,7 +73,7 @@ SKILLS = {
         "components/reference/cmdb/cmdb/server/static/vendor/cytoscape-LICENSE",
     )),
 }
-BASE_SKILLS = ("bmforge-project", "bmforge-constants", "bmforge-localization")
+BASE_SKILLS = ("bmforge-project", "bmforge-constants", "bmforge-localization", "bmforge-installation")
 COMMON = (
     "pages/engineering-contract.md",
     "pages/classification.md",
@@ -89,6 +97,7 @@ RELEASE_TEMPLATES = {
     "CHANGELOG.md": "templates/project/CHANGELOG.md",
 }
 RELEASE_GUIDES = ("pages/release-setup.md", "pages/creating-a-release.md")
+INSTALLATION_GUIDES = ("pages/installation-scripts.md", "pages/cmdb-compliance.md")
 LOCK = Path(".agents/bmforge/lock.json")
 MANAGER = Path(".agents/bmforge/manage.py")
 
@@ -153,6 +162,9 @@ def bundle(source, name):
         for destination, original in RELEASE_TEMPLATES.items():
             files["assets/release/" + destination] = original
         for guide in RELEASE_GUIDES:
+            files["references/" + Path(guide).name] = guide
+    if name == "bmforge-installation":
+        for guide in INSTALLATION_GUIDES:
             files["references/" + Path(guide).name] = guide
     if name in ("bmforge-http", "bmforge-zmq", "bmforge-db-server"):
         files["references/health-checks.md"] = HEALTH
@@ -244,10 +256,12 @@ updates**, reinstall skills, or replace approved technologies without explicit
 user authorization. Continue using the pinned skills unless instructed otherwise.
 
 Read `.agents/skills/bmforge-project/SKILL.md` for architecture. Every new app
-also follows the pinned `bmforge-constants` and `bmforge-localization` skills:
-centralize stable programmatic identifiers and prepare English localization keys
-from its first user-facing feature. Add real translations only when provided or
-requested, never by guessing. Invoke other component skills as needed.
+also follows the pinned `bmforge-constants`, `bmforge-localization` and
+`bmforge-installation` skills: centralize programmatic identifiers, prepare
+English localization keys from its first user-facing feature, and implement
+the installation lifecycle for the actual application before the first release.
+Add translations only when requested, never by guessing. Invoke other
+components as needed.
 Follow each selected skill's local
 `references/specification.md` and approved module inventory. Never invent another
 framework, database driver or plotting library as a shortcut.
@@ -255,9 +269,13 @@ framework, database driver or plotting library as a shortcut.
 Component selection and application-specific behaviour belong to this project's
 requirements. A pinned skill is an instruction bundle, not executable app code.
 
-Bootstrap provided `scripts/new-release.sh` with metadata, changelog and disabled
-installation stubs. Do not run the release tool, make branches, commit, tag, push,
-or deploy without explicit user authorization. Read the pinned project skill's
+Bootstrap provided `scripts/new-release.sh` with metadata, changelog and
+deployment-disabled install/upgrade/uninstall stubs. Complete and test these
+stubs through `bmforge-installation` once the application topology is known.
+Every successful installation must create the application-owned BASE_DIR and
+last-successful `.deployment-version`, even for a client or custom library.
+Do not run release or deployment tools, make branches, commit, tag or push
+without explicit user authorization. Read the pinned project skill's
 release-setup and creating-a-release references before release work.
 """
 

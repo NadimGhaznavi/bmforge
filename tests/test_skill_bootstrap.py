@@ -48,7 +48,8 @@ class SkillBootstrapTests(unittest.TestCase):
         manager = self.source / "skills/bmforge-new-project/scripts/manage.py"
         manager.parent.mkdir(parents=True)
         manager.write_bytes(MANAGER.read_bytes())
-        for common in (*module.COMMON, module.HEALTH, *module.RELEASE_GUIDES):
+        for common in (*module.COMMON, module.HEALTH, *module.RELEASE_GUIDES,
+                       *module.INSTALLATION_GUIDES):
             path = self.source / common
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(f"# {path.name}\n")
@@ -88,10 +89,11 @@ class SkillBootstrapTests(unittest.TestCase):
 
     def test_creates_pinned_local_skills_and_no_application(self):
         result = self.bootstrap()
-        self.assertIn("Installed 5 pinned", result.stdout)
+        self.assertIn("Installed 6 pinned", result.stdout)
         lock = json.loads((self.project / module.LOCK).read_text())
         self.assertEqual(set(lock["skills"]), {"bmforge-project", "bmforge-constants",
-                                               "bmforge-localization", "bmforge-http", "bmforge-db-server"})
+                                               "bmforge-localization", "bmforge-installation",
+                                               "bmforge-http", "bmforge-db-server"})
         self.assertEqual(len(lock["source_commit"]), 40)
         self.assertEqual(lock["skills"]["bmforge-http"]["source_commit"], lock["source_commit"])
         self.assertTrue((self.project / "AGENTS.md").is_file())
@@ -101,7 +103,7 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertFalse((self.project / "app").exists())
         self.assertIn("Do not apply", (self.project / "AGENTS.md").read_text())
 
-    def test_empty_component_selection_installs_architecture_only(self):
+    def test_empty_component_selection_installs_all_baseline_skills(self):
         self.bootstrap("")
         lock = json.loads((self.project / module.LOCK).read_text())
         self.assertEqual(set(lock["skills"]), set(module.BASE_SKILLS))
@@ -206,6 +208,10 @@ class SkillBootstrapTests(unittest.TestCase):
     def test_baseline_constants_and_localization_are_pinned(self):
         self.bootstrap("")
         root = self.project / ".agents/skills"
+        self.assertTrue((root / "bmforge-installation/SKILL.md").is_file())
+        self.assertTrue((root / "bmforge-installation/references/specification.md").is_file())
+        self.assertTrue((root / "bmforge-installation/references/installation-scripts.md").is_file())
+        self.assertTrue((root / "bmforge-installation/references/source/devlog/scripts/install-server.sh").is_file())
         self.assertTrue((root / "bmforge-constants/assets/DProject.py").is_file())
         self.assertTrue((root / "bmforge-localization/assets/Localizer.py").is_file())
         self.assertTrue((root / "bmforge-localization/assets/DText.py").is_file())
@@ -226,10 +232,11 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(local.read_bytes(), frozen)
 
     def test_default_skills_are_not_selectable_twice(self):
-        result = self.run_manager("init", "--components", "bmforge-localization")
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("Unknown component", result.stderr)
-        self.assertFalse((self.project / ".agents").exists())
+        for name in ("bmforge-localization", "bmforge-installation"):
+            result = self.run_manager("init", "--components", name)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("Unknown component", result.stderr)
+            self.assertFalse((self.project / ".agents").exists())
 
     def test_bootstrap_installs_configured_release_tooling(self):
         result = self.bootstrap("")
@@ -314,10 +321,23 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("No updates were applied", result.stdout)
         self.assertEqual(before, release.read_bytes())
 
+    def test_installation_policy_updates_are_notice_only(self):
+        self.bootstrap("")
+        spec = self.project / ".agents/skills/bmforge-installation/references/specification.md"
+        original = spec.read_bytes()
+        change = self.source / "pages/component-installation.md"
+        change.write_text(change.read_text() + "\nNew version of installation guidance\n")
+        self.commit_source()
+        result = self.run_manager("check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-installation", result.stdout)
+        self.assertIn("No updates were applied", result.stdout)
+        self.assertEqual(spec.read_bytes(), original)
+
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
         self.bootstrap(selection)
-        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 8)
+        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 9)
         self.assertEqual(self.run_manager("check").returncode, 0)
 
 

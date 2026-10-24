@@ -9,6 +9,18 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Added
+
+- Promote install/upgrade/uninstall completion to a **fourth mandatory greenfield skill** (`bmforge-installation`, draft spec 0.1.0), while keeping bootstrap itself deployment-disabled.
+- Specify a standard installed version/CMDB identity under `/opt/prod/<project>`, including custom libraries and client-only installations.
+- Specify optional client/server installation roles and role-preserving upgrades based on pinned DevLog examples; explicitly require a tested uninstall for every selected role.
+- Add a minimal metadata-only installation lifecycle test, pinned DevLog role examples, contract tests and read-only skill update regression coverage.
+
+### Changed
+
+- Add component provenance to the existing generic file-installer template without changing its deployment algorithm or the release script.
+
+
 ## [0.8.2] - 2026-10-24 @ 17:19
 
 This release is named for the element **Scandium (Sc)**. Small additions of scandium can make aluminium alloys stronger and lighter for aerospace applications.
