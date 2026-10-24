@@ -40,7 +40,7 @@ class ComponentBlueprintTests(unittest.TestCase):
         for name, approved in expected.items():
             body = (ROOT / f"pages/component-{name}.md").read_text()
             section = body.split("## Approved runtime modules\n", 1)[1].split("\n## ", 1)[0]
-            listed = re.findall(r"(?m)^\\| (?:Python stdlib|Third-party|Third-party submodule) \\| \`([^\`]+)\` \\|", section)
+            listed = re.findall(r"(?m)^\| (?:Python stdlib|Third-party|Third-party submodule) \| `([^`]+)` \|", section)
             self.assertEqual(listed, list(approved), name)
             self.assertIn("must pause and ask the user", section, name)
             self.assertIn("Application business logic", section, name)
