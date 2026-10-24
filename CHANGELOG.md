@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-24 @ 13:45
+
 This release is named for the element **Argon (Ar)**. Argon takes up nearly 1% of the air we breathe and is used to shield welds from unwanted chemical reactions.
 
 ### Added
