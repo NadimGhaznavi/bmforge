@@ -121,6 +121,14 @@ This file preserves design decisions that should not disappear into conversation
 
 **Distribution.** The policy lives in the engineering contract, the maintenance guide, BMForge's own agent instructions, the pinned project skill, and generated project `AGENTS.md`. Bundle the maintenance guide for offline use and report its revisions through existing approval-only pinned-skill checks. No new release automation or retroactive rewriting of released history is required.
 
+## 2026-10-25: dark GUI design standard for the HTTP component
+
+**Purpose.** New HTTP applications with human-facing HTML should start with a coherent dark interface inspired by BMDynIP's practical operational layout and readable panels, forms and tables. This is presentation guidance, not transport technology or a mandate for API-only projects to create a GUI.
+
+**Color choice.** Let the implementing AI select each application's dark palette. Prefer saturated primary hues and strong contrast, **avoid pastels**, and provide accessible status, focus, and responsive behavior. Do not require BMDynIP's exact colors or copy its business functionality.
+
+**Reference and traceability.** Pin the BMDynIP HTML/CSS snapshots at `2077300e7ee20de5328164115a277f353ed19579` into the project-local HTTP skill and advance `bmforge.http-server` to `0.4.0`. The rule applies to new implementations; no existing application is modified or migrated.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.
