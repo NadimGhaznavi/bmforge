@@ -143,6 +143,7 @@ This keeps the normal Codex session check offline, independent of GitHub access.
 Create the cache once, outside Codex:
 
 ```sh
+mkdir -p "$HOME/.cache"
 git clone --single-branch --branch main \
     https://github.com/NadimGhaznavi/bmforge.git \
     "$HOME/.cache/bmforge-upstream"
