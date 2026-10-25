@@ -15,6 +15,8 @@ translation_key: bmforge-home
 
 BMForge is an engineering contract for coding agents. It defines how applications are built, tested, released, and integrated with the local environment. It is **not a shared runtime library**: each application owns its code. Separate applications interact only through documented public APIs.
 
+BMForge is another fine product from the [Bear & Moose](https://osoyalce.com) brand.
+
 ## The engineering contract
 
 Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) before implementing anything.
