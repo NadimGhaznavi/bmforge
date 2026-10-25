@@ -18,7 +18,7 @@ permalink: /uk/pages/component-installation/
 
 **Кожен застосунок або повторно використовувана бібліотека BMForge має підтримувати встановлення, оновлення й видалення.** Це **базова навичка** для нових проєктів, незалежно від наявності HTTP-сервера, бази даних, служби systemd чи лише CLI-клієнта або бібліотеки. Глобальне початкове налаштування додає *наявні* шаблони інсталятора BMForge із вимкненим розгортанням; Codex має завершити справжній життєвий цикл **після** визначення артефактів і потрібної топології встановлення, але **до** оголошення готовності до випуску.
 
-Супутні контракти: [Скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) та [Відповідність CMDB]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}). Публікація Git-тегів через `new-release.sh` не означає встановлення випуску.
+Супутні контракти: [Скрипти встановлення]({{ site.baseurl }}{% link uk/pages/installation-scripts.md %}) та [Відповідність CMDB]({{ site.baseurl }}{% link uk/pages/cmdb-compliance.md %}). Публікація Git-тегів через `new-release.sh` не означає встановлення випуску.
 
 ## Схвалена технологія реалізації
 
@@ -98,4 +98,4 @@ permalink: /uk/pages/component-installation/
 
 ---
 
-[Скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) · [Навички Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) · [Повернутися до BMForge]({{ site.baseurl }}{% link uk/index.md %})
+[Скрипти встановлення]({{ site.baseurl }}{% link uk/pages/installation-scripts.md %}) · [Навички Codex]({{ site.baseurl }}{% link uk/pages/codex-skills.md %}) · [Повернутися до BMForge]({{ site.baseurl }}{% link uk/index.md %})
