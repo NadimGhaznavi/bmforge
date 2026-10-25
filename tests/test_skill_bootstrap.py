@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -15,8 +16,8 @@ module = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(module)
 
 
-def command(*args, cwd=None):
-    return subprocess.run([str(value) for value in args], cwd=cwd,
+def command(*args, cwd=None, env=None):
+    return subprocess.run([str(value) for value in args], cwd=cwd, env=env,
                           capture_output=True, text=True)
 
 
@@ -36,7 +37,7 @@ class SkillBootstrapTests(unittest.TestCase):
         self.project = root / "new-app"
         self.source.mkdir()
         self.project.mkdir()
-        git(self.source, "init", "-q")
+        git(self.source, "init", "-q", "-b", "main")
         git(self.source, "config", "user.name", "BMForge Test")
         git(self.source, "config", "user.email", "test@example.invalid")
         git(self.project, "init", "-q")
@@ -125,6 +126,54 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(check.returncode, 0, check.stderr)
         self.assertIn("All pinned BMForge skills are current", check.stdout)
         self.assertEqual(before, [(p.read_bytes(), p.stat().st_mtime_ns) for p in paths])
+
+    def test_check_uses_shared_cache_without_remote_access(self):
+        self.bootstrap("")
+        lock_file = self.project / module.LOCK
+        lock = json.loads(lock_file.read_text())
+        lock["repository"] = module.SOURCE_URL
+        lock_file.write_text(json.dumps(lock))
+        cache_home = self.project.parent / "cache-home"
+        cache = cache_home / ".cache/bmforge-upstream"
+        cache.parent.mkdir(parents=True)
+        shutil.copytree(self.source, cache)
+        env = os.environ.copy()
+        env["HOME"] = str(cache_home)
+        env.pop("BMFORGE_SOURCE", None)
+        result = command("python3", MANAGER, "check", "--project", self.project,
+                         env=env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("LOCAL SOURCE", result.stdout)
+        self.assertIn("against the local source snapshot", result.stdout)
+
+    def test_check_with_remote_lock_and_no_cache_is_unavailable_offline(self):
+        self.bootstrap("")
+        lock_file = self.project / module.LOCK
+        lock = json.loads(lock_file.read_text())
+        lock["repository"] = module.SOURCE_URL
+        lock_file.write_text(json.dumps(lock))
+        env = os.environ.copy()
+        env["HOME"] = str(self.project.parent / "missing-home")
+        env.pop("BMFORGE_SOURCE", None)
+        result = command("python3", MANAGER, "check", "--project", self.project,
+                         env=env)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Local BMForge source unavailable", result.stderr)
+        self.assertNotIn("Git clone", result.stderr)
+
+    def test_check_rejects_dirty_or_non_main_source(self):
+        self.bootstrap("")
+        skill = self.source / "skills/bmforge-http/SKILL.md"
+        skill.write_text(skill.read_text() + "\nUncommitted source edit\n")
+        dirty = self.run_manager("check")
+        self.assertEqual(dirty.returncode, 2)
+        self.assertIn("source has local changes", dirty.stderr)
+        self.assertNotIn("UPDATE AVAILABLE", dirty.stdout)
+        git(self.source, "restore", "skills/bmforge-http/SKILL.md")
+        git(self.source, "switch", "-q", "-c", "feature")
+        branch = self.run_manager("check")
+        self.assertEqual(branch.returncode, 2)
+        self.assertIn("source must be on main", branch.stderr)
 
     def test_changed_upstream_is_reported_never_applied(self):
         self.bootstrap()
