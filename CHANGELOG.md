@@ -16,6 +16,7 @@ permalink: /CHANGELOG/
 
 ### Added
 
+- Introduce optional GIF Animation component (draft `bmforge.gif-animation` 0.1.0) with a Pillow encoder template, source-pinned Snake Web example, Codex skill, bootstrap integration and animation round-trip checks.
 - Add a safe, read-only `setup-branches --dry-run` plus user-approved local `setup-branches` for the first `dev` and `feat/maint-0.1.0` branches after the project's initial commit; never commit or push automatically.
 - Add bootstrap branch-safety regression tests and update the Codex runbook.
 

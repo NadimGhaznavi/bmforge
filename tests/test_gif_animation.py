@@ -1,6 +1,8 @@
 """Behavior and contract checks for BMForge's application-owned GIF template."""
 
 import ast
+from hashlib import sha1
+import re
 from io import BytesIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -38,6 +40,15 @@ class GifAnimationTests(unittest.TestCase):
                              [(255, 0, 0), (0, 255, 0), (0, 0, 255)])
             self.assertEqual([frame.disposal_method for frame in ImageSequence.Iterator(image)],
                              [2, 2, 2])
+
+    def test_many_75ms_frames_do_not_accumulate_rounding_drift(self):
+        animation = GIFAnimation(8, 6)
+        for index in range(20):
+            animation.add_frame(self.frame("red" if index % 2 else "blue"), duration_ms=75)
+        with Image.open(BytesIO(animation.to_bytes())) as image:
+            durations = [frame.info["duration"] for frame in ImageSequence.Iterator(image)]
+            self.assertEqual(durations, [80, 70] * 10)
+            self.assertEqual(sum(durations), 1500)
 
     def test_explicit_durations_with_final_pause(self):
         animation = GIFAnimation(8, 6, loop=False)
@@ -96,6 +107,19 @@ class GifAnimationTests(unittest.TestCase):
             with self.subTest(duration=duration), self.assertRaises(ValueError):
                 animation.add_frame(self.frame("red"), duration_ms=duration)
         self.assertEqual(animation._frames, [])
+
+    def test_frozen_reference_and_documentation_links(self):
+        relative = "snake-web-code/snakewebcode/activity/SimulationAnimation.py"
+        data = (ROOT / "components/reference" / relative).read_bytes()
+        object_id = sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest()
+        self.assertEqual(object_id, "8e4b702fd890e7be09224ea8164e9fff971668fb")
+        spec = (ROOT / "pages/component-gif-animation.md").read_text()
+        self.assertIn('component_id: "bmforge.gif-animation"', spec)
+        self.assertIn('spec_version: "0.1.0"', spec)
+        self.assertIn("Pillow 12.3.0", spec)
+        for source in (spec, (ROOT / "index.md").read_text()):
+            for target in re.findall(r"{%\s*link\s+([^\s%]+)\s*%}", source):
+                self.assertTrue((ROOT / target).is_file(), target)
 
     def test_template_dependencies_and_provenance(self):
         content = TEMPLATE.read_text()
