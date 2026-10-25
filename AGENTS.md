@@ -19,6 +19,11 @@ The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmfo
 9. For a running application, implement the on-demand checks in `pages/health-checks.md` using existing HTTP/ZeroMQ interfaces and the application's own DB layer. Never give CMDB direct MariaDB access.
 10. Run the component's acceptance checks in the destination project and report what actually passed, failed, or was not tested. A copied example is not a completed component.
 
+## Changelog discipline
+
+- **Every completed logical change must update `CHANGELOG.md`**, including small code fixes, tests, documentation, configuration, maintenance and refactoring. Record it under the single `## [Unreleased]` heading in the same task, before reporting completion or committing; never defer it until release time. Consolidate related file edits into one clear entry rather than listing individual files.
+- **Add or refresh `### Summary` routinely**, even when one meaningful feature, bug fix or operational improvement is the only unreleased change. Explain the outcome and why it matters in plain English. Keep one `### Summary` per unreleased or versioned section, ahead of `Added`/`Changed`/`Fixed` headings. Consult `pages/changelog-maintenance.md` before finishing a task.
+
 ## Engineering rules
 
 - Classify substantial classes explicitly: `activity/` orchestrates work, `interface/` owns external and domain data access, `entity/` carries data. Domain `*Db` classes compose with the unchanged `DbMgr`. Do not put SQL in activity or entity classes.
