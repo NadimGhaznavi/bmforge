@@ -66,7 +66,7 @@ class SkillBootstrapTests(unittest.TestCase):
                 path = self.source / original
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(f"# Frozen reference: {original}\n")
-        for original in (module.DB_TEMPLATE, module.GIT_TEMPLATE, module.CONSTANTS_TEMPLATE,
+        for original in (module.DB_TEMPLATE, module.GIT_TEMPLATE, module.GIF_TEMPLATE, module.CONSTANTS_TEMPLATE,
                          module.LOCALIZER_TEMPLATE, module.TEXT_TEMPLATE, module.EN_CATALOG):
             path = self.source / original
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -403,10 +403,26 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(git(self.project, "branch", "--list", "dev"), "")
         self.assertEqual(git(self.project, "branch", "--show-current"), "main")
 
+    def test_optional_gif_skill_is_pinned_and_template_updates_only_notify(self):
+        self.bootstrap("bmforge-gif-animation")
+        skill = self.project / ".agents/skills/bmforge-gif-animation"
+        self.assertTrue((skill / "references/specification.md").is_file())
+        self.assertTrue((skill / "assets/GIFAnimation.py").is_file())
+        self.assertTrue((skill / "references/source/snake-web-code/snakewebcode/activity/SimulationAnimation.py").is_file())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+        original = (skill / "assets/GIFAnimation.py").read_bytes()
+        path = self.source / module.GIF_TEMPLATE
+        path.write_text(path.read_text() + "\nUpdated GIF template.\n")
+        self.commit_source()
+        check = self.run_manager("check")
+        self.assertEqual(check.returncode, 0, check.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-gif-animation", check.stdout)
+        self.assertEqual((skill / "assets/GIFAnimation.py").read_bytes(), original)
+
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
         self.bootstrap(selection)
-        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 9)
+        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 10)
         self.assertEqual(self.run_manager("check").returncode, 0)
 
 
