@@ -80,3 +80,5 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 ---
 
 [Журнал змін (англійською)]({{ site.baseurl }}{% link CHANGELOG.md %}) · [Репозиторій BMForge](https://github.com/NadimGhaznavi/bmforge)
+
+
