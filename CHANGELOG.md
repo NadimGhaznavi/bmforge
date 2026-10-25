@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.11.1] - 2026-10-25 @ 11:05
+
 This release is named for the elemenbt **Rhodium (Rh)**.  Rhodium is prized in catalytic converters for helping reduce harmful vehicle emissions.
 
 ### Summary
