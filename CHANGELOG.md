@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the elemenbt **Rhodium (Rh)**.  Rhodium is prized in catalytic converters for helping reduce harmful vehicle emissions.
+
 ### Summary
 
 Changelog maintenance is now mandatory for every completed project change, and meaningful improvements get a concise summary as they happen. The policy travels with pinned BMForge skills and newly generated agent instructions rather than relying on release-time reminders.
