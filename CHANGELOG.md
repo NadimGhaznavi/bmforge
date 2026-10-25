@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-25 @ 05:51
+
 This release is named for the element **Germanium (Ge)**. Germanium helped power the earliest transistors before silicon became the dominant semiconductor.
 
 ### Summary
