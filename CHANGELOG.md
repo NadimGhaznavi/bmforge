@@ -9,6 +9,14 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Introduce a lightweight, read-only production RCA skill so Codex collects evidence remotely and reproduces and repairs defects on the development workstation.
+
+### Added
+
+- Add optional `bmforge-rca` to the pinned skill installer, with SSH log/database collection, a strict no-remote-changes rule, and bootstrap regression coverage.
+
 ## [0.11.1] - 2026-10-25 @ 11:05
 
 This release is named for the elemenbt **Rhodium (Rh)**.  Rhodium is prized in catalytic converters for helping reduce harmful vehicle emissions.
