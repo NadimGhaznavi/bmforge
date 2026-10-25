@@ -129,7 +129,7 @@ class SkillBootstrapTests(unittest.TestCase):
         reference = self.project / ".agents/skills/bmforge-project/references/changelog-maintenance.md"
         old_content = reference.read_bytes()
         upstream = self.source / "pages/changelog-maintenance.md"
-        upstream.write_text(upstream.read_text() + "\\nNew changelog guidance.\\n")
+        upstream.write_text(upstream.read_text() + "\nNew changelog guidance.\n")
         self.commit_source()
         result = self.run_manager("check")
         self.assertEqual(result.returncode, 0, result.stderr)
