@@ -64,7 +64,7 @@ HTTP / ZeroMQ / CLI boundary
 | `components/reference/mycount/mycount/interface/VisitDb.py` | Interface, предметний DAL | Містить SQL відвідувань і викликає переданий `DbMgr` |
 | `components/reference/mycount/mycount/entity/Visit.py` | Entity | Зберігає дані, що переміщуються між рівнями |
 
-Ці файли мають імпорти, специфічні для MyCount, і **не є готовими загальними модулями**. Поточний канонічний шаблон бази даних — `components/templates/db-server/interface/DbMgr.py`, описаний у [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}). Знімки показують межі відповідальності, а не вимогу копіювати MyCount.
+Ці файли мають імпорти, специфічні для MyCount, і **не є готовими загальними модулями**. Поточний канонічний шаблон бази даних — `components/templates/db-server/interface/DbMgr.py`, описаний у [DB Server]({{ site.baseurl }}{% link uk/pages/component-db-server.md %}). Знімки показують межі відповідальності, а не вимогу копіювати MyCount.
 
 ## Критерії приймання Codex
 
@@ -76,4 +76,4 @@ HTTP / ZeroMQ / CLI boundary
 
 ---
 
-[DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) · [Повернутися до BMForge]({{ site.baseurl }}{% link uk/index.md %})
+[DB Server]({{ site.baseurl }}{% link uk/pages/component-db-server.md %}) · [Повернутися до BMForge]({{ site.baseurl }}{% link uk/index.md %})
