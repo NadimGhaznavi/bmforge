@@ -83,6 +83,8 @@ scripts/
       assets/DbMgr.py
 ```
 
+Generated `AGENTS.md` and the pinned `bmforge-project` skill require a `CHANGELOG.md` entry for **every completed change**. The project skill includes an offline copy of [Changelog Maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}); meaningful improvements get a `### Summary` immediately, not only at release time. Existing projects adopt this stronger guidance only through an approved pinned-skill update.
+
 Each installed component's source commit, spec version and content fingerprint are recorded in `lock.json`. The original release templates are included in the pinned `bmforge-project` skill, so changes upstream are **reported as available**, never applied to generated project-owned release files. Components are available locally even if BMForge is later offline. There are **no runtime imports from BMForge**, and no ports, databases, application features or running services are created by installing skills. Release files are prepared **but never executed**. Once the application exists, the baseline [Installation Lifecycle skill]({{ site.baseurl }}{% link pages/component-installation.md %}) requires Codex to complete and test all three installation operations before the first release. Every successful installation records its version under the application-owned `/opt/prod` directory, even when installing only a custom library or CLI. Configure the app's deployment, Git origin and main/dev/feature branches, and commit the project before publishing a release. See [Release Setup]({{ site.baseurl }}{% link pages/release-setup.md %}).
 
 ## Available skills
