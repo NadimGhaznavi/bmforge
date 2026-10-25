@@ -24,6 +24,10 @@ The [greenfield skill installer](pages/codex-skills.md) lives under `skills/bmfo
 - **Every completed logical change must update `CHANGELOG.md`**, including small code fixes, tests, documentation, configuration, maintenance and refactoring. Record it under the single `## [Unreleased]` heading in the same task, before reporting completion or committing; never defer it until release time. Consolidate related file edits into one clear entry rather than listing individual files.
 - **Add or refresh `### Summary` routinely**, even when one meaningful feature, bug fix or operational improvement is the only unreleased change. Explain the outcome and why it matters in plain English. Keep one `### Summary` per unreleased or versioned section, ahead of `Added`/`Changed`/`Fixed` headings. Consult `pages/changelog-maintenance.md` before finishing a task.
 
+## HTTP GUI appearance
+
+For user-facing HTML, follow the HTTP component's `pages/component-http.md` design contract. Treat BMDynIP's pinned HTML/CSS as a **visual reference**: use dark surfaces, strong contrast and AI-chosen saturated primary accents, **not pastel colors**. Keep controls keyboard/mobile accessible. Do not copy its DNS features or create a GUI for an API-only service.
+
 ## Engineering rules
 
 - Classify substantial classes explicitly: `activity/` orchestrates work, `interface/` owns external and domain data access, `entity/` carries data. Domain `*Db` classes compose with the unchanged `DbMgr`. Do not put SQL in activity or entity classes.

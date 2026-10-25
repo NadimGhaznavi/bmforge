@@ -48,6 +48,8 @@ SKILLS = {
         "components/reference/bmgeoip/bmgeoip/server/BMGeoIPServer.py",
         "components/reference/bmgeoip/bmgeoip/server/BMGeoIPHandler.py",
         "components/reference/bmgeoip/bmgeoip/server/LookupHandler.py",
+        "components/reference/bmdynip/bmdynip/server/static/index.html",
+        "components/reference/bmdynip/bmdynip/server/static/style.css",
     )),
     "bmforge-zmq": ("pages/component-zmq.md", (
         "components/reference/bmgeoip/bmgeoip/zmq/ZMQServer.py",

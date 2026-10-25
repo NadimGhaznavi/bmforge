@@ -10,7 +10,7 @@ COMPONENTS = {
     "zmq": "bmforge.zmq-server",
     "db-server": "bmforge.db-server",
 }
-VERSIONS = {"http": "0.3.0", "zmq": "0.3.1", "db-server": "0.4.0"}
+VERSIONS = {"http": "0.4.0", "zmq": "0.3.1", "db-server": "0.4.0"}
 
 
 class ComponentBlueprintTests(unittest.TestCase):
@@ -47,6 +47,25 @@ class ComponentBlueprintTests(unittest.TestCase):
             self.assertIn("must pause and ask the user", section, name)
             self.assertIn("Application business logic", section, name)
             self.assertIn("## Reference snapshot", body)
+
+    def test_http_gui_dark_style_contract_and_bmdynip_references(self):
+        spec = (ROOT / "pages/component-http.md").read_text()
+        skill = (ROOT / "skills/bmforge-http/SKILL.md").read_text()
+        self.assertIn("## GUI design contract (human-facing HTML only)", spec)
+        for word in ("dark", "saturated", "pastels", "4.5:1", "3:1",
+                     "keyboard focus", "mobile", "API-only", "BMDynIP"):
+            self.assertIn(word, spec)
+        self.assertIn("spec version `0.4.0`", skill)
+        self.assertIn("no pastels", skill)
+        source = ROOT / "components/reference/bmdynip/bmdynip/server/static"
+        css, html = source / "style.css", source / "index.html"
+        self.assertTrue(css.is_file())
+        self.assertTrue(html.is_file())
+        self.assertIn("color-scheme: dark", css.read_text())
+        self.assertIn("--background:", css.read_text())
+        self.assertIn(".control-panel", css.read_text())
+        self.assertIn('class="masthead"', html.read_text())
+        self.assertIn('aria-live="polite"', html.read_text())
 
     def test_homepage_jekyll_links_resolve_locally(self):
         home = (ROOT / "index.md").read_text()

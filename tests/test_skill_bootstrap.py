@@ -137,6 +137,31 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("No updates were applied", result.stdout)
         self.assertEqual(reference.read_bytes(), old_content)
 
+    def test_http_design_references_are_pinned_with_selected_skill(self):
+        self.bootstrap("bmforge-http")
+        base = "bmdynip/bmdynip/server/static"
+        installed_root = self.project / ".agents/skills/bmforge-http"
+        for filename in ("index.html", "style.css"):
+            installed = installed_root / "references/source" / base / filename
+            upstream = self.source / "components/reference" / base / filename
+            self.assertTrue(installed.is_file())
+            self.assertEqual(installed.read_bytes(), upstream.read_bytes())
+        self.assertFalse((self.project / ".agents/skills/bmforge-visualization").exists())
+        self.assertIn("no pastels", (installed_root / "SKILL.md").read_text())
+
+    def test_http_design_reference_updates_only_notify(self):
+        self.bootstrap("bmforge-http")
+        name = "bmdynip/bmdynip/server/static/style.css"
+        installed = self.project / ".agents/skills/bmforge-http/references/source" / name
+        old = installed.read_bytes()
+        source = self.source / "components/reference" / name
+        source.write_text(source.read_text() + "\nNew design snapshot.\n")
+        self.commit_source()
+        result = self.run_manager("check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-http", result.stdout)
+        self.assertEqual(installed.read_bytes(), old)
+
     def test_empty_component_selection_installs_all_baseline_skills(self):
         self.bootstrap("")
         lock = json.loads((self.project / module.LOCK).read_text())
