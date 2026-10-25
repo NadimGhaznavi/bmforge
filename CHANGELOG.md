@@ -9,6 +9,24 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-25 @ 05:51
+
+This release is named for the element **Germanium (Ge)**. Germanium helped power the earliest transistors before silicon became the dominant semiconductor.
+
+### Summary
+
+BMForge skill update checks now work offline from a clean local `main` checkout. The check reports the cached revision, so `CURRENT` describes that snapshot rather than live GitHub freshness.
+
+### Changed
+
+- Use `~/.cache/bmforge-upstream` for `manage.py check`, with `BMFORGE_SOURCE` and `--source` overrides, without cloning or fetching; reject missing, dirty or non-`main` sources.
+- Keep installed-skill integrity checks independent of source availability, preserving `LOCALLY MODIFIED` warnings when the cache is unavailable.
+- Document cache creation, separate `git pull --ff-only` refreshes, local-source bootstrap and the `--source` workaround for older pinned managers; existing installations remain pinned until a user-approved upgrade.
+
+### Added
+
+- Add hermetic regression coverage for cached and unavailable offline checks, source validation, environment overrides and local modification reporting.
+
 ## [0.10.1] - 2026-10-25 @ 04:40
 
 This release is named for the element **Zinc (Zn)**. Zinc protects steel from rust in galvanization by corroding preferentially to the iron beneath it.
