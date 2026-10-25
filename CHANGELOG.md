@@ -9,6 +9,18 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-25 @ 16:14
+
+This release is named for the element **Cadmium (Cd)**. Cadmium gives some pigments brilliant yellow and red colors, although its toxicity limits their use.
+
+### Summary
+
+Codex can now investigate production defects with the optional `bmforge-rca` skill: collect evidence over read-only SSH, then reproduce, debug and fix locally. Production hosts remain unchanged, and fixes follow the normal release and upgrade process.
+
+### Added
+
+- Add optional `bmforge-rca` to the pinned skill installer ([#16](https://github.com/NadimGhaznavi/bmforge/pull/16)), with SSH collection of logs and database dumps into local scratch storage. Require database queries, reproduction, debugging and fixes to run locally; prohibit remote file changes, SQL queries, service restarts and deployments during RCA. Include bootstrap regression coverage for pinned installation and notification-only update checks.
+
 ## [0.11.1] - 2026-10-25 @ 11:05
 
 This release is named for the elemenbt **Rhodium (Rh)**.  Rhodium is prized in catalytic converters for helping reduce harmful vehicle emissions.

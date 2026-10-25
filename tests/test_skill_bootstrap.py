@@ -551,10 +551,27 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("UPDATE AVAILABLE bmforge-gif-animation", check.stdout)
         self.assertEqual((skill / "assets/GIFAnimation.py").read_bytes(), original)
 
+
+    def test_optional_rca_skill_is_pinned_and_update_is_notification_only(self):
+        self.bootstrap("bmforge-rca")
+        directory = self.project / ".agents/skills/bmforge-rca"
+        skill = directory / "SKILL.md"
+        original = skill.read_bytes()
+        self.assertIn(b"Never modify a remote host", original)
+        self.assertFalse((directory / "references/specification.md").exists())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+        upstream = self.source / "skills/bmforge-rca/SKILL.md"
+        upstream.write_text(upstream.read_text() + "\nUpdated RCA guidance.\n")
+        self.commit_source()
+        result = self.run_manager("check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-rca", result.stdout)
+        self.assertEqual(skill.read_bytes(), original)
+
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
         self.bootstrap(selection)
-        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 10)
+        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 11)
         self.assertEqual(self.run_manager("check").returncode, 0)
 
 

@@ -43,6 +43,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
 | Making an application monitorable | [Application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}) |
+| Investigating a production defect | [RCA skill](https://github.com/NadimGhaznavi/bmforge/blob/main/skills/bmforge-rca/SKILL.md): collect evidence read-only and troubleshoot locally |
 | Installing, upgrading or uninstalling | [Installation Lifecycle contract]({{ site.baseurl }}{% link pages/component-installation.md %}), [installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
 | Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
