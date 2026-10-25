@@ -7,7 +7,7 @@ translation_key: bmforge-github-pages-publishing
 permalink: /uk/pages/github-pages-publishing/
 ---
 
-Публікуйте Jekyll-сайт документації проєкту з гілки `main` за допомогою GitHub Actions. Спочатку підготуйте файли сайту за [Налаштуванням Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}).
+Публікуйте Jekyll-сайт документації проєкту з гілки `main` за допомогою GitHub Actions. Спочатку підготуйте файли сайту за [Налаштуванням Jekyll]({{ site.baseurl }}{% link uk/pages/jekyll-setup.md %}).
 
 ## Додавання процесу публікації
 
