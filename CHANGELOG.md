@@ -9,12 +9,19 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
-## [0.10.0] - 2026-10-24 @ 22:43
+## [0.10.1] - 2026-10-25 @ 04:40
+
+This release is named for the element **Zinc (Zn)**. Zinc protects steel from rust in galvanization by corroding preferentially to the iron beneath it.
+
+### Added
+
+- Link to osoyalce.com off the main index.md file.
 
 ### Fixed
 
-- Require ZeroMQ input validation to reject escaped lone Unicode surrogates without terminating a REQ/REP worker; add malformed-then-valid acceptance checks (draft ZMQ spec 0.3.1).
-- Require role-and-operation-specific installation preflight, including accurate `--check` results for missing server provisioning commands (draft installation spec 0.1.1).
+- Correct the changelog's release-section grouping by consolidating duplicate `Fixed` headings in 0.10.0
+
+## [0.10.0] - 2026-10-24 @ 22:43
 
 ### Added
 
@@ -22,9 +29,10 @@ permalink: /CHANGELOG/
 - Add a safe, read-only `setup-branches --dry-run` plus user-approved local `setup-branches` for the first `dev` and `feat/maint-0.1.0` branches after the project's initial commit; never commit or push automatically.
 - Add bootstrap branch-safety regression tests and update the Codex runbook.
 
-
 ### Fixed
 
+- Require ZeroMQ input validation to reject escaped lone Unicode surrogates without terminating a REQ/REP worker; add malformed-then-valid acceptance checks (draft ZMQ spec 0.3.1).
+- Require role-and-operation-specific installation preflight, including accurate `--check` results for missing server provisioning commands (draft installation spec 0.1.1).
 - Synchronize static PEP 621 `pyproject.toml` `[project].version` with application `VERSION` in the canonical release script and BMForge's own release script, rejecting drift before branch merges.
 - Preserve tool-only `pyproject.toml` files and existing release-branch, tag, changelog and atomic-push behaviour; add release regression tests.
 - Clarify that client-only installed CMDB metadata must not claim server-owned databases or listeners.
