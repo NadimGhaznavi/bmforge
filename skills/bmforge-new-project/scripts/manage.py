@@ -72,6 +72,9 @@ SKILLS = {
         "components/reference/cmdb/cmdb/server/static/vendor/cytoscape-3.34.3.min.js",
         "components/reference/cmdb/cmdb/server/static/vendor/cytoscape-LICENSE",
     )),
+    "bmforge-gif-animation": ("pages/component-gif-animation.md", (
+        "components/reference/snake-web-code/snakewebcode/activity/SimulationAnimation.py",
+    )),
 }
 BASE_SKILLS = ("bmforge-project", "bmforge-constants", "bmforge-localization", "bmforge-installation")
 COMMON = (
@@ -83,6 +86,7 @@ COMMON = (
 HEALTH = "pages/health-checks.md"
 DB_TEMPLATE = "components/templates/db-server/interface/DbMgr.py"
 GIT_TEMPLATE = "components/templates/git/Git.py"
+GIF_TEMPLATE = "components/templates/gif-animation/interface/GIFAnimation.py"
 CONSTANTS_TEMPLATE = "templates/project/constants/DProject.py"
 LOCALIZER_TEMPLATE = "components/templates/localization/interface/Localizer.py"
 TEXT_TEMPLATE = "components/templates/constants/DText.py"
@@ -174,6 +178,8 @@ def bundle(source, name):
         files["assets/DbMgr.py"] = DB_TEMPLATE
     if name == "bmforge-git":
         files["assets/Git.py"] = GIT_TEMPLATE
+    if name == "bmforge-gif-animation":
+        files["assets/GIFAnimation.py"] = GIF_TEMPLATE
     if name == "bmforge-constants":
         files["assets/DProject.py"] = CONSTANTS_TEMPLATE
     if name == "bmforge-localization":

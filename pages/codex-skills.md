@@ -98,6 +98,7 @@ Each installed component's source commit, spec version and content fingerprint a
 | `bmforge-db-server` | Unchanged canonical MariaDB `DbMgr.py` plus domain `*Db` interfaces |
 | `bmforge-git` | Commit-all/push or managed-file publishing |
 | `bmforge-visualization` | Plotly.js charts, Leaflet maps, Cytoscape.js topology graphs |
+| `bmforge-gif-animation` | Pillow GIF frame encoding with controlled timing, palettes, looping, and bytes/file output |
 
 **Existing projects:** Updating the global bootstrap skill or pinned project-local skills still requires explicit review and approval. The read-only checker will report available changes to the manager and skill bundles; it does not retrofit the new baseline into previously bootstrapped projects. A fresh bootstrap includes the new baseline automatically.
 
