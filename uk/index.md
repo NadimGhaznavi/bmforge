@@ -21,7 +21,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 ## Інженерний контракт
 
-Перед початком реалізації прочитайте [інженерний контракт (англійською)]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}).
+Перед початком реалізації прочитайте [інженерний контракт]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}).
 
 - **Мінімалізм за замовчуванням:** реалізуйте лише необхідне. Кожна абстракція, служба, повторна спроба й резервний механізм мають бути обґрунтовані.
 - **Довіра до контрактів:** перевіряйте дані на зовнішніх межах; не дублюйте перевірки довірених внутрішніх даних на кожному рівні.
@@ -32,42 +32,42 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 ## Початок роботи
 
-| Завдання Codex | З чого почати (документація англійською) |
+| Завдання Codex | З чого почати |
 | --- | --- |
 | Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link uk/pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link uk/pages/component-blueprints.md %}) |
-| Початкове налаштування порожнього проєкту з навичками Codex | [Установлення закріплених навичок компонентів Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
+| Початкове налаштування порожнього проєкту з навичками Codex | [Установлення закріплених навичок компонентів Codex]({{ site.baseurl }}{% link uk/pages/codex-skills.md %}) |
 | Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link uk/pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link uk/pages/specification-lifecycle.md %}) |
-| Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link uk/pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
+| Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link uk/pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link uk/pages/component-db-server.md %}) |
 | Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link uk/pages/component-constants.md %}) |
-| Локалізація інтерфейсів | [Локалізація застосунків]({{ site.baseurl }}{% link pages/component-localization.md %}) |
-| Вибір графіків, карт і графів зв’язків | [Схвалені візуалізації]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
-| Експорт кадрів до анімованого GIF | [GIF-анімація]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
-| Налаштування служби | [Конфігурація виконання]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) і [мережева конфігурація]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
-| Інтеграція з CMDB | [Відповідність CMDB]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
+| Локалізація інтерфейсів | [Локалізація застосунків]({{ site.baseurl }}{% link uk/pages/component-localization.md %}) |
+| Вибір графіків, карт і графів зв’язків | [Схвалені візуалізації]({{ site.baseurl }}{% link uk/pages/component-visualization.md %}) |
+| Експорт кадрів до анімованого GIF | [GIF-анімація]({{ site.baseurl }}{% link uk/pages/component-gif-animation.md %}) |
+| Налаштування служби | [Конфігурація виконання]({{ site.baseurl }}{% link uk/pages/runtime-configuration.md %}) і [мережева конфігурація]({{ site.baseurl }}{% link uk/pages/network-configuration.md %}) |
+| Інтеграція з CMDB | [Відповідність CMDB]({{ site.baseurl }}{% link uk/pages/cmdb-compliance.md %}) |
 | Моніторинг стану застосунку | [Перевірки працездатності]({{ site.baseurl }}{% link uk/pages/health-checks.md %}) |
-| Установлення, оновлення або видалення | [Контракт життєвого циклу встановлення]({{ site.baseurl }}{% link pages/component-installation.md %}), [скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) і [відстеження змін розгортання]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
-| Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link uk/pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link uk/pages/changelog-maintenance.md %}) |
-| Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link uk/pages/multilingual-documentation.md %}) |
+| Установлення, оновлення або видалення | [Контракт життєвого циклу встановлення]({{ site.baseurl }}{% link uk/pages/component-installation.md %}), [скрипти встановлення]({{ site.baseurl }}{% link uk/pages/installation-scripts.md %}) і [відстеження змін розгортання]({{ site.baseurl }}{% link uk/pages/deployment-impact-tracking.md %}) |
+| Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link uk/pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link uk/pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link uk/pages/changelog-maintenance.md %}) |
+| Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link uk/pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link uk/pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link uk/pages/multilingual-documentation.md %}) |
 
 ## Пакування навичок Codex
 
-Почніть із [навички початкового налаштування проєкту]({{ site.baseurl }}{% link pages/codex-skills.md %}), щоб установити закріплені навички **проєкту, констант, локалізації та встановлення**, а також лише ті додаткові компоненти, які запросив користувач, у `.agents/skills/` нового застосунку. Проєкт отримує власний `AGENTS.md` та **сповіщення про оновлення лише для читання**, без автоматичних оновлень чи генерації застосунків.
+Почніть із [навички початкового налаштування проєкту]({{ site.baseurl }}{% link uk/pages/codex-skills.md %}), щоб установити закріплені навички **проєкту, констант, локалізації та встановлення**, а також лише ті додаткові компоненти, які запросив користувач, у `.agents/skills/` нового застосунку. Проєкт отримує власний `AGENTS.md` та **сповіщення про оновлення лише для читання**, без автоматичних оновлень чи генерації застосунків.
 
 ## Специфікації компонентів
 
 Кожен контракт визначає поведінку, **фіксований перелік схвалених модулів виконання** та приймальні перевірки. Codex адаптує **зафіксований локальний еталонний код**, а не вибирає інші фреймворки. Якщо визначених модулів недостатньо, Codex має зупинитися й отримати схвалення до зміни специфікації.
 
-| Компонент | Стабільний ідентифікатор | Контракт (англійською) |
+| Компонент | Стабільний ідентифікатор | Контракт |
 | --- | --- | --- |
-| HTTP-сервер відображення | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
-| ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
-| Сервер бази даних | `bmforge.db-server` | [Канонічний DbMgr і рівні DAL]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
+| HTTP-сервер відображення | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link uk/pages/component-http.md %}) |
+| ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link uk/pages/component-zmq.md %}) |
+| Сервер бази даних | `bmforge.db-server` | [Канонічний DbMgr і рівні DAL]({{ site.baseurl }}{% link uk/pages/component-db-server.md %}) |
 | Git | `bmforge.git` | [Публікація й коміти]({{ site.baseurl }}{% link uk/pages/component-git.md %}) |
-| Візуалізації | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
-| GIF-анімація | `bmforge.gif-animation` | [Кодувальник GIF-кадрів Pillow]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
+| Візуалізації | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link uk/pages/component-visualization.md %}) |
+| GIF-анімація | `bmforge.gif-animation` | [Кодувальник GIF-кадрів Pillow]({{ site.baseurl }}{% link uk/pages/component-gif-animation.md %}) |
 | Константи | `bmforge.constants` | [Фіксовані значення за доменами]({{ site.baseurl }}{% link uk/pages/component-constants.md %}) |
-| Локалізація застосунків | `bmforge.localization` | [Англійський каталог і багатомовний інтерфейс]({{ site.baseurl }}{% link pages/component-localization.md %}) |
-| Життєвий цикл встановлення | `bmforge.installation` | [Установлення, оновлення, видалення та ролі клієнта/сервера]({{ site.baseurl }}{% link pages/component-installation.md %}) |
+| Локалізація застосунків | `bmforge.localization` | [Англійський каталог і багатомовний інтерфейс]({{ site.baseurl }}{% link uk/pages/component-localization.md %}) |
+| Життєвий цикл встановлення | `bmforge.installation` | [Установлення, оновлення, видалення та ролі клієнта/сервера]({{ site.baseurl }}{% link uk/pages/component-installation.md %}) |
 
 ## Простежуваність і вдосконалення
 
