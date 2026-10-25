@@ -105,6 +105,14 @@ This file preserves design decisions that should not disappear into conversation
 
 **Application implementation:** Fix the two DevLog defects in DevLog's own repository with its own tests and changelog. Preserve project-local pinned skills and the BMForge update-notification policy; do not silently upgrade consuming applications.
 
+## 2026-10-25: offline BMForge skill update comparison
+
+**Problem.** A fresh GitHub clone on every Codex session creates an unnecessary network dependency. Some Codex execution environments cannot reach GitHub even while the installed skills are fully usable.
+
+**Separation.** Use a single dedicated clean BMForge checkout on `main` as a locally cached source snapshot. Refresh its Git history independently of Codex sessions. The project-local `manage.py check` remains read-only and now compares only against a local checkout, defaulting to `~/.cache/bmforge-upstream`; an explicit `BMFORGE_SOURCE` or `--source` can select another clean checkout. A stale cache cannot certify the latest GitHub state, so the check reports the local source revision.
+
+**Integrity.** Dirty and non-`main` source checkouts are rejected to avoid treating in-progress development as published standards. Installed skill content is still checked against its pinned fingerprint separately: `LOCALLY MODIFIED` is not cleared by a source refresh. Existing project-local managers remain pinned until an owner-approved upgrade.
+
 ## Work not yet implemented
 
 - Package any future BMForge components as additional Codex skills only when required; existing global/bootstrap and component skills are implemented but still require real Codex-session validation.
