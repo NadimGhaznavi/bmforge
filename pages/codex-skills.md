@@ -138,17 +138,65 @@ than assuming ownership of an existing history. Push local branches to
 
 ## Update notification, not automatic upgrades
 
-The generated `AGENTS.md` directs Codex to perform one **read-only update check** before the first BMForge-derived coding change in a session:
+Use one **dedicated, clean local checkout** as the upstream snapshot for all projects.
+This keeps the normal Codex session check offline, independent of GitHub access.
+Create the cache once, outside Codex:
+
+```sh
+mkdir -p "$HOME/.cache"
+git clone --single-branch --branch main \
+    https://github.com/NadimGhaznavi/bmforge.git \
+    "$HOME/.cache/bmforge-upstream"
+```
+
+Refresh it **separately**, when GitHub is accessible:
+
+```sh
+git -C "$HOME/.cache/bmforge-upstream" pull --ff-only
+```
+
+The checkout must remain clean and on `main`. Do not use a BMForge development
+checkout with uncommitted edits as the update source. Set `BMFORGE_SOURCE` or pass
+`--source /path/to/clean/bmforge` to use a different checkout.
+
+The generated `AGENTS.md` asks Codex to run the **read-only, offline check**
+before the first BMForge-derived coding change in a session:
 
 ```sh
 python3 .agents/bmforge/manage.py check --project .
 ```
 
-This checks the pinned local bundle and compares its **actual contents** with the latest BMForge branch. A change to a skill or contract is reported even when its specification version was not advanced; an unrelated BMForge commit does **not** create false notifications.
+The check compares installed fingerprints to the cache's recorded Git commit.
+It **does not** clone, fetch, pull or modify any checkout or application files.
+A change to a skill or contract is reported even when the specification version
+was not advanced; an unrelated BMForge commit does **not** create a false notice.
 
-Possible results: `CURRENT`, `UPDATE AVAILABLE`, `LOCALLY MODIFIED`, and `UPDATE CHECK UNAVAILABLE` (for example when GitHub cannot be reached). The check does not modify installed files, the lock, `AGENTS.md`, or application code.
+Possible results: `CURRENT`, `UPDATE AVAILABLE`, `LOCALLY MODIFIED`, and
+`UPDATE CHECK UNAVAILABLE`. The reported local source commit identifies the
+comparison point. **CURRENT means current relative to that cached commit, not
+necessarily the newest GitHub commit.** A stale or unavailable cache cannot
+establish whether new upstream updates exist. Refresh separately when appropriate.
 
-**Nothing upgrades automatically.** Codex must tell the user what changed and request authorization. The current tool intentionally has **no automatic upgrade command**. An approved upgrade is a separate, reviewable step, preserving local modifications and pinned provenance.
+`LOCALLY MODIFIED` is a separate integrity finding: the project's installed
+skill differs from its lock even if the upstream cache is current. Inspect the
+difference before any approved replacement. No updates are applied by the check.
+
+**Nothing upgrades automatically.** Codex must tell the user what changed and
+request authorization. The current tool intentionally has **no automatic upgrade
+command**. An approved upgrade is a separate, reviewable step, preserving local
+modifications and pinned provenance.
+
+**Previously bootstrapped projects** retain their older pinned manager and
+`AGENTS.md`. As an immediate workaround with the older manager, specify the
+local checkout explicitly:
+
+```sh
+python3 .agents/bmforge/manage.py check --project . \
+    --source "$HOME/.cache/bmforge-upstream"
+```
+
+Replacing the old manager/instructions remains a separately reviewed upgrade,
+not something an update check performs.
 
 ## Verification
 

@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 from contextlib import contextmanager
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -104,6 +105,7 @@ RELEASE_GUIDES = ("pages/release-setup.md", "pages/creating-a-release.md")
 INSTALLATION_GUIDES = ("pages/installation-scripts.md", "pages/cmdb-compliance.md")
 LOCK = Path(".agents/bmforge/lock.json")
 MANAGER = Path(".agents/bmforge/manage.py")
+DEFAULT_SOURCE_CACHE = Path.home() / ".cache/bmforge-upstream"
 
 
 class SetupError(Exception):
@@ -252,11 +254,16 @@ def root_agents():
 This project uses **pinned BMForge Codex skills**. These are project-owned copies,
 not live imports from BMForge or another application.
 
-Before the first BMForge-related edit in a Codex session, run the **read-only**
-update check from the repository root:
+Before the first BMForge-related edit in a Codex session, run the **read-only**,
+**offline** update check from the repository root:
 
     python3 .agents/bmforge/manage.py check --project .
 
+The check reads a clean local BMForge main checkout at
+~/.cache/bmforge-upstream (override with BMFORGE_SOURCE or --source).
+It never fetches or clones. Refresh that checkout separately with
+'git pull --ff-only', outside this check. "CURRENT" means current as of the
+reported cached source revision, not necessarily the newest GitHub commit.
 Report available changes or an unavailable check to the user. **Do not apply
 updates**, reinstall skills, or replace approved technologies without explicit
 user authorization. Continue using the pinned skills unless instructed otherwise.
@@ -451,6 +458,26 @@ def start_add(args):
     print("Existing installed skills were not modified.")
 
 
+def local_update_source(explicit, recorded):
+    """Find a clean, committed BMForge checkout without network access."""
+    candidate = explicit or os.environ.get("BMFORGE_SOURCE")
+    if not candidate and isinstance(recorded, str) and Path(recorded).is_dir():
+        candidate = recorded
+    source = (Path(candidate).expanduser() if candidate else DEFAULT_SOURCE_CACHE).resolve()
+    if not source.is_dir():
+        raise SetupError(
+            f"Local BMForge source unavailable: {source}. "
+            "Create or refresh a checkout separately, or set BMFORGE_SOURCE/--source"
+        )
+    if Path(git("rev-parse", "--show-toplevel", cwd=source)).resolve() != source:
+        raise SetupError(f"BMForge source must be a Git repository root: {source}")
+    if git("symbolic-ref", "--quiet", "--short", "HEAD", cwd=source) != SOURCE_BRANCH:
+        raise SetupError(f"BMForge source must be on {SOURCE_BRANCH}: {source}")
+    if git("status", "--porcelain", "--untracked-files=all", cwd=source):
+        raise SetupError(f"BMForge source has local changes: {source}; use a clean dedicated checkout")
+    return source
+
+
 def start_check(args):
     root = project_root(args.project)
     lock = load_lock(root)
@@ -469,7 +496,9 @@ def start_check(args):
     if manager_changed:
         print("LOCALLY MODIFIED manager: pinned update-check script differs from the lock")
     try:
-        with source_checkout(args.source or lock["repository"]) as (source, revision):
+        local_source = local_update_source(args.source, lock.get("repository"))
+        with source_checkout(local_source) as (source, revision):
+            print(f"LOCAL SOURCE {revision[:12]} ({source}); no network request. Refresh separately to check newer upstream changes.")
             available = []
             for name, installed in sorted(lock["skills"].items()):
                 new = bundle(source, name)
@@ -490,7 +519,7 @@ def start_check(args):
     if available:
         print("User approval required for any upgrade. No updates were applied.")
     elif not modified and not manager_changed:
-        print("All pinned BMForge skills are current. No files were changed.")
+        print("All pinned BMForge skills are current against the local source snapshot. No files were changed.")
     return 1 if modified or manager_changed else 0
 
 
