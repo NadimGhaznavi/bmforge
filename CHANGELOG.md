@@ -9,6 +9,10 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+- Validated the RCA tool in the DevLog project. Clean install.
+
 ## [0.12.0] - 2026-10-25 @ 16:14
 
 This release is named for the element **Cadmium (Cd)**. Cadmium gives some pigments brilliant yellow and red colors, although its toxicity limits their use.
