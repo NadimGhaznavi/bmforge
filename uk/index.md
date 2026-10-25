@@ -34,9 +34,9 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 | Завдання Codex | З чого почати (документація англійською) |
 | --- | --- |
-| Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link uk/pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
+| Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link uk/pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link uk/pages/component-blueprints.md %}) |
 | Початкове налаштування порожнього проєкту з навичками Codex | [Установлення закріплених навичок компонентів Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
-| Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link uk/pages/specification-lifecycle.md %}) |
+| Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link uk/pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link uk/pages/specification-lifecycle.md %}) |
 | Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link uk/pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link pages/component-constants.md %}) |
 | Локалізація інтерфейсів | [Локалізація застосунків]({{ site.baseurl }}{% link pages/component-localization.md %}) |
@@ -47,7 +47,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 | Моніторинг стану застосунку | [Перевірки працездатності]({{ site.baseurl }}{% link pages/health-checks.md %}) |
 | Установлення, оновлення або видалення | [Контракт життєвого циклу встановлення]({{ site.baseurl }}{% link pages/component-installation.md %}), [скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) і [відстеження змін розгортання]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
-| Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
+| Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link uk/pages/multilingual-documentation.md %}) |
 
 ## Пакування навичок Codex
 
