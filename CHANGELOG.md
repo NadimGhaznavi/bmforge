@@ -9,6 +9,26 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.11.1] - 2026-10-25 @ 11:05
+
+This release is named for the elemenbt **Rhodium (Rh)**.  Rhodium is prized in catalytic converters for helping reduce harmful vehicle emissions.
+
+### Summary
+
+Changelog maintenance is now mandatory for every completed project change, and meaningful improvements get a concise summary as they happen. The policy travels with pinned BMForge skills and newly generated agent instructions rather than relying on release-time reminders.
+
+### Changed
+
+- Require changelog entries for every completed logical change, including small code, test, documentation, configuration and maintenance work; use `### Summary` for individual meaningful improvements rather than only large releases.
+- Embed the rule in the engineering contract, agent guidance, project skills, release documentation and the BMForge decision record.
+- Advance HTTP Display Server to `0.4.0` with dark, saturated, high-contrast styling for human-facing GUIs; API-only services remain presentation-free.
+- Bundle the changelog maintenance guide inside the pinned `bmforge-project` skill for offline use; existing projects retain their pinned guidance until explicitly updated.
+
+### Added
+
+- Cover generated changelog instructions and read-only detection of updated pinned changelog guidance in bootstrap regression tests.
+- Pin BMDynIP's HTML/CSS from `2077300e7ee20de5328164115a277f353ed19579` for new HTTP skills, with spec and bootstrap regression checks.
+
 ## [0.11.0] - 2026-10-25 @ 05:51
 
 This release is named for the element **Germanium (Ge)**. Germanium helped power the earliest transistors before silicon became the dominant semiconductor.
