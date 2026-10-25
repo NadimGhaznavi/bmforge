@@ -21,7 +21,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 ## Інженерний контракт
 
-Перед початком реалізації прочитайте [інженерний контракт (англійською)]({{ site.baseurl }}{% link pages/engineering-contract.md %}).
+Перед початком реалізації прочитайте [інженерний контракт (англійською)]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}).
 
 - **Мінімалізм за замовчуванням:** реалізуйте лише необхідне. Кожна абстракція, служба, повторна спроба й резервний механізм мають бути обґрунтовані.
 - **Довіра до контрактів:** перевіряйте дані на зовнішніх межах; не дублюйте перевірки довірених внутрішніх даних на кожному рівні.
@@ -34,10 +34,10 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 | Завдання Codex | З чого почати (документація англійською) |
 | --- | --- |
-| Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
+| Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link uk/pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link uk/pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
 | Початкове налаштування порожнього проєкту з навичками Codex | [Установлення закріплених навичок компонентів Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
-| Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
-| Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
+| Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link uk/pages/specification-lifecycle.md %}) |
+| Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link uk/pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link pages/component-constants.md %}) |
 | Локалізація інтерфейсів | [Локалізація застосунків]({{ site.baseurl }}{% link pages/component-localization.md %}) |
 | Вибір графіків, карт і графів зв’язків | [Схвалені візуалізації]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
@@ -71,7 +71,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 ## Простежуваність і вдосконалення
 
-Модулі реалізації містять невеликий ідентифікатор компонента та версію специфікації, які можна прочитати статичним аналізом. [Життєвий цикл специфікацій]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) визначає, як виявляти прогалини, вдосконалювати контракт, додавати регресійні перевірки й версіонувати зміни. [Журнал рішень]({{ site.baseurl }}{% link DECISIONS.md %}) фіксує ухвалені рішення та незавершену роботу.
+Модулі реалізації містять невеликий ідентифікатор компонента та версію специфікації, які можна прочитати статичним аналізом. [Життєвий цикл специфікацій]({{ site.baseurl }}{% link uk/pages/specification-lifecycle.md %}) визначає, як виявляти прогалини, вдосконалювати контракт, додавати регресійні перевірки й версіонувати зміни. [Журнал рішень]({{ site.baseurl }}{% link DECISIONS.md %}) фіксує ухвалені рішення та незавершену роботу.
 
 **Поточний стан:** контракти HTTP, ZeroMQ, DB Server, Git та необов’язкових візуалізацій, канонічні шаблони DB/Git і закріплені локальні приклади є чернетками, що очікують перевірки в застосунках-споживачах. Варіанти візуалізацій ґрунтуються на зафіксованому коді MyCount і CMDB; GIF-анімація також має канонічний кодувальник Pillow та зафіксований приклад Snake Web. Пакування навичок Codex реалізовано; перевірка в реальних застосунках і сканування тегів компонентів у CMDB залишаються майбутньою роботою. Наявні декларації CMDB для файлів, баз даних і мережевих слухачів залишаються окремими від відстеження архітектурних компонентів.
 
