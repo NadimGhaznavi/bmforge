@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-10-24 @ 22:43
+
 ### Fixed
 
 - Require ZeroMQ input validation to reject escaped lone Unicode surrogates without terminating a REQ/REP worker; add malformed-then-valid acceptance checks (draft ZMQ spec 0.3.1).
