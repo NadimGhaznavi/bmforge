@@ -161,6 +161,38 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("Local BMForge source unavailable", result.stderr)
         self.assertNotIn("Git clone", result.stderr)
 
+    def test_check_can_use_explicit_local_source_environment(self):
+        self.bootstrap("")
+        lock_file = self.project / module.LOCK
+        lock = json.loads(lock_file.read_text())
+        lock["repository"] = module.SOURCE_URL
+        lock_file.write_text(json.dumps(lock))
+        env = os.environ.copy()
+        env["HOME"] = str(self.project.parent / "missing-home")
+        env["BMFORGE_SOURCE"] = str(self.source)
+        result = command("python3", MANAGER, "check", "--project", self.project,
+                         env=env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("LOCAL SOURCE", result.stdout)
+
+    def test_unavailable_upstream_does_not_hide_local_modifications(self):
+        self.bootstrap("")
+        architecture = self.project / ".agents/skills/bmforge-project/SKILL.md"
+        architecture.write_text(architecture.read_text() + "\nLocally edited architecture\n")
+        lock_file = self.project / module.LOCK
+        lock = json.loads(lock_file.read_text())
+        lock["repository"] = module.SOURCE_URL
+        lock_file.write_text(json.dumps(lock))
+        env = os.environ.copy()
+        env["HOME"] = str(self.project.parent / "missing-home")
+        env.pop("BMFORGE_SOURCE", None)
+        result = command("python3", MANAGER, "check", "--project", self.project,
+                         env=env)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("LOCALLY MODIFIED bmforge-project", result.stdout)
+        self.assertIn("UPDATE CHECK UNAVAILABLE", result.stderr)
+        self.assertIn("Locally edited architecture", architecture.read_text())
+
     def test_check_rejects_dirty_or_non_main_source(self):
         self.bootstrap("")
         skill = self.source / "skills/bmforge-http/SKILL.md"
