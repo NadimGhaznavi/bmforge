@@ -38,15 +38,15 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 | Початкове налаштування порожнього проєкту з навичками Codex | [Установлення закріплених навичок компонентів Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
 | Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link uk/pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link uk/pages/specification-lifecycle.md %}) |
 | Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link uk/pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
-| Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link pages/component-constants.md %}) |
+| Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link uk/pages/component-constants.md %}) |
 | Локалізація інтерфейсів | [Локалізація застосунків]({{ site.baseurl }}{% link pages/component-localization.md %}) |
 | Вибір графіків, карт і графів зв’язків | [Схвалені візуалізації]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
 | Експорт кадрів до анімованого GIF | [GIF-анімація]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
 | Налаштування служби | [Конфігурація виконання]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) і [мережева конфігурація]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Інтеграція з CMDB | [Відповідність CMDB]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
-| Моніторинг стану застосунку | [Перевірки працездатності]({{ site.baseurl }}{% link pages/health-checks.md %}) |
+| Моніторинг стану застосунку | [Перевірки працездатності]({{ site.baseurl }}{% link uk/pages/health-checks.md %}) |
 | Установлення, оновлення або видалення | [Контракт життєвого циклу встановлення]({{ site.baseurl }}{% link pages/component-installation.md %}), [скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) і [відстеження змін розгортання]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
-| Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
+| Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link uk/pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link uk/pages/changelog-maintenance.md %}) |
 | Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link uk/pages/multilingual-documentation.md %}) |
 
 ## Пакування навичок Codex
@@ -62,10 +62,10 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 | HTTP-сервер відображення | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
 | Сервер бази даних | `bmforge.db-server` | [Канонічний DbMgr і рівні DAL]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
-| Git | `bmforge.git` | [Публікація й коміти]({{ site.baseurl }}{% link pages/component-git.md %}) |
+| Git | `bmforge.git` | [Публікація й коміти]({{ site.baseurl }}{% link uk/pages/component-git.md %}) |
 | Візуалізації | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
 | GIF-анімація | `bmforge.gif-animation` | [Кодувальник GIF-кадрів Pillow]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
-| Константи | `bmforge.constants` | [Фіксовані значення за доменами]({{ site.baseurl }}{% link pages/component-constants.md %}) |
+| Константи | `bmforge.constants` | [Фіксовані значення за доменами]({{ site.baseurl }}{% link uk/pages/component-constants.md %}) |
 | Локалізація застосунків | `bmforge.localization` | [Англійський каталог і багатомовний інтерфейс]({{ site.baseurl }}{% link pages/component-localization.md %}) |
 | Життєвий цикл встановлення | `bmforge.installation` | [Установлення, оновлення, видалення та ролі клієнта/сервера]({{ site.baseurl }}{% link pages/component-installation.md %}) |
 
