@@ -17,11 +17,13 @@ Changelog maintenance is now mandatory for every completed project change, and m
 
 - Require changelog entries for every completed logical change, including small code, test, documentation, configuration and maintenance work; use `### Summary` for individual meaningful improvements rather than only large releases.
 - Embed the rule in the engineering contract, agent guidance, project skills, release documentation and the BMForge decision record.
+- Advance HTTP Display Server to `0.4.0` with dark, saturated, high-contrast styling for human-facing GUIs; API-only services remain presentation-free.
 - Bundle the changelog maintenance guide inside the pinned `bmforge-project` skill for offline use; existing projects retain their pinned guidance until explicitly updated.
 
 ### Added
 
 - Cover generated changelog instructions and read-only detection of updated pinned changelog guidance in bootstrap regression tests.
+- Pin BMDynIP's HTML/CSS from `2077300e7ee20de5328164115a277f353ed19579` for new HTTP skills, with spec and bootstrap regression checks.
 
 ## [0.11.0] - 2026-10-25 @ 05:51
 
