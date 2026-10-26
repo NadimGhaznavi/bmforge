@@ -6,8 +6,6 @@ language_name: English
 translation_key: bmforge-codex-skills
 ---
 
-# Use BMForge with Codex
-
 BMForge gives Codex a set of engineering skills for building new applications. **Install one entry-point skill**, then let Codex select and install the components your project needs.
 
 ## 1. Install BMForge once
