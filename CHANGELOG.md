@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-10-26 @ 19:23
+
 This release is named for the element **Barium (Ba)**. Barium compounds make 
 some fireworks glow green, while barium sulfate is used as a contrast agent 
 in medical imaging.
