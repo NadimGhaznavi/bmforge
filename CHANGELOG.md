@@ -9,6 +9,22 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.12.3] - 2026-10-26 @ 05:20
+
+This release is named for the element **Tellurium (Te)**. Tellurium is used in certain solar cells, particularly cadmium telluride photovoltaic panels.
+
+### Summary
+
+The concise Codex quick-start is now available in Ukrainian, and Ukrainian readers can reach it from the localized BMForge homepage. Agent-facing skills, commands and technical contracts remain in English.
+
+### Added
+
+- Translate the human-facing Codex quick-start into Ukrainian, with matching `translation_key`, a distinct localized permalink and a link back to the Ukrainian homepage.
+
+### Fixed
+
+- Link the Ukrainian homepage to its localized quick-start and remove the duplicate `# BMForge` heading where front matter already supplies the page title.
+
 ## [0.12.2] - 2026-10-26 @ 05:06
 
 This release is named for the element **Antimony (Sb)**.  Antimony compounds are used in some flame-retardant formulations to help slow burning.

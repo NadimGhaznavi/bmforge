@@ -11,7 +11,6 @@ permalink: /uk/
 
 ![Логотип BMForge](/pages/images/bmforge.png)
 
-# BMForge
 
 **Створюй просте. Не приховуй збоїв. Відповідай за реалізацію.**
 
@@ -27,7 +26,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skills/bmforge
 ```
 
-Потім відкрийте Codex у новому репозиторії Git і викличте `$bmforge`. Codex пояснить доступні навички, допоможе вибрати потрібні компоненти й установить їхні закріплені локальні копії. Дивіться [коротку інструкцію англійською]({{ site.baseurl }}{% link pages/codex-skills.md %}).
+Потім відкрийте Codex у новому репозиторії Git і викличте `$bmforge`. Codex пояснить доступні навички, допоможе вибрати потрібні компоненти й установить їхні закріплені локальні копії. Дивіться [коротку інструкцію українською]({{ site.baseurl }}{% link uk/pages/codex-skills.md %}).
 
 ## Інженерний підхід
 
@@ -47,7 +46,7 @@ $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skil
 | Завдання Codex | З чого почати |
 | --- | --- |
 | Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
-| Початок нового проєкту в Codex | [Використання BMForge з Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
+| Початок нового проєкту в Codex | [Використання BMForge з Codex]({{ site.baseurl }}{% link uk/pages/codex-skills.md %}) |
 | Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
 | Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link pages/component-constants.md %}) |
