@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-10-26 @ 05:06
+
 This release is named for the element **Antimony (Sb)**.  Antimony compounds are used in some flame-retardant formulations to help slow burning.
 
 ### Changed
