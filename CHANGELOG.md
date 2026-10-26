@@ -11,7 +11,13 @@ permalink: /CHANGELOG/
 
 ### Summary
 
-- Validated the RCA tool in the DevLog project. Clean install.
+Codex now has one `$bmforge` entry point for new applications. Users install it once and select components through Codex; project-local pinning and setup remain handled by the skill.
+
+### Changed
+
+- Rename the user-level bootstrap from `bmforge-new-project` to `bmforge`, move its manager, update source paths and regression tests, and remove the old entry point without a compatibility alias.
+- Reduce the public quick-start guide and homepage to installation and invocation instructions; keep component selection, branch setup and offline update management within the skill.
+- Refresh the README, Ukrainian homepage and agent guidance to reflect implemented Codex skills and the correct installation locations.
 
 ## [0.12.0] - 2026-10-25 @ 16:14
 
