@@ -2,6 +2,22 @@
 
 BMForge is a **standalone engineering specification repository**, not a runtime library. Every application owns its implementation.
 
+## Implementation authorization gate
+
+**Discussion is not authorization to implement.** Codex may inspect the
+repository read-only, explore alternatives, draft designs and propose tests
+without changing project files. Do not write code, modify tests, configuration
+or documentation, install dependencies, or perform other mutating work until
+the user clearly authorizes implementation of the agreed scope. No special
+phrase is required: a direct request to implement or fix something counts;
+tentative agreement during discussion does not. If intent is unclear, ask.
+
+After authorization, complete the agreed implementation, tests and changelog
+without requesting permission for every edit. Pause for new dependencies or
+material changes in design, technology or scope. Approval to implement does
+not authorize commits, pushes, releases or deployments; those require separate
+permission.
+
 ## Codex component skills
 
 The user-facing [BMForge skill](pages/codex-skills.md) lives under `skills/bmforge/` and installs self-contained, pinned skills from `skills/bmforge-{project,constants,localization,installation,http,zmq,db-server,git,visualization,gif-animation,rca}/`. Its `manage.py check` is **read-only** and reports changes without applying them. Always install the project/constant/localization/installation baseline and the canonical release-tooling scaffold. Require a canonical `--name` to configure `scripts/new-release.sh` and its existing prerequisites. Never run the release script, commit, tag, push or deploy during file generation. A user-authorized post-commit `manage.py setup-branches` operation may establish the local `dev`/feature branch lineage, but never alters remote branches or pushes automatically. Add other infrastructure only by explicit selection. Keep installer tests hermetic and require user consent for any upgrade.

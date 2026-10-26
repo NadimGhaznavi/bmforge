@@ -8,6 +8,21 @@ translation_key: bmforge-engineering-contract
 
 **The smallest clear implementation that satisfies the contract wins.** BMForge is for the applications actually being built, not an imagined enterprise platform.
 
+## Implementation authorization gate
+
+**Discussion is not authorization to implement.** Read-only investigation,
+requirements conversations, design alternatives and proposed specifications
+may proceed without implementation approval. Do not change project files,
+install dependencies, run migrations or perform other mutating implementation
+steps until the user clearly authorizes the agreed scope. A direct instruction
+to implement, fix or apply a change counts; no magic phrase is required. If
+a conversational response leaves the intent to proceed unclear, ask.
+
+Once authorized, implement and test within that scope without seeking
+permission for each file. Pause for material scope expansions, new dependencies
+or unapproved architectural choices. Implementation approval is separate from
+permission to commit, push, release or deploy.
+
 ## Required behaviour
 
 1. **Implement only requested capability.** Reuse the chosen patterns and the project's existing conventions. Do not add generic frameworks, brokers, caches, background supervisors, feature switches, or other infrastructure without a concrete requirement.

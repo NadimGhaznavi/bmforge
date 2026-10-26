@@ -26,11 +26,20 @@ Optional, selected by requirement:
 
 Explain relevant capabilities and ask the user which optional skills to install. **Never select all by default** or silently add infrastructure. A baseline-only installation is valid.
 
+## Implementation authorization gate
+
+Discussion, component exploration and approval of a design do not themselves
+authorize edits. Inspect and explain read-only until the user clearly asks
+you to proceed with the agreed setup or implementation. No fixed phrase is
+required. Once authorized, complete that scope without repeated prompts,
+but pause for new dependencies or material scope or architecture changes.
+Implementation permission does not authorize commits, pushes or deployments.
+
 ## Set up a new project
 
 1. Work at the root of a **new Git repository**. Ask before initializing Git if necessary. Do not overwrite an existing `AGENTS.md` or `.agents/`. Do not attempt to adopt an established application.
 2. Ask for the canonical Python application class name (such as `SnakeLab`) and optional CMDB subtype (default `Application`). Never infer the Python name from a repository slug.
-3. With the user's selection, invoke this skill's installer, for example:
+3. Explain the files and pinned skills the installer will create, and get an **explicit go-ahead** before invoking it. A direct instruction to perform the described setup is sufficient. For example:
 
    ```sh
    python3 ~/.agents/skills/bmforge/scripts/manage.py init \
@@ -44,7 +53,7 @@ Explain relevant capabilities and ask the user which optional skills to install.
 
 ## Subsequent work
 
-- When the user requests another component for a BMForge-bootstrapped project, explain it and use `python3 .agents/bmforge/manage.py add --project . --components <selected-name>`. Refuse to overwrite installed skills. The user need not know manager syntax.
+- When the user requests another component for a BMForge-bootstrapped project, explain it and obtain explicit permission to add it before using `python3 .agents/bmforge/manage.py add --project . --components <selected-name>`. Refuse to overwrite installed skills. The user need not know manager syntax.
 - Before the first BMForge-derived edit in a Codex session, run `python3 .agents/bmforge/manage.py check --project .`. It reads the separately maintained clean `~/.cache/bmforge-upstream` checkout, reports pinned-skill integrity and available changes, and **never** fetches or upgrades. Refresh the upstream checkout separately only when authorized. A missing or stale cache does not invalidate installed skills.
 - An available update is a notification, not permission to replace local files. There is no automatic upgrade command. Never change approved dependencies or apply new contracts without explicit approval.
 

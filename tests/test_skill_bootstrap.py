@@ -103,6 +103,21 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertFalse((ROOT / "skills/bmforge-new-project").exists())
         self.assertIn("tree/main/skills/bmforge", (ROOT / "pages/codex-skills.md").read_text())
 
+    def test_implementation_gate_is_in_entry_point_and_bootstrapped_guidance(self):
+        self.bootstrap("")
+        entry_point = (ROOT / "skills/bmforge/SKILL.md").read_text()
+        project_skill = (self.project / ".agents/skills/bmforge-project/SKILL.md").read_text()
+        agents = (self.project / "AGENTS.md").read_text()
+        contract = (ROOT / "pages/engineering-contract.md").read_text()
+        self.assertIn("## Implementation authorization gate", entry_point)
+        self.assertIn("explicit go-ahead", entry_point)
+        self.assertIn("**Implementation authorization gate:**", project_skill)
+        self.assertIn("Implementation authorization gate:", agents)
+        self.assertIn("A direct request to implement or fix counts", agents)
+        self.assertIn("Permission to implement does not authorize", agents)
+        self.assertIn("## Implementation authorization gate", contract)
+        self.assertIn("Discussion is not authorization to implement.", contract)
+
     def test_creates_pinned_local_skills_and_no_application(self):
         result = self.bootstrap()
         self.assertIn("Installed 6 pinned", result.stdout)
@@ -144,6 +159,20 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertIn("UPDATE AVAILABLE bmforge-project", result.stdout)
         self.assertIn("No updates were applied", result.stdout)
         self.assertEqual(reference.read_bytes(), old_content)
+
+    def test_implementation_gate_contract_updates_only_notify(self):
+        self.bootstrap("")
+        installed = (self.project / ".agents/skills/bmforge-project/"
+                     "references/engineering-contract.md")
+        previous = installed.read_bytes()
+        contract = self.source / "pages/engineering-contract.md"
+        contract.write_text(contract.read_text() + "\nRevised authorization guidance.\n")
+        self.commit_source()
+        result = self.run_manager("check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-project", result.stdout)
+        self.assertIn("No updates were applied", result.stdout)
+        self.assertEqual(installed.read_bytes(), previous)
 
     def test_http_design_references_are_pinned_with_selected_skill(self):
         self.bootstrap("bmforge-http")
