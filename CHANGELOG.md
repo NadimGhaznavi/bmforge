@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Tin (Sn)**. Tin has helped preserve food for centuries as a protective coating on steel cans.
+
 ### Summary
 
 Codex now has one `$bmforge` entry point for new applications. Users install it once and select components through Codex; project-local pinning and setup remain handled by the skill.
