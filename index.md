@@ -17,6 +17,16 @@ BMForge is an engineering contract for coding agents. It defines how application
 
 BMForge is another fine product from the [Bear & Moose](https://osoyalce.com) brand.
 
+## Start with Codex
+
+Install the **`bmforge` skill** once in a Codex chat:
+
+```text
+$skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skills/bmforge
+```
+
+Then open Codex in a new Git repository and invoke `$bmforge`. Codex explains the available skills, helps you choose the components you need, and installs pinned project-local copies. See the [short setup guide]({{ site.baseurl }}{% link pages/codex-skills.md %}).
+
 ## The engineering contract
 
 Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) before implementing anything.
@@ -33,7 +43,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | What Codex is doing | Authoritative starting point |
 | --- | --- |
 | Building an application | Root `AGENTS.md`, [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [class classification]({{ site.baseurl }}{% link pages/classification.md %}), then selected [component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
-| Bootstrapping an empty project with Codex skills | [Install pinned Codex component skills]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
+| Starting a new project with Codex | [Use BMForge with Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
 | Implementing or improving a component | [Component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) and [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
 | Building the DAL or classifying application code | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) and [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Centralizing constants and avoiding magic strings | [Constants standard]({{ site.baseurl }}{% link pages/component-constants.md %}) |
@@ -47,10 +57,6 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Installing, upgrading or uninstalling | [Installation Lifecycle contract]({{ site.baseurl }}{% link pages/component-installation.md %}), [installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
 | Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
-
-## Codex skill packaging
-
-Start from the [greenfield bootstrap skill]({{ site.baseurl }}{% link pages/codex-skills.md %}) to install the pinned **project, constants, localization and installation** baseline, plus only the other components the user requests, into a new application's `.agents/skills/`. The project gets its own `AGENTS.md` and **read-only update notices**, never automatic upgrades or application generation.
 
 ## Component specifications
 
@@ -72,7 +78,7 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 
 Implementing modules carry a small, statically readable component ID and specification version. The [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) defines how to identify a gap, improve a contract, add a regression case, and version the change. The [decision record]({{ site.baseurl }}{% link DECISIONS.md %}) captures choices and unresolved work.
 
-**Current state:** the HTTP, ZeroMQ, DB Server, Git, and optional display-visualization contracts, canonical DB/Git templates, and pinned local examples are drafts awaiting validation in consuming applications. The visualization choices are grounded in pinned MyCount and CMDB code; GIF animation additionally has a canonical Pillow encoder and a frozen Snake Web example. Codex skill packaging is implemented; live consumer validation and CMDB scanning of component tags remain future work. Existing CMDB declarations for files, databases, and listeners remain separate from architectural component tracing.
+**Current state:** Pinned Codex skills, release scaffolding and read-only offline update checks are implemented, including the optional GIF Animation and production RCA skills. Component contracts and reference implementations remain drafts undergoing validation in consuming applications. CMDB scanning of component version markers is still planned.
 
 ---
 

@@ -1,15 +1,24 @@
 # BMForge
 
-Engineering standards, component specifications, and frozen reference implementations for Codex-driven projects. **No shared runtime code.**
+Engineering standards, component specifications and frozen reference implementations for Codex-driven projects. **No shared runtime code.**
+
+## Use with Codex
+
+In a Codex chat, install BMForge once:
+
+```text
+$skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skills/bmforge
+```
+
+Then open Codex in a **new Git repository** and invoke `$bmforge`. Codex will describe available skills and prepare the selected, pinned project-local components. See the [short setup guide](pages/codex-skills.md).
+
+## Engineering references
 
 - Start with [AGENTS.md](AGENTS.md) and the [engineering contract](pages/engineering-contract.md).
-- [Install Codex component skills](pages/codex-skills.md) from the global bootstrap, then use the reviewed, post-commit `setup-branches` action to create local `dev` and initial feature branches; constants, localization and a configured `scripts/new-release.sh` release scaffold are included, with read-only update notices.
-- Read the distinct [constants](pages/component-constants.md), [runtime localization](pages/component-localization.md) and [installation lifecycle](pages/component-installation.md) specifications. Every installed project gets a versioned `BASE_DIR`, even a CLI or custom library.
-- Find tasks and website documentation in [index.md](index.md).
-- Build using the [component blueprints](pages/component-blueprints.md) and their pinned local examples.
-- Organize new application classes with [Activity / Interface / Entity](pages/classification.md), and reuse the canonical MariaDB manager from [DB Server](pages/component-db-server.md).
-- Choose [approved visualization libraries](pages/component-visualization.md) deliberately for charts, maps and relationship graphs.
-- Use the [GIF Animation component](pages/component-gif-animation.md) for image-frame sequences and GIF byte/file output, independent of browser charts.
-- See [specification traceability](pages/specification-lifecycle.md) and [recorded decisions](DECISIONS.md).
+- Use [component blueprints](pages/component-blueprints.md), [class classification](pages/classification.md) and pinned local examples.
+- Follow the [specification lifecycle](pages/specification-lifecycle.md) and [decision record](DECISIONS.md).
+- Find component, installation, release and documentation contracts in [index.md](index.md).
 
-The website is published at https://bmforge.osoyalce.com. The component specifications are drafts requiring validation in consuming applications; native skills and CMDB component scanning are planned, not yet implemented.
+Website: https://bmforge.osoyalce.com
+
+The Codex skill packaging and read-only update checks are implemented. Component contracts continue to be validated in consuming applications; CMDB component scanning remains planned.
