@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-MANAGER = ROOT / "skills/bmforge-new-project/scripts/manage.py"
+MANAGER = ROOT / "skills/bmforge/scripts/manage.py"
 SPEC = importlib.util.spec_from_file_location("bmforge_skill_manager", MANAGER)
 module = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(module)
@@ -46,7 +46,7 @@ class SkillBootstrapTests(unittest.TestCase):
             folder.mkdir(parents=True)
             original = ROOT / "skills" / name / "SKILL.md"
             (folder / "SKILL.md").write_bytes(original.read_bytes())
-        manager = self.source / "skills/bmforge-new-project/scripts/manage.py"
+        manager = self.source / "skills/bmforge/scripts/manage.py"
         manager.parent.mkdir(parents=True)
         manager.write_bytes(MANAGER.read_bytes())
         for common in (*module.COMMON, module.HEALTH, *module.RELEASE_GUIDES,
@@ -94,6 +94,14 @@ class SkillBootstrapTests(unittest.TestCase):
         result = self.run_manager("init", "--components", skills)
         self.assertEqual(result.returncode, 0, result.stderr)
         return result
+
+    def test_single_user_entry_point_is_bmforge(self):
+        skill = (ROOT / "skills/bmforge/SKILL.md").read_text(encoding="utf-8")
+        self.assertTrue(skill.startswith("---\nname: bmforge\n"))
+        self.assertIn("bmforge-http", skill)
+        self.assertIn("bmforge-rca", skill)
+        self.assertFalse((ROOT / "skills/bmforge-new-project").exists())
+        self.assertIn("tree/main/skills/bmforge", (ROOT / "pages/codex-skills.md").read_text())
 
     def test_creates_pinned_local_skills_and_no_application(self):
         result = self.bootstrap()
@@ -292,7 +300,7 @@ class SkillBootstrapTests(unittest.TestCase):
         self.bootstrap()
         local = self.project / module.MANAGER
         old = local.read_bytes()
-        upstream = self.source / "skills/bmforge-new-project/scripts/manage.py"
+        upstream = self.source / "skills/bmforge/scripts/manage.py"
         upstream.write_bytes(old + b"\n# Nonfunctional update\n")
         self.commit_source()
         result = self.run_manager("check")
