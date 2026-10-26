@@ -19,6 +19,16 @@ BMForge — це інженерний контракт для агентів, я
 
 BMForge — ще один продукт бренду [Bear & Moose](https://osoyalce.com).
 
+## Початок роботи з Codex
+
+Один раз установіть навичку **`bmforge`** у чаті Codex:
+
+```text
+$skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skills/bmforge
+```
+
+Потім відкрийте Codex у новому репозиторії Git і викличте `$bmforge`. Codex пояснить доступні навички, допоможе вибрати потрібні компоненти й установить їхні закріплені локальні копії. Дивіться [коротку інструкцію англійською]({{ site.baseurl }}{% link pages/codex-skills.md %}).
+
 ## Інженерний підхід
 
 **Англійська є авторитетною мовою технічних контрактів і навичок для AI-агентів.** Українська версія пояснює BMForge людям, а посилання нижче ведуть до актуальних англомовних специфікацій.
@@ -37,7 +47,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 | Завдання Codex | З чого почати |
 | --- | --- |
 | Створення застосунку | Кореневий `AGENTS.md`, [інженерний контракт]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [класифікація класів]({{ site.baseurl }}{% link pages/classification.md %}), а потім вибрані [специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
-| Початкове налаштування порожнього проєкту з навичками Codex | [Установлення закріплених навичок компонентів Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
+| Початок нового проєкту в Codex | [Використання BMForge з Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
 | Реалізація або вдосконалення компонента | [Специфікації компонентів]({{ site.baseurl }}{% link pages/component-blueprints.md %}) і [життєвий цикл специфікацій]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
 | Створення DAL або класифікація коду | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) і [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Централізація констант | [Стандарт констант]({{ site.baseurl }}{% link pages/component-constants.md %}) |
@@ -47,13 +57,10 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 | Налаштування служби | [Конфігурація виконання]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) і [мережева конфігурація]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Інтеграція з CMDB | [Відповідність CMDB]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
 | Моніторинг стану застосунку | [Перевірки працездатності]({{ site.baseurl }}{% link pages/health-checks.md %}) |
+| Аналіз збоїв у production | [Навичка RCA](https://github.com/NadimGhaznavi/bmforge/blob/main/skills/bmforge-rca/SKILL.md): збір даних без змін на сервері, відтворення та налагодження локально |
 | Установлення, оновлення або видалення | [Контракт життєвого циклу встановлення]({{ site.baseurl }}{% link pages/component-installation.md %}), [скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) і [відстеження змін розгортання]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
 | Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
-
-## Пакування навичок Codex
-
-Почніть із [навички початкового налаштування проєкту]({{ site.baseurl }}{% link pages/codex-skills.md %}), щоб установити закріплені навички **проєкту, констант, локалізації та встановлення**, а також лише ті додаткові компоненти, які запросив користувач, у `.agents/skills/` нового застосунку. Проєкт отримує власний `AGENTS.md` та **сповіщення про оновлення лише для читання**, без автоматичних оновлень чи генерації застосунків.
 
 ## Довідник компонентів (англійською)
 
@@ -75,7 +82,7 @@ BMForge — ще один продукт бренду [Bear & Moose](https://oso
 
 Модулі реалізації містять невеликий ідентифікатор компонента та версію специфікації, які можна прочитати статичним аналізом. [Життєвий цикл специфікацій]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) визначає, як виявляти прогалини, вдосконалювати контракт, додавати регресійні перевірки й версіонувати зміни. [Журнал рішень]({{ site.baseurl }}{% link DECISIONS.md %}) фіксує ухвалені рішення та незавершену роботу.
 
-**Поточний стан:** контракти HTTP, ZeroMQ, DB Server, Git та необов’язкових візуалізацій, канонічні шаблони DB/Git і закріплені локальні приклади є чернетками, що очікують перевірки в застосунках-споживачах. Варіанти візуалізацій ґрунтуються на зафіксованому коді MyCount і CMDB; GIF-анімація також має канонічний кодувальник Pillow та зафіксований приклад Snake Web. Пакування навичок Codex реалізовано; перевірка в реальних застосунках і сканування тегів компонентів у CMDB залишаються майбутньою роботою. Наявні декларації CMDB для файлів, баз даних і мережевих слухачів залишаються окремими від відстеження архітектурних компонентів.
+**Поточний стан:** Закріплені навички Codex, шаблони випусків і перевірки оновлень у режимі лише читання вже реалізовано, зокрема додаткові навички GIF-анімації та аналізу причин збоїв (RCA). Контракти компонентів і еталонні реалізації ще перевіряються в реальних застосунках. Сканування версій компонентів у CMDB залишається запланованим.
 
 ---
 

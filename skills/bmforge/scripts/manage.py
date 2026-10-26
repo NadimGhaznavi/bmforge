@@ -377,7 +377,7 @@ def start_init(args):
     with source_checkout(args.source) as (source, revision):
         bundles = {name: bundle(source, name) for name in names}
         versions = {name: spec_version(source, name) for name in names}
-        manager_source = (source / "skills/bmforge-new-project/scripts/manage.py").read_bytes()
+        manager_source = (source / "skills/bmforge/scripts/manage.py").read_bytes()
         scaffolding = release_scaffold(bundles, args.name, args.subtype)
     check_scaffold_destinations(root, scaffolding)
     base = root / ".agents"
@@ -521,7 +521,7 @@ def start_check(args):
                           f"available {new_version} ({revision[:12]})")
                 elif name not in modified:
                     print(f"CURRENT {name}: {installed['spec_version']}")
-            script = (source / "skills/bmforge-new-project/scripts/manage.py").read_bytes()
+            script = (source / "skills/bmforge/scripts/manage.py").read_bytes()
             if sha256(script).hexdigest() != lock["manager_sha256"]:
                 available.append("manager")
                 print(f"UPDATE AVAILABLE manager: available in {revision[:12]}")
