@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Tellurium (Te)**. Tellurium is used in certain solar cells, particularly cadmium telluride photovoltaic panels.
+
 ### Summary
 
 The concise Codex quick-start is now available in Ukrainian, and Ukrainian readers can reach it from the localized BMForge homepage. Agent-facing skills, commands and technical contracts remain in English.
