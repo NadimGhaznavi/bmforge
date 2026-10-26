@@ -9,8 +9,6 @@ spec_status: "draft"
 translation_key: bmforge-component-gif-animation
 ---
 
-# GIF Animation
-
 **Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
 
 This optional component encodes a sequence of **already-rendered Pillow images** into an animated GIF. The consuming application owns the frame content and cadence, whether those frames are charts, screenshots, Snake simulations, or photographs. The encoder owns frame snapshots, dimensions, timing quantization, palette handling, loop metadata and GIF encoding. It does **not** render domain data, take screenshots, manage a camera, schedule a job, publish files, run an HTTP service, or cache generated media.

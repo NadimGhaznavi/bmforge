@@ -9,6 +9,14 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-10-26 @ 05:06
+
+This release is named for the element **Antimony (Sb)**.  Antimony compounds are used in some flame-retardant formulations to help slow burning.
+
+### Changed
+
+- Website pages: Deleted headers where the title was the same (causes dupe display).
+
 ## [0.12.1] - 2026-10-26 @ 04:52
 
 This release is named for the element **Tin (Sn)**. Tin has helped preserve food for centuries as a protective coating on steel cans.
