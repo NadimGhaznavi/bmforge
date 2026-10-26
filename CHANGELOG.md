@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.12.3] - 2026-10-26 @ 05:20
+
 This release is named for the element **Tellurium (Te)**. Tellurium is used in certain solar cells, particularly cadmium telluride photovoltaic panels.
 
 ### Summary
