@@ -15,6 +15,22 @@ This file preserves design decisions that should not disappear into conversation
 
 **User experience.** The global `bmforge` skill is the single public entry point for a new repository. It describes the available `bmforge-*` skills and lets Codex install the selected, pinned project-local bundles. Users invoke `$bmforge` instead of managing component installers themselves. Manager commands, branch operations and update-cache details remain agent-facing; public documentation covers only installation, invocation and the resulting guarantees. No legacy `bmforge-new-project` alias or existing-application adoption workflow is maintained.
 
+## 2026-10-26: explicit implementation authorization
+
+**Human control.** Codex may investigate read-only, discuss possibilities and
+propose specifications before implementation is authorized. None of those
+activities implicitly grants permission to change files. A clear user directive
+to implement an agreed scope opens the gate without a prescribed phrase; the
+agent then executes the approved work without repetitive per-file approval.
+New dependencies and material scope or architecture changes require another
+decision. Permission to implement does not imply permission to commit, push,
+release or deploy.
+
+**Propagation.** The gate belongs in BMForge's engineering contract and
+agent instructions, the single entry-point and baseline project skills, and
+the generated project `AGENTS.md`. Existing projects retain pinned guidance
+until deliberately updated; read-only update checks report new policy.
+
 ## 2026-10-24: agent-first BMForge
 
 **Purpose.** BMForge teaches Codex the desired software-development process and construction patterns. It is not a shared library or an orchestration platform. Every destination application owns its generated or adapted code. Cross-project integrations use documented public APIs only.

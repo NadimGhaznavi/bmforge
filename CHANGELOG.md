@@ -9,6 +9,22 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Codex now requires a clear implementation go-ahead, so exploring a design or
+agreeing on a specification cannot accidentally trigger code changes. The rule
+is included in new projects through generated agent guidance and pinned skills.
+
+### Changed
+
+- Establish scope-bound implementation authorization across BMForge guidance,
+  engineering contract, entry-point and project skills, and generated
+  `AGENTS.md`. Allow read-only planning, recognize direct user requests without
+  magic words, and require renewed approval for material deviations while
+  keeping commit, release and deployment decisions separate.
+- Add bootstrap regression checks for the generated authorization gate and
+  notification-only updates to pinned engineering guidance.
+
 ## [0.12.3] - 2026-10-26 @ 05:20
 
 This release is named for the element **Tellurium (Te)**. Tellurium is used in certain solar cells, particularly cadmium telluride photovoltaic panels.
