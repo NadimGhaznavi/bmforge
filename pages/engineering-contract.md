@@ -6,8 +6,6 @@ language_name: English
 translation_key: bmforge-engineering-contract
 ---
 
-# Engineering Contract
-
 **The smallest clear implementation that satisfies the contract wins.** BMForge is for the applications actually being built, not an imagined enterprise platform.
 
 ## Required behaviour
