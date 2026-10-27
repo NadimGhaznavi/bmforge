@@ -7,7 +7,9 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 MANAGER = ROOT / "skills/bmforge/scripts/manage.py"
@@ -368,6 +370,101 @@ class SkillBootstrapTests(unittest.TestCase):
         repeat = self.run_manager("add", "--components", "bmforge-zmq")
         self.assertEqual(repeat.returncode, 2)
         self.assertEqual(existing.read_bytes(), content)
+
+    def test_attach_preserves_established_project_and_supports_add_check(self):
+        (self.project / "AGENTS.md").write_text("R3el's own coding guidance\n")
+        (self.project / "CHANGELOG.md").write_text("Established application history\n")
+        (self.project / "scripts").mkdir()
+        (self.project / "scripts/release.sh").write_text("original release\n")
+        other_skill = self.project / ".agents/skills/other-agent"
+        other_skill.mkdir(parents=True)
+        (other_skill / "SKILL.md").write_text("Third-party skill\n")
+        git(self.project, "add", ".")
+        git(self.project, "-c", "user.name=BMForge Test", "-c", "user.email=test@example.invalid",
+            "commit", "-qm", "Existing project")
+        old_head = git(self.project, "rev-parse", "HEAD")
+
+        result = self.run_manager("attach", "--components", "bmforge-rca")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Attached 1 pinned", result.stdout)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(lock["mode"], "attached")
+        self.assertEqual(set(lock["skills"]), {"bmforge-rca"})
+        self.assertEqual(len(lock["source_commit"]), 40)
+        self.assertTrue((self.project / module.MANAGER).is_file())
+        self.assertTrue((self.project / ".agents/skills/bmforge-rca/SKILL.md").is_file())
+        self.assertEqual((self.project / "AGENTS.md").read_text(), "R3el's own coding guidance\n")
+        self.assertEqual((self.project / "CHANGELOG.md").read_text(), "Established application history\n")
+        self.assertEqual((self.project / "scripts/release.sh").read_text(), "original release\n")
+        self.assertEqual((other_skill / "SKILL.md").read_text(), "Third-party skill\n")
+        self.assertFalse((self.project / "scripts/new-release.sh").exists())
+        self.assertFalse((self.project / ".agents/skills/bmforge-project").exists())
+        self.assertEqual(git(self.project, "rev-parse", "HEAD"), old_head)
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+        added = self.run_manager("add", "--components", "bmforge-zmq")
+        self.assertEqual(added.returncode, 0, added.stderr)
+        self.assertEqual(set(json.loads((self.project / module.LOCK).read_text())["skills"]),
+                         {"bmforge-rca", "bmforge-zmq"})
+        self.assertEqual(self.run_manager("check").returncode, 0)
+        branches = self.run_manager("setup-branches", "--dry-run")
+        self.assertEqual(branches.returncode, 2)
+        self.assertIn("not attached repositories", branches.stderr)
+        self.assertEqual(git(self.project, "branch", "--list", "dev"), "")
+
+    def test_attach_requires_explicit_optional_skills(self):
+        (self.project / "AGENTS.md").write_text("Leave this intact\n")
+        for selection in ("", "bmforge-project", "bmforge-rca,bmforge-rca", "django"):
+            result = self.run_manager("attach", "--components", selection)
+            self.assertEqual(result.returncode, 2)
+            self.assertFalse((self.project / ".agents").exists())
+        self.assertEqual((self.project / "AGENTS.md").read_text(), "Leave this intact\n")
+
+    def test_attach_refuses_existing_managed_or_colliding_paths(self):
+        other_skill = self.project / ".agents/skills/bmforge-rca"
+        other_skill.mkdir(parents=True)
+        (other_skill / "SKILL.md").write_text("User-owned RCA\n")
+        conflict = self.run_manager("attach", "--components", "bmforge-rca")
+        self.assertEqual(conflict.returncode, 2)
+        self.assertIn("refusing overwrite", conflict.stderr)
+        self.assertEqual((other_skill / "SKILL.md").read_text(), "User-owned RCA\n")
+        self.assertFalse((self.project / module.LOCK).exists())
+        self.assertFalse((self.project / module.MANAGER).exists())
+
+        other_skill.rename(self.project / ".agents/skills/renamed-skill")
+        (self.project / ".agents/bmforge").mkdir()
+        managed = self.run_manager("attach", "--components", "bmforge-rca")
+        self.assertEqual(managed.returncode, 2)
+        self.assertIn("management directory already exists", managed.stderr)
+        self.assertFalse((self.project / module.LOCK).exists())
+
+    def test_attach_refuses_symlinked_skill_directory(self):
+        destination = self.project.parent / "outside-skills"
+        destination.mkdir()
+        (self.project / ".agents").mkdir()
+        (self.project / ".agents/skills").symlink_to(destination, target_is_directory=True)
+        result = self.run_manager("attach", "--components", "bmforge-rca")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Unsafe existing agent directory", result.stderr)
+        self.assertEqual(list(destination.iterdir()), [])
+        self.assertFalse((self.project / module.LOCK).exists())
+
+    def test_attach_rolls_back_partial_copy_without_touching_existing_files(self):
+        agents = self.project / ".agents"
+        agents.mkdir()
+        (agents / "other-file.txt").write_text("owned by project\n")
+        def interrupted_copy(path, files):
+            path.mkdir()
+            (path / "partial.txt").write_text("incomplete")
+            raise OSError("simulated copy failure")
+        args = SimpleNamespace(project=self.project, source=self.source, components="bmforge-rca")
+        with mock.patch.object(module, "copy_bundle", side_effect=interrupted_copy):
+            with self.assertRaisesRegex(OSError, "simulated copy failure"):
+                module.start_attach(args)
+        self.assertEqual((agents / "other-file.txt").read_text(), "owned by project\n")
+        self.assertFalse((agents / "skills").exists())
+        self.assertFalse((agents / "bmforge").exists())
+
 
     def test_invalid_component_and_missing_remote_fail_without_mutation(self):
         fail = self.run_manager("init", "--components", "bmforge-http,django")
