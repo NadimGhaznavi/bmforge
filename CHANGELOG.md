@@ -9,6 +9,9 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Lanthanum (La)**. Lanthanum is used in 
+specialized optical glass for camera lenses.
+
 ### Summary
 
 Existing applications can now attach individual pinned BMForge skills without adopting
