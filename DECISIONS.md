@@ -11,6 +11,12 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-27: attach selected skills to established applications
+
+**Reason.** R3el needs BMForge's read-only production RCA guidance without adopting an unrelated greenfield architecture or replacing its existing agent and release practices. This is a concrete existing-application use case, not a request for framework migration.
+
+**Boundary.** Add a distinct `manage.py attach` operation. It installs only explicitly selected optional skills with the existing lock file and manager; preserve `AGENTS.md`, other local skills, application files, existing branches and release tooling. New-project `init` remains unchanged and keeps its mandatory baseline. Attached repositories support subsequent `add` and read-only `check`, but not `setup-branches`. Refuse path conflicts and avoid partial attachment on failures. Attachment alone does not authorize coding, remote access, commits or deployment.
+
 ## 2026-10-26: one Codex entry-point skill
 
 **User experience.** The global `bmforge` skill is the single public entry point for a new repository. It describes the available `bmforge-*` skills and lets Codex install the selected, pinned project-local bundles. Users invoke `$bmforge` instead of managing component installers themselves. Manager commands, branch operations and update-cache details remain agent-facing; public documentation covers only installation, invocation and the resulting guarantees. No legacy `bmforge-new-project` alias or existing-application adoption workflow is maintained.
