@@ -6,7 +6,7 @@ language_name: English
 translation_key: bmforge-codex-skills
 ---
 
-BMForge gives Codex a set of engineering skills for building new applications. **Install one entry-point skill**, then let Codex select and install the components your project needs.
+BMForge gives Codex selectable engineering skills for new and existing applications. **Install one entry-point skill** and select only the capabilities your project needs.
 
 ## 1. Install BMForge once
 
@@ -27,6 +27,12 @@ $bmforge
 Codex will explain the available skills, ask for your application name and required components, and prepare the project. You do not need to manage individual skill installations or run setup scripts yourself.
 
 The `bmforge` entry point lives in `~/.agents/skills/bmforge/`; selected component skills are copied into each project's `.agents/skills/` directory and pinned to a BMForge source revision. **No application is generated or deployed**, and updates require your approval.
+
+## 3. Add a skill to an existing project
+
+Open Codex in an established Git repository and enter `$bmforge`. Choose only the skill you need, such as `bmforge-rca` for read-only production evidence collection and local bug investigation. After you authorize the setup, Codex attaches that skill with its pinned version and local update checker.
+
+**Existing projects retain their own `AGENTS.md`, architecture, application files, branches and release tooling.** Attachment does not install the new-project baseline or create a release scaffold. More skills can be added later with approval; checking for newer skills never upgrades them automatically.
 
 ---
 

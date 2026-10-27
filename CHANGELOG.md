@@ -9,6 +9,22 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-27 @ 04:12
+
+This release is named for the element **Lanthanum (La)**. Lanthanum is used in 
+specialized optical glass for camera lenses.
+
+### Summary
+
+Existing applications can now attach individual pinned BMForge skills without adopting
+BMForge's greenfield architecture, release scaffolding or agent instructions.
+
+### Added
+
+- Introduce `manage.py attach --components` for established Git repositories: preserve existing `AGENTS.md`, application files and `.agents/` content; install only selected optional skills and the standard local pinning/check manager.
+- Reuse `add` and offline `check` for attached projects, reject new-project branch setup, and cover preservation, conflicts, symlinks and partial-failure rollback with regression tests.
+- Explain new-project versus existing-project workflows in the Codex skill and website documentation.
+
 ## [0.13.0] - 2026-10-26 @ 19:23
 
 This release is named for the element **Barium (Ba)**. Barium compounds make 

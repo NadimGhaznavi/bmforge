@@ -25,7 +25,7 @@ Install the **`bmforge` skill** once in a Codex chat:
 $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skills/bmforge
 ```
 
-Then open Codex in a new Git repository and invoke `$bmforge`. Codex explains the available skills, helps you choose the components you need, and installs pinned project-local copies. See the [short setup guide]({{ site.baseurl }}{% link pages/codex-skills.md %}).
+Then invoke `$bmforge` in Codex. In a new repository, it bootstraps the engineering baseline and your chosen components. In an existing repository, it can attach just the selected skill, such as RCA, without changing the application architecture or release process. See the [short setup guide]({{ site.baseurl }}{% link pages/codex-skills.md %}).
 
 ## The engineering contract
 

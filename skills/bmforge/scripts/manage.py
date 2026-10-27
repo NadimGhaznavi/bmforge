@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install pinned BMForge Codex skills into a new application repository.
+"""Install and manage pinned BMForge Codex skills in Git repositories.
 
 The check operation never writes to the application or its installed skills.
 """
@@ -433,6 +433,75 @@ def start_init(args):
     print("  python3 .agents/bmforge/manage.py check --project .")
 
 
+def start_attach(args):
+    """Pin selected skills in an existing repository without adopting its architecture."""
+    root = project_root(args.project)
+    names = selected_names(args.components)
+    if not names:
+        raise SetupError("Select at least one component to attach")
+    agents = root / ".agents"
+    skills_dir = agents / "skills"
+    manager_dir = root / LOCK.parent
+
+    # Existing agent instructions and third-party skills are entirely project-owned.
+    for directory in (agents, skills_dir):
+        if directory.is_symlink() or (directory.exists() and not directory.is_dir()):
+            raise SetupError(f"Unsafe existing agent directory: {directory}")
+    if manager_dir.exists() or manager_dir.is_symlink():
+        raise SetupError("BMForge management directory already exists; use 'add' for managed projects")
+    for name in names:
+        path = skills_dir / name
+        if path.exists() or path.is_symlink():
+            raise SetupError(f"Skill already exists; refusing overwrite: {path}")
+
+    # Read and validate every selected bundle before touching the destination.
+    with source_checkout(args.source) as (source, revision):
+        bundles = {name: bundle(source, name) for name in names}
+        versions = {name: spec_version(source, name) for name in names}
+        manager_source = (source / "skills/bmforge/scripts/manage.py").read_bytes()
+
+    created_directories = []
+    created_bundles = []
+    try:
+        for directory in (agents, skills_dir, manager_dir):
+            if not directory.exists():
+                directory.mkdir()
+                created_directories.append(directory)
+        for name, files in bundles.items():
+            target = skills_dir / name
+            created_bundles.append(target)
+            copy_bundle(target, files)
+        (root / MANAGER).write_bytes(manager_source)
+        write_json_atomic(root / LOCK, {
+            "schema": 1,
+            "mode": "attached",
+            "repository": args.source or SOURCE_URL,
+            "branch": SOURCE_BRANCH,
+            "source_commit": revision,
+            "manager_sha256": sha256(manager_source).hexdigest(),
+            "skills": {name: {"spec_version": versions[name],
+                               "sha256": fingerprint(files),
+                               "source_commit": revision}
+                       for name, files in bundles.items()},
+        })
+    except BaseException:
+        (root / LOCK).unlink(missing_ok=True)
+        (root / MANAGER).unlink(missing_ok=True)
+        for directory in reversed(created_bundles):
+            if directory.exists():
+                shutil.rmtree(directory)
+        for directory in reversed(created_directories):
+            directory.rmdir()
+        raise
+
+    print(f"Attached {len(names)} pinned BMForge skill(s) from {revision[:12]}:")
+    for name in names:
+        print(f"  {name} ({versions[name]})")
+    print("Existing AGENTS.md, application files, release tooling and Git branches were not changed.")
+    print("Check pinned skills with: python3 .agents/bmforge/manage.py check --project .")
+    print("Add further skills with: python3 .agents/bmforge/manage.py add --project . --components NAME")
+
+
 def load_lock(root):
     try:
         value = json.loads((root / LOCK).read_text(encoding="utf-8"))
@@ -560,7 +629,9 @@ def ref_exists(root, reference):
 def start_setup_branches(args):
     """Create local release branches after the user's reviewed initial commit."""
     root = project_root(args.project)
-    load_lock(root)  # Only operate on a project that BMForge actually initialized.
+    lock = load_lock(root)
+    if lock.get("mode") == "attached":
+        raise SetupError("Branch setup is for new BMForge projects, not attached repositories")
     main = "main"
     feature = args.feature
     if feature in (main, "dev") or not feature.startswith("feat/"):
@@ -596,12 +667,12 @@ def start_setup_branches(args):
 def main(argv=None):
     parser = ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="action", required=True)
-    for action in ("init", "add", "check", "setup-branches"):
+    for action in ("init", "attach", "add", "check", "setup-branches"):
         cmd = sub.add_parser(action)
         cmd.add_argument("--project", default=".", help="Existing Git repository root")
-        if action in ("init", "add", "check"):
+        if action in ("init", "attach", "add", "check"):
             cmd.add_argument("--source", help="BMForge checkout or Git remote (default: published main)")
-        if action in ("init", "add"):
+        if action in ("init", "attach", "add"):
             cmd.add_argument("--components", default="", help="Comma-separated component skill names")
         if action == "init":
             cmd.add_argument("--name", required=True, help="Canonical application class name, e.g. SnakeLab")
@@ -613,7 +684,8 @@ def main(argv=None):
                              help="Validate branch setup without writing refs")
     args = parser.parse_args(argv)
     try:
-        return {"init": start_init, "add": start_add, "check": start_check,
+        return {"init": start_init, "attach": start_attach,
+                "add": start_add, "check": start_check,
                 "setup-branches": start_setup_branches}[args.action](args) or 0
     except (SetupError, OSError, subprocess.TimeoutExpired) as error:
         print(f"BMForge: {error}", file=sys.stderr)
