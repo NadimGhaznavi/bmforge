@@ -9,6 +9,23 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-10-28 @ 17:40
+
+This release is named for the element **Tantalum (Ta)**. Tantalum resists 
+corrosion so well that it is used in demanding chemical equipment and electronic 
+capacitors.
+
+### Summary
+
+Multi-service applications now have one standard command for starting and stopping
+their services in sequence.
+
+### Changed
+
+- Require an executable `scripts/services start|stop` for applications with more
+  than one service, using explicit command sequences without dependency awareness.
+  Include the rule in pinned project guidance and generated agent instructions.
+
 ## [0.14.1] - 2026-10-28 @ 04:53
 
 - Updated README.
