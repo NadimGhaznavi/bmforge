@@ -11,6 +11,14 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-28: simple service start/stop sequencing
+
+Applications with more than one service provide an executable `scripts/services`
+with `start` and `stop`. Each action runs the application's commands sequentially
+in an explicit order, so operators do not have to discover systemd units manually.
+Dependency awareness is not required. Carry this rule in the engineering contract,
+project skill and generated agent instructions; each application owns its script.
+
 ## 2026-10-27: attach selected skills to established applications
 
 **Reason.** R3el needs BMForge's read-only production RCA guidance without adopting an unrelated greenfield architecture or replacing its existing agent and release practices. This is a concrete existing-application use case, not a request for framework migration.

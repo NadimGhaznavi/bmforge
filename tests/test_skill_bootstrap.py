@@ -135,6 +135,10 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertFalse((self.project / ".agents/skills/bmforge-zmq").exists())
         self.assertFalse((self.project / "app").exists())
         self.assertIn("Do not apply", (self.project / "AGENTS.md").read_text())
+        for relative in ("AGENTS.md", ".agents/skills/bmforge-project/SKILL.md"):
+            guidance = (self.project / relative).read_text()
+            self.assertIn("`scripts/services` supporting `start` and `stop`", guidance)
+            self.assertIn("no dependency awareness is required", guidance)
 
     def test_changelog_policy_is_in_generated_guidance_and_pinned_reference(self):
         self.bootstrap("")

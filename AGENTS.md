@@ -46,6 +46,7 @@ For user-facing HTML, follow the HTTP component's `pages/component-http.md` desi
 
 ## Engineering rules
 
+- For applications with more than one service, create an executable `scripts/services` supporting `start` and `stop`. Run the application's start/stop commands sequentially in an explicit order. Keep it simple; no dependency awareness is required.
 - Classify substantial classes explicitly: `activity/` orchestrates work, `interface/` owns external and domain data access, `entity/` carries data. Domain `*Db` classes compose with the unchanged `DbMgr`. Do not put SQL in activity or entity classes.
 - Validate untrusted inputs at external boundaries. Trust established internal contracts instead of repeating defensive checks.
 - Never introduce a new module, server framework, database driver, ORM, plotting library, or dependency to replace an approved component implementation without explicit user approval and a specification update. Charts use Plotly.js, geographic maps use Leaflet, and relationship graphs use Cytoscape.js at the versions listed in `pages/component-visualization.md`; select only the libraries the application requires.
