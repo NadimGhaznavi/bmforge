@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-10-28 @ 17:40
+
 This release is named for the element **Tantalum (Ta)**. Tantalum resists 
 corrosion so well that it is used in demanding chemical equipment and electronic 
 capacitors.
