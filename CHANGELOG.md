@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+- Updated README.
+
 ## [0.14.0] - 2026-10-27 @ 04:12
 
 This release is named for the element **Lanthanum (La)**. Lanthanum is used in 
