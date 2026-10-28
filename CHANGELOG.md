@@ -9,6 +9,10 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Tantalum (Ta)**. Tantalum resists 
+corrosion so well that it is used in demanding chemical equipment and electronic 
+capacitors.
+
 ### Summary
 
 Multi-service applications now have one standard command for starting and stopping
