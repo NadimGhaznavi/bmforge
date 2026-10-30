@@ -72,6 +72,7 @@ $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skil
 | Сервер бази даних | `bmforge.db-server` | [Канонічний DbMgr і рівні DAL]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Git | `bmforge.git` | [Публікація й коміти]({{ site.baseurl }}{% link pages/component-git.md %}) |
 | Візуалізації | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
+| Редагування часових шкал | `bmforge.timeline` | [vis-timeline (потребує HTTP)]({{ site.baseurl }}{% link pages/component-timeline.md %}) |
 | GIF-анімація | `bmforge.gif-animation` | [Кодувальник GIF-кадрів Pillow]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
 | Константи | `bmforge.constants` | [Фіксовані значення за доменами]({{ site.baseurl }}{% link pages/component-constants.md %}) |
 | Локалізація застосунків | `bmforge.localization` | [Англійський каталог і багатомовний інтерфейс]({{ site.baseurl }}{% link pages/component-localization.md %}) |

@@ -78,9 +78,11 @@ SKILLS = {
     "bmforge-gif-animation": ("pages/component-gif-animation.md", (
         "components/reference/snake-web-code/snakewebcode/activity/SimulationAnimation.py",
     )),
+    "bmforge-timeline": ("pages/component-timeline.md", ()),
     "bmforge-rca": (None, ()),
 }
 BASE_SKILLS = ("bmforge-project", "bmforge-constants", "bmforge-localization", "bmforge-installation")
+REQUIRES = {"bmforge-timeline": ("bmforge-http",)}
 COMMON = (
     "pages/engineering-contract.md",
     "pages/classification.md",
@@ -159,6 +161,14 @@ def selected_names(value):
     if unknown:
         raise SetupError("Unknown component(s): " + ", ".join(unknown))
     return names
+
+
+def require_components(names, installed=()):
+    available = set(names) | set(installed)
+    for name in names:
+        for dependency in REQUIRES.get(name, ()):
+            if dependency not in available:
+                raise SetupError(f"{name} requires {dependency}; select both components or install the dependency first")
 
 
 def bundle(source, name):
@@ -390,6 +400,7 @@ def start_init(args):
     if (root / ".agents").exists() or (root / "AGENTS.md").exists():
         raise SetupError("Refusing to overwrite existing .agents/ or AGENTS.md")
     names = [*BASE_SKILLS, *selected_names(args.components)]
+    require_components(names)
     with source_checkout(args.source) as (source, revision):
         bundles = {name: bundle(source, name) for name in names}
         versions = {name: spec_version(source, name) for name in names}
@@ -444,6 +455,7 @@ def start_attach(args):
     names = selected_names(args.components)
     if not names:
         raise SetupError("Select at least one component to attach")
+    require_components(names)
     agents = root / ".agents"
     skills_dir = agents / "skills"
     manager_dir = root / LOCK.parent
@@ -525,6 +537,7 @@ def start_add(args):
     names = selected_names(args.components)
     if not names:
         raise SetupError("Select at least one additional component")
+    require_components(names, lock["skills"])
     present = sorted(set(names) & set(lock["skills"]))
     if present:
         raise SetupError("Already installed, will not overwrite: " + ", ".join(present))

@@ -73,7 +73,7 @@ class SkillBootstrapTests(unittest.TestCase):
                          module.LOCALIZER_TEMPLATE, module.TEXT_TEMPLATE, module.EN_CATALOG):
             path = self.source / original
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(f"# Canonical template {original}\n")
+            path.write_bytes((ROOT / original).read_bytes())
         self.commit_source()
 
     def commit_source(self):
@@ -374,6 +374,67 @@ class SkillBootstrapTests(unittest.TestCase):
         repeat = self.run_manager("add", "--components", "bmforge-zmq")
         self.assertEqual(repeat.returncode, 2)
         self.assertEqual(existing.read_bytes(), content)
+
+    def test_timeline_requires_http_before_init_or_attach_writes(self):
+        for action in ("init", "attach"):
+            with self.subTest(action=action):
+                result = self.run_manager(action, "--components", "bmforge-timeline")
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn("bmforge-timeline requires bmforge-http", result.stderr)
+                self.assertEqual(list(self.project.iterdir()), [self.project / ".git"])
+
+    def test_timeline_pair_can_bootstrap_or_attach_without_implicit_skills(self):
+        self.bootstrap("bmforge-timeline,bmforge-http")
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {*module.BASE_SKILLS, "bmforge-http", "bmforge-timeline"})
+        # The installed manager carries the same dependency contract.
+        installed = self.project / module.MANAGER
+        self.assertEqual(installed.read_bytes(), MANAGER.read_bytes())
+        shutil.rmtree(self.project / ".agents")
+        (self.project / "AGENTS.md").write_text("Existing project instructions\n")
+        result = self.run_manager("attach", "--components", "bmforge-http,bmforge-timeline")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {"bmforge-http", "bmforge-timeline"})
+        self.assertEqual((self.project / "AGENTS.md").read_text(), "Existing project instructions\n")
+        for name in lock["skills"]:
+            self.assertEqual((self.project / ".agents/skills" / name / "references/specification.md").read_bytes(),
+                             (self.source / module.SKILLS[name][0]).read_bytes())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_add_timeline_missing_http_preserves_existing_project(self):
+        self.bootstrap("")
+        before = {p.relative_to(self.project): p.read_bytes()
+                  for p in self.project.rglob("*") if p.is_file() and ".git" not in p.parts}
+        result = self.run_manager("add", "--components", "bmforge-timeline")
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("requires bmforge-http", result.stderr)
+        after = {p.relative_to(self.project): p.read_bytes()
+                 for p in self.project.rglob("*") if p.is_file() and ".git" not in p.parts}
+        self.assertEqual(after, before)
+
+    def test_add_timeline_preserves_pinned_http_when_upstream_changes(self):
+        self.bootstrap("bmforge-http")
+        directory = self.project / ".agents/skills/bmforge-http"
+        before = {p.relative_to(directory): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+        http_lock = json.loads((self.project / module.LOCK).read_text())["skills"]["bmforge-http"]
+        (self.source / "skills/bmforge-http/SKILL.md").write_text("New upstream HTTP instructions\n")
+        self.commit_source()
+        result = self.run_manager("add", "--components", "bmforge-timeline")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        after = {p.relative_to(directory): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+        self.assertEqual(after, before)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(lock["skills"]["bmforge-http"], http_lock)
+        self.assertNotEqual(lock["skills"]["bmforge-timeline"]["source_commit"], http_lock["source_commit"])
+
+    def test_add_timeline_and_http_together(self):
+        self.bootstrap("")
+        result = self.run_manager("add", "--components", "bmforge-timeline,bmforge-http")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {*module.BASE_SKILLS, "bmforge-http", "bmforge-timeline"})
+        self.assertEqual(self.run_manager("check").returncode, 0)
 
     def test_attach_preserves_established_project_and_supports_add_check(self):
         (self.project / "AGENTS.md").write_text("R3el's own coding guidance\n")
@@ -709,7 +770,7 @@ class SkillBootstrapTests(unittest.TestCase):
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
         self.bootstrap(selection)
-        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 11)
+        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 12)
         self.assertEqual(self.run_manager("check").returncode, 0)
 
 

@@ -11,6 +11,12 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-30: timeline editing standard and HTTP prerequisite
+
+Use **vis-timeline 8.5.6** with matching standalone JavaScript and CSS for editing timeline objects. The optional `bmforge-timeline` skill pins the `bmforge.timeline` draft 0.1.0 contract, including acknowledged saves, server-side validation, locked objects, precise form editing and explicit time semantics. Applications own their records and persistence.
+
+Timeline requires `bmforge-http`. The manager checks explicitly selected and already installed skills before writing files; it rejects a missing prerequisite instead of silently adding infrastructure or overwriting a pinned HTTP skill. This is a skill-installation dependency, not service orchestration. HTTP alone remains sufficient for applications without timeline editing.
+
 ## 2026-10-28: simple service start/stop sequencing
 
 Applications with more than one service provide an executable `scripts/services`
