@@ -33,9 +33,11 @@ class DbMgrTests(unittest.TestCase):
     def test_connection_config_has_no_application_dependencies(self):
         self.assertEqual(self.fake.connect.call_args.kwargs['database'], 'testdb')
         self.assertEqual(self.fake.connect.call_args.kwargs['charset'], 'utf8mb4')
+        self.assertEqual(self.fake.connect.call_args.kwargs['collation'], 'utf8mb4_unicode_ci')
+        self.assertEqual(self.fake.connect.call_args.kwargs['init_command'], "SET time_zone = '+00:00'")
         self.assertTrue(self.fake.connect.call_args.kwargs['autocommit'])
         self.assertIn('STRICT_ALL_TABLES', self.fake.connect.call_args.kwargs['sql_mode'])
-        self.assertEqual(self.module.BMFORGE_COMPONENT['spec_version'], '0.4.0')
+        self.assertEqual(self.module.BMFORGE_COMPONENT['spec_version'], '0.5.0')
         imports = set()
         for node in ast.walk(ast.parse(TEMPLATE.read_text())):
             if isinstance(node, ast.Import):

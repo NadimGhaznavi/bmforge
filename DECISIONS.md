@@ -11,6 +11,12 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-30: local HTTP timestamps and consistent MariaDB collations
+
+**Time display.** HTTP human-facing timestamps use local time and the numeric format `yyyy-mm-dd hh:mm:ss`, with a 24-hour clock and no fractional seconds. Use the application's configured local timezone, defaulting to the server's OS local timezone, consistently in server-rendered pages and browser widgets. This is presentation policy; UTC persistence, offset-bearing API timestamps and protocol headers retain their own contracts. Advance HTTP to draft `0.5.0` and align timeline at `0.2.0`, removing its previous UTC display option. Use stdlib `datetime`/`zoneinfo` and existing browser capabilities without a new third-party date library.
+
+**Database comparison.** SnakeLab's `run_id` used `utf8mb4_unicode_ci` while Ax3l's `process_id` used `utf8mb4_uca1400_ai_ci`, causing cross-database SQL comparison failures. Pin `utf8mb4` / `utf8mb4_unicode_ci` throughout application database defaults, tables, text columns and connections. Both DDL and PyMySQL connections name the pair explicitly, independent of MariaDB version defaults. Advance DB Server and its canonical manager to draft `0.5.0`; acceptance includes inspecting effective settings and a cross-database text join. Changing a default or connection does not convert existing columns. Consuming applications adopt through owner-approved upgrades and explicit migrations where required.
+
 ## 2026-10-30: timeline editing standard and HTTP prerequisite
 
 Use **vis-timeline 8.5.6** with matching standalone JavaScript and CSS for editing timeline objects. The optional `bmforge-timeline` skill pins the `bmforge.timeline` draft 0.1.0 contract, including acknowledged saves, server-side validation, locked objects, precise form editing and explicit time semantics. Applications own their records and persistence.
