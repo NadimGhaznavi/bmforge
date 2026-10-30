@@ -9,6 +9,19 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+BMForge now defines a standard for editing timeline objects with vis-timeline, using the application's HTTP server and preserving application-owned validation and persistence.
+
+### Added
+
+- Add the optional `bmforge-timeline` skill and draft `bmforge.timeline` 0.1.0 contract, pinning vis-timeline 8.5.6 JavaScript/CSS with editing callbacks, acknowledged saves, locked objects, precise keyboard forms and explicit timezone rules.
+- Require `bmforge-http` for timeline during init, attach and add; reject missing prerequisites before any writes and preserve an already pinned HTTP skill.
+
+### Fixed
+
+- Use real canonical templates in the bootstrap test fixture so release-scaffold checks can run instead of failing on placeholder constants.
+
 ## [0.15.0] - 2026-10-28 @ 17:40
 
 This release is named for the element **Tantalum (Ta)**. Tantalum resists 

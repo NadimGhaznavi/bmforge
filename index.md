@@ -49,6 +49,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Centralizing constants and avoiding magic strings | [Constants standard]({{ site.baseurl }}{% link pages/component-constants.md %}) |
 | Localizing application interfaces from day one | [Application Localization]({{ site.baseurl }}{% link pages/component-localization.md %}) |
 | Selecting charts, maps or relationship graphs | [Approved display visualizations]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
+| Editing timeline objects | [Timeline Editing (requires HTTP)]({{ site.baseurl }}{% link pages/component-timeline.md %}) |
 | Exporting rendered frames as an animated GIF | [GIF Animation]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
 | Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
@@ -69,6 +70,7 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 | DB Server | `bmforge.db-server` | [Canonical DbMgr and DAL layering]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Git | `bmforge.git` | [Publish and Commit]({{ site.baseurl }}{% link pages/component-git.md %}) |
 | Display visualizations | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
+| Timeline editing | `bmforge.timeline` | [vis-timeline (requires HTTP)]({{ site.baseurl }}{% link pages/component-timeline.md %}) |
 | GIF animation | `bmforge.gif-animation` | [Pillow GIF frame encoder]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
 | Constants | `bmforge.constants` | [Domain-grouped fixed values]({{ site.baseurl }}{% link pages/component-constants.md %}) |
 | Application localization | `bmforge.localization` | [English source and multilingual runtime UI]({{ site.baseurl }}{% link pages/component-localization.md %}) |
