@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Astatine (At)**. Astatine is so rare and radioactive that only tiny amounts exist naturally at any given moment.
+
 ### Summary
 
 BMForge now defines a standard for editing timeline objects with vis-timeline, using the application's HTTP server and preserving application-owned validation and persistence.
