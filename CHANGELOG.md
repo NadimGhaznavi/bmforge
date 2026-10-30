@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.17.1] - 2026-10-30 @ 04:42
+
 This release is named for the element **Actinium (Ac)**. Actinium-225 is being 
 studied for targeted alpha-particle cancer therapies.
 
