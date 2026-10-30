@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-10-30 @ 03:00
+
 This release is named for the element **Astatine (At)**. Astatine is so rare and radioactive that only tiny amounts exist naturally at any given moment.
 
 ### Summary
