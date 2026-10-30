@@ -9,6 +9,22 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Standardize local-time HTTP displays and MariaDB text comparison settings so
+timestamps are consistent and cross-database SQL avoids collation mismatches.
+
+### Changed
+
+- Advance HTTP to draft `0.5.0`: display local `yyyy-mm-dd hh:mm:ss` timestamps
+  with a 24-hour clock and no fractional seconds, using the application's local
+  timezone consistently across server and browser views. Align timeline at
+  `0.2.0`, preserving unambiguous API timestamps and UTC persistence.
+- Advance DB Server to draft `0.5.0`: pin `utf8mb4` / `utf8mb4_unicode_ci` for
+  database defaults, tables, character columns and canonical PyMySQL connections;
+  require effective-setting checks and cross-database join validation on adoption.
+  Existing application upgrades and data migrations remain deliberate operations.
+
 ## [0.16.0] - 2026-10-30 @ 03:00
 
 This release is named for the element **Astatine (At)**. Astatine is so rare and radioactive that only tiny amounts exist naturally at any given moment.

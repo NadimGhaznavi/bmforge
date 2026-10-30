@@ -44,10 +44,13 @@ The user-facing [BMForge skill](pages/codex-skills.md) lives under `skills/bmfor
 
 For user-facing HTML, follow the HTTP component's `pages/component-http.md` design contract. Treat BMDynIP's pinned HTML/CSS as a **visual reference**: use dark surfaces, strong contrast and AI-chosen saturated primary accents, **not pastel colors**. Keep controls keyboard/mobile accessible. Do not copy its DNS features or create a GUI for an API-only service.
 
+Display human-facing timestamps in the application's local timezone (default: server local time), using zero-padded `yyyy-mm-dd hh:mm:ss`, a 24-hour clock and no fractional seconds. Apply the same timezone in server-rendered pages and browser widgets; keep machine-facing timestamp/storage contracts unambiguous. Follow the HTTP specification's date/time acceptance checks.
+
 ## Engineering rules
 
 - For applications with more than one service, create an executable `scripts/services` supporting `start` and `stop`. Run the application's start/stop commands sequentially in an explicit order. Keep it simple; no dependency awareness is required.
 - Classify substantial classes explicitly: `activity/` orchestrates work, `interface/` owns external and domain data access, `entity/` carries data. Domain `*Db` classes compose with the unchanged `DbMgr`. Do not put SQL in activity or entity classes.
+- Pin MariaDB application databases, tables, ordinary text columns and connections to `utf8mb4` / `utf8mb4_unicode_ci` under `pages/component-db-server.md`, preserving its JSON type exception. Do not rely on server defaults or query-level collation workarounds for cross-database text joins; existing schema adoption is an explicit reviewed migration.
 - Validate untrusted inputs at external boundaries. Trust established internal contracts instead of repeating defensive checks.
 - Never introduce a new module, server framework, database driver, ORM, plotting library, or dependency to replace an approved component implementation without explicit user approval and a specification update. Charts use Plotly.js, geographic maps use Leaflet, and relationship graphs use Cytoscape.js at the versions listed in `pages/component-visualization.md`; select only the libraries the application requires.
 - Don't swallow exceptions or invent fallbacks, retries, workers, queues, abstractions, or optional features. Include additional complexity only for a named requirement or observed failure.
