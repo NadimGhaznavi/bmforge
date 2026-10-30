@@ -10,7 +10,7 @@ COMPONENTS = {
     "zmq": "bmforge.zmq-server",
     "db-server": "bmforge.db-server",
 }
-VERSIONS = {"http": "0.4.0", "zmq": "0.3.1", "db-server": "0.4.0"}
+VERSIONS = {"http": "0.5.0", "zmq": "0.3.1", "db-server": "0.5.0"}
 
 
 class ComponentBlueprintTests(unittest.TestCase):
@@ -33,8 +33,8 @@ class ComponentBlueprintTests(unittest.TestCase):
 
     def test_approved_module_inventory_is_explicit(self):
         expected = {
-            "http": ("argparse", "http.server", "ipaddress", "json", "logging",
-                     "pathlib", "signal", "urllib.parse", "jinja2"),
+            "http": ("argparse", "datetime", "http.server", "ipaddress", "json", "logging",
+                     "pathlib", "signal", "urllib.parse", "zoneinfo", "jinja2"),
             "zmq": ("collections.abc", "dataclasses", "json", "threading",
                     "typing", "zmq"),
             "db-server": ("contextlib", "pymysql", "pymysql.cursors"),
@@ -55,7 +55,7 @@ class ComponentBlueprintTests(unittest.TestCase):
         for word in ("dark", "saturated", "pastels", "4.5:1", "3:1",
                      "keyboard focus", "mobile", "API-only", "BMDynIP"):
             self.assertIn(word, spec)
-        self.assertIn("spec version `0.4.0`", skill)
+        self.assertIn("spec version `0.5.0`", skill)
         self.assertIn("no pastels", skill)
         source = ROOT / "components/reference/bmdynip/bmdynip/server/static"
         css, html = source / "style.css", source / "index.html"
@@ -123,7 +123,7 @@ class ComponentBlueprintTests(unittest.TestCase):
             elif isinstance(node, ast.ImportFrom):
                 imports.add(node.module)
         self.assertEqual(imports, {"contextlib", "pymysql", "pymysql.cursors"})
-        self.assertIn('BMFORGE_COMPONENT = {"id": "bmforge.db-server", "spec_version": "0.4.0"}', code)
+        self.assertIn('BMFORGE_COMPONENT = {"id": "bmforge.db-server", "spec_version": "0.5.0"}', code)
         self.assertNotIn("from bmgeoip", code)
         self.assertNotIn("from mycount", code)
         spec = (ROOT / "pages/component-db-server.md").read_text()
