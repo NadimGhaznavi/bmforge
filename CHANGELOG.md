@@ -9,6 +9,9 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Actinium (Ac)**. Actinium-225 is being 
+studied for targeted alpha-particle cancer therapies.
+
 ### Summary
 
 Standardize local-time HTTP displays and MariaDB text comparison settings so
