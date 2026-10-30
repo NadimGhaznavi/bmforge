@@ -17,6 +17,7 @@ Always installed **for new-project bootstrap only**:
 
 Optional, selected by requirement:
 - `bmforge-http`: standard-library HTTP server and optional Jinja2 display.
+- `bmforge-timeline`: vis-timeline editing of dated objects and ranges; requires `bmforge-http`.
 - `bmforge-zmq`: PyZMQ REQ/REP server.
 - `bmforge-db-server`: canonical MariaDB manager and domain data-access interfaces.
 - `bmforge-git`: Git commit and managed-file publishing.
@@ -25,6 +26,8 @@ Optional, selected by requirement:
 - `bmforge-rca`: read-only production evidence collection and local root-cause analysis.
 
 Explain relevant capabilities and ask the user which optional skills to install. **Never select all by default** or silently add infrastructure. A baseline-only installation is valid.
+
+For timeline editing, explicitly select `bmforge-http,bmforge-timeline` together, or add timeline when HTTP is already pinned in the project. The manager rejects a missing HTTP dependency before writing files and never installs it implicitly.
 
 ## Implementation authorization gate
 
