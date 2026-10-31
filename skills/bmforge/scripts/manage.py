@@ -79,10 +79,15 @@ SKILLS = {
         "components/reference/snake-web-code/snakewebcode/activity/SimulationAnimation.py",
     )),
     "bmforge-timeline": ("pages/component-timeline.md", ()),
+    "bmforge-nftables": ("pages/component-nftables.md", ()),
+    "bmforge-fail2ban": ("pages/component-fail2ban.md", ()),
     "bmforge-rca": (None, ()),
 }
 BASE_SKILLS = ("bmforge-project", "bmforge-constants", "bmforge-localization", "bmforge-installation")
-REQUIRES = {"bmforge-timeline": ("bmforge-http",)}
+REQUIRES = {
+    "bmforge-timeline": ("bmforge-http",),
+    "bmforge-fail2ban": ("bmforge-zmq",),
+}
 COMMON = (
     "pages/engineering-contract.md",
     "pages/classification.md",

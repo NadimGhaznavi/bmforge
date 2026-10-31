@@ -69,6 +69,8 @@ $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skil
 | --- | --- | --- |
 | HTTP-сервер відображення | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
+| Тимчасове блокування IP на хості | `bmforge.nftables` | [Набори nftables зі строком дії]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
+| Виявлення подій у журналах безпеки | `bmforge.fail2ban` | [Fail2ban і локальний клієнт дії (потребує ZMQ)]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) |
 | Сервер бази даних | `bmforge.db-server` | [Канонічний DbMgr і рівні DAL]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Git | `bmforge.git` | [Публікація й коміти]({{ site.baseurl }}{% link pages/component-git.md %}) |
 | Візуалізації | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
