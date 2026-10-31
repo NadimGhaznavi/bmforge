@@ -23,6 +23,7 @@ Optional, selected by requirement:
 - `bmforge-fail2ban`: native security-log filters/jails and a thin local ban action client; requires `bmforge-zmq`.
 - `bmforge-db-server`: canonical MariaDB manager and domain data-access interfaces.
 - `bmforge-git`: Git commit and managed-file publishing.
+- `bmforge-github-pages`: project documentation sites with the shared dark theme, required logo, canonical configuration and publishing scaffold; no HTTP or Git component prerequisite.
 - `bmforge-visualization`: Plotly.js charts, Leaflet maps and Cytoscape.js graphs.
 - `bmforge-gif-animation`: Pillow GIF generation from rendered frames.
 - `bmforge-rca`: read-only production evidence collection and local root-cause analysis.
