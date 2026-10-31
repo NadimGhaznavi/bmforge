@@ -9,6 +9,10 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Fermium (Fm)**. Fermium was discovered 
+in debris from the 1952 hydrogen-bomb test and named after physicist Enrico Fermi.
+
+
 ### Summary
 
 Allow applications to use named local sockets for ZeroMQ request/reply messaging
