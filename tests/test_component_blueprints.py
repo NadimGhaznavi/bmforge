@@ -10,7 +10,7 @@ COMPONENTS = {
     "zmq": "bmforge.zmq-server",
     "db-server": "bmforge.db-server",
 }
-VERSIONS = {"http": "0.5.0", "zmq": "0.4.0", "db-server": "0.5.0"}
+VERSIONS = {"http": "0.5.1", "zmq": "0.4.0", "db-server": "0.5.0"}
 
 
 class ComponentBlueprintTests(unittest.TestCase):
@@ -55,7 +55,7 @@ class ComponentBlueprintTests(unittest.TestCase):
         for word in ("dark", "saturated", "pastels", "4.5:1", "3:1",
                      "keyboard focus", "mobile", "API-only", "BMDynIP"):
             self.assertIn(word, spec)
-        self.assertIn("spec version `0.5.0`", skill)
+        self.assertIn("spec version `0.5.1`", skill)
         self.assertIn("no pastels", skill)
         source = ROOT / "components/reference/bmdynip/bmdynip/server/static"
         css, html = source / "style.css", source / "index.html"
