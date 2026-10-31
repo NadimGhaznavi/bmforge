@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.21.2] - 2026-10-31 @ 17:44
+
 ### Summary
 
 Separate application security-event publication from ban enforcement using
