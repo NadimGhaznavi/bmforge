@@ -441,6 +441,33 @@ class InstallationTests(unittest.TestCase):
             operation.apply('uninstall')
             self.assertFalse((self.destination / '.venv').exists())
 
+    def test_host_interpreter_cannot_be_a_development_environment(self):
+        (self.checkout / 'requirements.txt').write_text('example-package==1.0\n')
+        with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
+             patch.object(starter, 'DEPLOYMENT_READY', True), \
+             patch.object(starter, 'COPY_TREES', ()), \
+             patch.object(starter, 'COPY_FILES', ('bmforge/constants/DBMForge.py',)), \
+             patch.object(starter, 'REQUIREMENTS_FILE', 'requirements.txt'), \
+             patch.object(starter, 'SYSTEM_PYTHON', str(self.checkout / '.venv/bin/python')):
+            operation = starter.Installation(self.checkout, destination=self.destination)
+            with self.assertRaisesRegex(ValueError, 'host interpreter'):
+                operation.apply('install', check=True)
+            self.assertFalse(self.destination.exists())
+
+    def test_source_virtual_environment_is_excluded_from_deployed_files(self):
+        source = self.checkout / 'bmforge/.venv/should-not-copy.txt'
+        source.parent.mkdir()
+        source.write_text('developer-only')
+        with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
+             patch.object(starter, 'DEPLOYMENT_READY', True), \
+             patch.object(starter, 'COPY_TREES', ('bmforge',)), \
+             patch.object(starter, 'COPY_FILES', ()):
+            operation = starter.Installation(self.checkout, destination=self.destination)
+            operation.apply('install')
+            self.assertFalse((self.destination / 'bmforge/.venv').exists())
+            self.assertFalse((self.destination / '.venv').exists())
+            operation.apply('uninstall')
+
     def test_failed_runtime_import_keeps_success_marker_unpublished(self):
         (self.checkout / 'requirements.txt').write_text('example-package==1.0\n')
         def fake_run(command, **kwargs):
