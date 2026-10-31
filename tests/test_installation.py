@@ -215,6 +215,52 @@ class InstallationTests(unittest.TestCase):
             self.assertTrue(manifest['removed'])
             self.assertEqual(manifest['files'], [])
 
+
+    def test_starter_production_venv_is_optional_and_managed(self):
+        requirements = self.checkout / 'requirements.txt'
+        requirements.write_text('example-package==1.0\\n')
+        calls = []
+
+        def fake_run(command, **kwargs):
+            calls.append(command)
+            if command[1:3] == ['-m', 'venv']:
+                python = self.destination / '.venv/bin/python'
+                python.parent.mkdir(parents=True)
+                python.write_text('fake interpreter')
+
+        with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
+             patch.object(starter, 'DEPLOYMENT_READY', True), \
+             patch.object(starter, 'COPY_TREES', ()), \
+             patch.object(starter, 'COPY_FILES', ('bmforge/constants/DBMForge.py',)), \
+             patch.object(starter, 'REQUIREMENTS_FILE', 'requirements.txt'), \
+             patch.object(starter.subprocess, 'run', side_effect=fake_run):
+            operation = starter.Installation(self.checkout, destination=self.destination)
+            operation.apply('install', check=True)
+            self.assertFalse(self.destination.exists())
+            operation.apply('install')
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(calls[1][:4], [str(self.destination / '.venv/bin/python'),
+                                            '-m', 'pip', 'install'])
+            self.assertEqual(calls[1][-2:], ['-r', str(self.destination / 'requirements.txt')])
+            self.assertEqual((self.destination / starter.VERSION_MARKER).read_text().strip(), self.version)
+            operation.apply('upgrade')
+            self.assertEqual(len(calls), 3)
+            self.assertEqual(calls[2][1:4], ['-m', 'pip', 'install'])
+            operation.apply('uninstall')
+            self.assertFalse((self.destination / '.venv').exists())
+
+    def test_failed_dependency_install_never_advances_version(self):
+        (self.checkout / 'requirements.txt').write_text('example-package==1.0\\n')
+        with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
+             patch.object(starter, 'DEPLOYMENT_READY', True), \
+             patch.object(starter, 'COPY_TREES', ()), \
+             patch.object(starter, 'COPY_FILES', ('bmforge/constants/DBMForge.py',)), \
+             patch.object(starter, 'REQUIREMENTS_FILE', 'requirements.txt'), \
+             patch.object(starter.subprocess, 'run', side_effect=subprocess.CalledProcessError(1, 'pip')):
+            with self.assertRaises(subprocess.CalledProcessError):
+                starter.Installation(self.checkout, destination=self.destination).apply('install')
+            self.assertFalse((self.destination / starter.VERSION_MARKER).exists())
+
     def test_starter_declares_installation_component_marker(self):
         self.assertEqual(starter.BMFORGE_COMPONENT,
                          {"id": "bmforge.installation", "spec_version": "0.1.2"})
