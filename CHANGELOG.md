@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Mendelevium (Md)**. Mendelevium honors Dmitri Mendeleev, whose periodic table anticipated the existence of several undiscovered elements.
+
 ### Summary
 
 Keep timed blocking stateless in the service: Fail2ban requests a block, the
