@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-10-31 @ 08:22
+
 This release is named for the element **Rutherfordium (Rf)**.Rutherfordium honors 
 Ernest Rutherford, whose experiments revealed the atomic nucleus.
 
