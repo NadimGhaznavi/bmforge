@@ -9,6 +9,39 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Separate application security-event publication from ban enforcement using
+native systemd journald as the sole event channel. An application emits one
+semantic event; Fail2ban, BMCyber and nftables retain their existing ownership
+of native counting, local ban requests and kernel enforcement.
+
+### Added
+
+- Introduce optional `bmforge-security-events` with draft `0.1.0`
+  specification, tiny stdlib-only Python producer asset, trusted request-context
+  binding, fire-and-forget semantics and strict single-line journal formatting.
+  The skill can be installed/attached independently without HTTP, ZMQ,
+  Fail2ban or nftables.
+- Add unit and pinned-skill regression tests covering isolated/nested/concurrent
+  request contexts, IPv4/IPv6, invalid source/event injection, independent
+  skill setup, offline asset pinning and update notifications.
+
+### Changed
+
+- Advance Fail2ban to draft `0.3.0`: native `backend = systemd`, unit-scoped
+  `journalmatch`, explicit host journal dependencies, native per-IP
+  `findtime`/`maxretry` and end-to-end tests from actual application requests
+  rather than log-file fixtures. Keep the existing ZMQ prerequisite only in
+  the blocking project, and leave kernel blocking unchanged.
+- Advance HTTP to draft `0.5.1` with optional trusted client-source handling
+  at the request boundary: verified proxy peers, overwritten headers,
+  IPv4/IPv6 normalization and request-context isolation.
+- Update the BMForge component catalogue, Codex entry-point guidance, manager
+  bundle, blueprint, decision record and installation-independent acceptance
+  workflow. Application repositories and production hosts remain untouched.
+
+
 ## [0.21.1] - 2026-10-31 @ 11:33
 
 ### Summary
