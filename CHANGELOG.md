@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-10-31 @ 04:26
+
 This release is named for the element **Fermium (Fm)**. Fermium was discovered 
 in debris from the 1952 hydrogen-bomb test and named after physicist Enrico Fermi.
 
