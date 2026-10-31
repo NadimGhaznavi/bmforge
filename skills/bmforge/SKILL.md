@@ -19,6 +19,8 @@ Optional, selected by requirement:
 - `bmforge-http`: standard-library HTTP server and optional Jinja2 display.
 - `bmforge-timeline`: vis-timeline editing of dated objects and ranges; requires `bmforge-http`.
 - `bmforge-zmq`: PyZMQ REQ/REP server.
+- `bmforge-nftables`: host-local timed IP bans, removal and inspection in one owned table.
+- `bmforge-fail2ban`: native security-log filters/jails and a thin local ban action client; requires `bmforge-zmq`.
 - `bmforge-db-server`: canonical MariaDB manager and domain data-access interfaces.
 - `bmforge-git`: Git commit and managed-file publishing.
 - `bmforge-visualization`: Plotly.js charts, Leaflet maps and Cytoscape.js graphs.
@@ -28,6 +30,8 @@ Optional, selected by requirement:
 Explain relevant capabilities and ask the user which optional skills to install. **Never select all by default** or silently add infrastructure. A baseline-only installation is valid.
 
 For timeline editing, explicitly select `bmforge-http,bmforge-timeline` together, or add timeline when HTTP is already pinned in the project. The manager rejects a missing HTTP dependency before writing files and never installs it implicitly.
+
+For per-host log-driven bans, select `bmforge-zmq,bmforge-fail2ban,bmforge-nftables` in the blocking project. Fail2ban requires an explicitly selected or already pinned ZMQ skill; nftables can be selected alone. Applications only emit security-event logs. These skills cover this small integration subset, not general firewall or Fail2ban administration.
 
 ## Implementation authorization gate
 

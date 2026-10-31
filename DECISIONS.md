@@ -11,6 +11,14 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-30: minimal per-host security-log blocking skills
+
+**Boundary.** Applications log a trusted security event; native Fail2ban filters/jails detect it and invoke a thin action client using the existing BMForge ZMQ contract. The blocking service on the same host owns policy and source claims; nftables enforces IPv4/IPv6 bans with native element timeouts. Each internet-facing host operates independently. No centralized controller or firewalld dependency is needed.
+
+**Small supported subset.** Add optional draft `bmforge.fail2ban` and `bmforge.nftables` 0.1.0 contracts. Define only the log/filter/jail/action path and one owned table with timed address sets, drop rules, removal and inspection. Do not reproduce either tool's feature catalogue, detection engine or general administration API. The service preserves independent jail claims; the action wrapper contains no firewall or policy logic. A database, dashboard, escalation rules and durable recovery subsystem are not implicit requirements.
+
+**Selection and validation.** `bmforge-fail2ban` requires an explicitly selected or already pinned `bmforge-zmq`; `bmforge-nftables` is independently selectable. Use existing pre-write prerequisite checks, pinned bundles and approval-only updates. These are draft implementation contracts, not an implemented or deployed blocking service; validate native detection and enforcement in the standalone consuming project.
+
 ## 2026-10-30: local HTTP timestamps and consistent MariaDB collations
 
 **Time display.** HTTP human-facing timestamps use local time and the numeric format `yyyy-mm-dd hh:mm:ss`, with a 24-hour clock and no fractional seconds. Use the application's configured local timezone, defaulting to the server's OS local timezone, consistently in server-rendered pages and browser widgets. This is presentation policy; UTC persistence, offset-bearing API timestamps and protocol headers retain their own contracts. Advance HTTP to draft `0.5.0` and align timeline at `0.2.0`, removing its previous UTC display option. Use stdlib `datetime`/`zoneinfo` and existing browser capabilities without a new third-party date library.

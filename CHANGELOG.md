@@ -9,6 +9,24 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-10-30 @ 20:41
+
+### Summary
+
+Add small, selectable skills for independent per-host blocking: application
+security logs feed Fail2ban, a thin local ZMQ action requests bans, and nftables
+enforces timed IP entries.
+
+### Added
+
+- Add optional `bmforge-nftables` and `bmforge-fail2ban` skills with draft 0.1.0
+  contracts, focused runtime inventories and consuming-project acceptance checks.
+  Scope them to owned timed ban sets and the native log/filter/jail/action path;
+  leave broader tool features upstream.
+- Require explicitly selected or already pinned ZMQ for Fail2ban before any
+  installer writes. Keep nftables independently selectable and preserve existing
+  pinned skills. Extend the catalogue, decision record and installer checks.
+
 ## [0.17.1] - 2026-10-30 @ 04:42
 
 This release is named for the element **Actinium (Ac)**. Actinium-225 is being 
