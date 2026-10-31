@@ -58,7 +58,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Investigating a production defect | [RCA skill](https://github.com/NadimGhaznavi/bmforge/blob/main/skills/bmforge-rca/SKILL.md): collect evidence read-only and troubleshoot locally |
 | Installing, upgrading or uninstalling | [Installation Lifecycle contract]({{ site.baseurl }}{% link pages/component-installation.md %}), [installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
-| Publishing documentation | [Jekyll setup]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
+| Creating or publishing a project website | [Project GitHub Pages standard]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) (`bmforge-github-pages`), [publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
 
 ## Component specifications
 
@@ -66,6 +66,7 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 
 | Component | Stable ID | Contract |
 | --- | --- | --- |
+| Project documentation site | `bmforge.github-pages` | [GitHub Pages scaffold and styling]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
 | Timed host IP bans | `bmforge.nftables` | [nftables timeout sets]({{ site.baseurl }}{% link pages/component-nftables.md %}) |

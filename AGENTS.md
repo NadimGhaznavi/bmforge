@@ -20,7 +20,7 @@ permission.
 
 ## Codex component skills
 
-The user-facing [BMForge skill](pages/codex-skills.md) lives under `skills/bmforge/` and installs self-contained, pinned skills from `skills/bmforge-{project,constants,localization,installation,http,timeline,zmq,nftables,fail2ban,db-server,git,visualization,gif-animation,rca}/`. Its `manage.py check` is **read-only** and reports changes without applying them. For **new projects**, always install the project/constant/localization/installation baseline and the canonical release-tooling scaffold. Require a canonical `--name` to configure `scripts/new-release.sh` and its existing prerequisites. For **existing projects**, use `manage.py attach` to install only the selected optional skills plus their lock and manager. Preserve all existing agent instructions, code, release tooling and Git refs; never implicitly impose the new-project baseline. Never run the release script, commit, tag, push or deploy during file generation. A user-authorized post-commit `manage.py setup-branches` operation may establish the local `dev`/feature branch lineage, but never alters remote branches or pushes automatically. Add other infrastructure only by explicit selection. Keep installer tests hermetic and require user consent for any upgrade.
+The user-facing [BMForge skill](pages/codex-skills.md) lives under `skills/bmforge/` and installs self-contained, pinned skills from `skills/bmforge-{project,constants,localization,installation,http,timeline,zmq,nftables,fail2ban,db-server,git,github-pages,visualization,gif-animation,rca}/`. Its `manage.py check` is **read-only** and reports changes without applying them. For **new projects**, always install the project/constant/localization/installation baseline and the canonical release-tooling scaffold. Require a canonical `--name` to configure `scripts/new-release.sh` and its existing prerequisites. For **existing projects**, use `manage.py attach` to install only the selected optional skills plus their lock and manager. Preserve all existing agent instructions, code, release tooling and Git refs; never implicitly impose the new-project baseline. Never run the release script, commit, tag, push or deploy during file generation. A user-authorized post-commit `manage.py setup-branches` operation may establish the local `dev`/feature branch lineage, but never alters remote branches or pushes automatically. Add other infrastructure only by explicit selection. Keep installer tests hermetic and require user consent for any upgrade.
 
 ## Read only what the task needs
 
@@ -39,6 +39,12 @@ For per-host IP blocking, read `pages/component-fail2ban.md` and
 `pages/component-nftables.md`. Keep their supported subset small: native log
 filters/jails, a thin local ZMQ action client and timed nftables address sets.
 Do not clone either tool or add a centralized controller.
+
+For project documentation sites, select `bmforge-github-pages` and read
+`pages/jekyll-setup.md`. Use the canonical configuration, Markdown scaffold and
+publishing workflow, the shared dark theme and the project's required logo.
+Keep theme styling shared and avoid duplicate front-matter/body titles. This
+static-site skill has no application HTTP or Git component prerequisite.
 
 ## Changelog discipline
 

@@ -34,6 +34,14 @@ Open Codex in an established Git repository and enter `$bmforge`. Choose only th
 
 **Existing projects retain their own `AGENTS.md`, architecture, application files, branches and release tooling.** Attachment does not install the new-project baseline or create a release scaffold. More skills can be added later with approval; checking for newer skills never upgrades them automatically.
 
+For a project website, select **`bmforge-github-pages`**. It pins the
+[GitHub Pages standard]({{ site.baseurl }}{% link pages/jekyll-setup.md %}),
+configuration, Markdown templates and publishing workflow. The standard uses
+the shared dark theme and requires the project's own logo. Applying the
+templates is a separate implementation step; existing site content and
+translations are preserved. This skill does not require the application HTTP
+or Git components.
+
 ---
 
 [Back to BMForge]({{ site.baseurl }}{% link index.md %})

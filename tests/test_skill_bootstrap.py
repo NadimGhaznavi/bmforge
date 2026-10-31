@@ -52,11 +52,13 @@ class SkillBootstrapTests(unittest.TestCase):
         manager.parent.mkdir(parents=True)
         manager.write_bytes(MANAGER.read_bytes())
         for common in (*module.COMMON, module.HEALTH, *module.RELEASE_GUIDES,
-                       *module.INSTALLATION_GUIDES):
+                       *module.INSTALLATION_GUIDES, *module.GITHUB_PAGES_GUIDES):
             path = self.source / common
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(f"# {path.name}\n")
-        for original in module.RELEASE_TEMPLATES.values():
+        for original in (*module.RELEASE_TEMPLATES.values(),
+                         *module.GITHUB_PAGES_ASSETS.values(),
+                         "skills/bmforge-github-pages/agents/openai.yaml"):
             path = self.source / original
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes((ROOT / original).read_bytes())
@@ -817,6 +819,73 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("UPDATE AVAILABLE bmforge-rca", result.stdout)
         self.assertEqual(skill.read_bytes(), original)
+
+    def test_github_pages_attaches_independently_without_replacing_the_site(self):
+        existing = {
+            "AGENTS.md": b"Keep the application's own instructions.\n",
+            "_config.yml": b'title: Existing site\n',
+            "index.md": b"Existing documentation.\n",
+            "uk/index.md": "Українська документація.\n".encode(),
+        }
+        for relative, data in existing.items():
+            path = self.project / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        result = self.run_manager("attach", "--components", "bmforge-github-pages")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {"bmforge-github-pages"})
+        self.assertEqual(lock["skills"]["bmforge-github-pages"]["spec_version"], "0.1.0")
+        installed = self.project / ".agents/skills/bmforge-github-pages"
+        for asset, original in module.GITHUB_PAGES_ASSETS.items():
+            self.assertEqual((installed / "assets" / asset).read_bytes(),
+                             (self.source / original).read_bytes())
+        for guide in module.GITHUB_PAGES_GUIDES:
+            self.assertEqual((installed / "references" / Path(guide).name).read_bytes(),
+                             (self.source / guide).read_bytes())
+        self.assertEqual((installed / "references/specification.md").read_bytes(),
+                         (self.source / "pages/jekyll-setup.md").read_bytes())
+        self.assertTrue((installed / "agents/openai.yaml").is_file())
+        for relative, data in existing.items():
+            self.assertEqual((self.project / relative).read_bytes(), data)
+        self.assertFalse((self.project / ".github").exists())
+        self.assertFalse((self.project / "scripts").exists())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_github_pages_resources_notify_without_changing_pins(self):
+        self.bootstrap("")
+        baseline = json.loads((self.project / module.LOCK).read_text())["skills"]
+        result = self.run_manager("add", "--components", "bmforge-github-pages")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        for name, entry in baseline.items():
+            self.assertEqual(lock["skills"][name], entry)
+        installed = self.project / ".agents/skills/bmforge-github-pages"
+        pinned = {str(p.relative_to(installed)): p.read_bytes()
+                  for p in installed.rglob("*") if p.is_file()}
+        for relative in (*module.GITHUB_PAGES_ASSETS.values(), *module.GITHUB_PAGES_GUIDES):
+            with self.subTest(resource=relative):
+                upstream = self.source / relative
+                previous = upstream.read_bytes()
+                upstream.write_bytes(previous + b"\n# Revised resource.\n")
+                self.commit_source()
+                result = self.run_manager("check")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("UPDATE AVAILABLE bmforge-github-pages", result.stdout)
+                self.assertEqual({str(p.relative_to(installed)): p.read_bytes()
+                                  for p in installed.rglob("*") if p.is_file()}, pinned)
+                self.assertEqual(json.loads((self.project / module.LOCK).read_text()), lock)
+                upstream.write_bytes(previous)
+                self.commit_source()
+
+    def test_github_pages_missing_asset_fails_before_attachment(self):
+        (self.source / "templates/jekyll-gh-pages.yml").unlink()
+        self.commit_source()
+        result = self.run_manager("attach", "--components", "bmforge-github-pages")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing regular BMForge source file", result.stderr)
+        self.assertFalse((self.project / ".agents").exists())
+        self.assertFalse((self.project / "_config.yml").exists())
 
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)

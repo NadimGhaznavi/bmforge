@@ -11,6 +11,28 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-31: a selectable GitHub Pages site standard
+
+Consolidate the existing Jekyll setup and publishing conventions into the optional
+`bmforge-github-pages` skill, draft `bmforge.github-pages` specification `0.1.0`.
+Bundle the concise configuration, homepage/README/guide templates, existing
+publishing workflow and documentation guides through the normal pinned-skill
+manager. Select it independently of application HTTP and Git components.
+Installation only pins the resources; applying them preserves existing site
+content, translations and required project settings.
+
+Use the shared Minimal Mistakes fork, dark skin, wide single-page content and
+author sidebar. Every project site has its own logo under `pages/images/`, used
+by both configuration and homepage. Front-matter titles must not be repeated as
+body H1 headings. Keep common styling in the theme, project identity and content
+in the project, and remove unused upstream configuration boilerplate. Prepare
+English language metadata without generating unrequested translations.
+
+Keep builds on GitHub and publication on `main`, including manual workflow runs.
+Do not add local Jekyll dependencies or alter Pages settings, DNS, releases or
+consuming sites as part of skill installation. File checks and live deployment
+verification remain separately reported. Existing pins change only by approval.
+
 ## 2026-10-31: kernel-owned block state and ban-only detection actions
 
 Advance the Fail2ban and nftables contracts to draft `0.2.0`. Applications log events, Fail2ban detects abuse and requests a block, and the local blocking service chooses the duration. The kernel's timed nftables entry is the sole live enforcement state. Keep no application ban map, per-source claims, saved deadlines, duplicate tracking, expiry timers, persistence or recovery/replay subsystem. Repeat requests after a restart are acceptable, including a fresh full duration; a source identifier is diagnostic metadata only.
