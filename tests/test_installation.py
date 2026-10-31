@@ -218,7 +218,7 @@ class InstallationTests(unittest.TestCase):
 
     def test_starter_production_venv_is_optional_and_managed(self):
         requirements = self.checkout / 'requirements.txt'
-        requirements.write_text('example-package==1.0\\n')
+        requirements.write_text('example-package==1.0\n')
         calls = []
 
         def fake_run(command, **kwargs):
@@ -250,7 +250,7 @@ class InstallationTests(unittest.TestCase):
             self.assertFalse((self.destination / '.venv').exists())
 
     def test_failed_dependency_install_never_advances_version(self):
-        (self.checkout / 'requirements.txt').write_text('example-package==1.0\\n')
+        (self.checkout / 'requirements.txt').write_text('example-package==1.0\n')
         with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
              patch.object(starter, 'DEPLOYMENT_READY', True), \
              patch.object(starter, 'COPY_TREES', ()), \
