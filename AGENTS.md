@@ -2,6 +2,20 @@
 
 BMForge is a **standalone engineering specification repository**, not a runtime library. Every application owns its implementation.
 
+## Repository boundary and skill adoption
+
+Develop and review BMForge specifications, templates, skills, and their tests **in
+the BMForge repository only**. Consuming projects (e.g. Ax3l and BMCyber) are
+read-only references during BMForge work: inspect their code and failure reports
+to improve the reusable standard, but do not modify, commit to, or create PRs in
+those repositories as part of this task.
+
+After the BMForge change is reviewed and merged, the application owner decides
+when to update the project's pinned BMForge skill. Codex then applies that
+updated specification inside the consuming application as a **separate**
+application-scoped task. Never bypass this sequence by directly patching a
+consumer when the requested work belongs to BMForge.
+
 ## Implementation authorization gate
 
 **Discussion is not authorization to implement.** Codex may inspect the
