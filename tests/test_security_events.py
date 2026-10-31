@@ -1,6 +1,7 @@
 """Contract tests for the tiny security-event producer (no systemd required)."""
 
 from concurrent.futures import ThreadPoolExecutor
+import ast
 import importlib.util
 from io import StringIO
 import logging
@@ -78,6 +79,26 @@ class SecurityEventTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "No trusted client source"):
             self.events.emit("abuse")
         self.assertEqual(self.lines(), [])
+
+    def test_exception_restores_request_context(self):
+        with self.assertRaisesRegex(RuntimeError, "handler error"):
+            with self.events.trusted_source("192.0.2.10"):
+                raise RuntimeError("handler error")
+        with self.assertRaisesRegex(RuntimeError, "No trusted client source"):
+            self.events.emit("abuse")
+        self.assertEqual(self.lines(), [])
+
+    def test_approved_runtime_imports_are_exactly_stdlib(self):
+        program = ast.parse(SOURCE.read_text())
+        modules = set()
+        for node in ast.walk(program):
+            if isinstance(node, ast.Import):
+                modules.update(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom):
+                modules.add(node.module)
+        self.assertEqual(modules,
+                         {"contextlib", "contextvars", "datetime", "ipaddress",
+                          "logging", "re"})
 
     def test_parallel_request_contexts_do_not_leak_sources(self):
         barrier = Barrier(2)
