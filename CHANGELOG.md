@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.21.0] - 2026-10-31 @ 10:35
+
 This release is named for the element **Bohrium (Bh)**. Bohrium honors Niels Bohr, whose atomic model transformed our understanding of electrons.
 
 ### Summary
