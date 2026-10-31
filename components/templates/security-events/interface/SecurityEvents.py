@@ -38,7 +38,10 @@ class SecurityEvents:
         try:
             if not isinstance(address, str):
                 raise ValueError("Client source must be a numeric IP address")
-            normalized = str(ip_address(address))
+            parsed = ip_address(address)
+            if parsed.is_unspecified or parsed.is_multicast:
+                raise ValueError("Unusable client source address")
+            normalized = str(parsed)
         except ValueError as error:
             raise ValueError("Client source must be a numeric IP address") from error
         token = _SOURCE_ADDRESS.set(normalized)
