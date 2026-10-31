@@ -9,6 +9,34 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.21.1] - 2026-10-31 @ 11:33
+
+### Summary
+
+Make the production Python virtual-environment contract enforceable by the BMForge
+installer and explicit for all consuming application entry points, not just the
+systemd service.
+
+### Changed
+
+- Advance the installation specification to draft `0.1.3`. Verify host
+  `venv`/`ensurepip` prerequisites without requiring application packages
+  globally, and use the installed Python environment for requirements,
+  dependency checks and configured service/client imports.
+- Track `venv_owned` before creation, reject unowned or checkout-backed
+  environments and editable/development dependencies, and keep failed
+  installation or upgrade attempts from advancing successful-version markers.
+- Require the complete deployed runtime path in systemd, CLI/client launchers,
+  Fail2ban actions and health probes. Runtime must work after the development
+  checkout becomes unavailable; no new deployment framework is introduced.
+- Expand lifecycle tests for read-only `--check`, dependency and import
+  failures, environment ownership and cleanup, developer venv exclusion, and
+  an offline pinned-wheel upgrade with checkout-independent imports.
+- Correct the installation contract test's outdated bootstrap manager location.
+- Clarify the BMForge-first repository boundary in agent guidance: consuming
+  repositories are read-only references until their owners pin the new skill
+  and request independent application changes.
+
 ## [0.21.0] - 2026-10-31 @ 10:35
 
 This release is named for the element **Bohrium (Bh)**. Bohrium honors Niels Bohr, whose atomic model transformed our understanding of electrons.
@@ -466,3 +494,4 @@ Establish BMForge as a shared development reference for coding agents working on
 ---
 
 [Back]({{ site.baseurl }}{% link index.md %})
+
