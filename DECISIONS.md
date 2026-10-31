@@ -11,6 +11,12 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-31: optional named local IPC for ZeroMQ
+
+Extend the existing ZMQ client/server contract to draft `0.4.0` with an application-selected `ipc:///absolute/path.sock` endpoint alongside TCP. Preserve REQ/REP, envelopes, validation, bounded calls and health semantics. Keep existing TCP defaults; IPC selection does not create a second listener or a fallback. PyZMQ already supplies IPC, so the approved runtime-module inventory is unchanged.
+
+The application's deployment lifecycle owns the runtime directory, restrictive ownership/permissions and umask, one server instance per path, and safe stale-socket recovery. Clients only connect. Use filesystem sockets rather than abstract names when relying on filesystem access controls, and account for libzmq's ability to replace an existing IPC binding. Keep paths in application configuration without extending the IP-only `CMDB_NETWORK` schema or inventing a port. Consuming applications validate both transport behavior and actual local-user access boundaries before adoption.
+
 ## 2026-10-30: minimal per-host security-log blocking skills
 
 **Boundary.** Applications log a trusted security event; native Fail2ban filters/jails detect it and invoke a thin action client using the existing BMForge ZMQ contract. The blocking service on the same host owns policy and source claims; nftables enforces IPv4/IPv6 bans with native element timeouts. Each internet-facing host operates independently. No centralized controller or firewalld dependency is needed.

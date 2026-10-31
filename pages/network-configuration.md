@@ -23,6 +23,8 @@ Each entry is a literal `(use, interface, port)` tuple. `use` is a unique, nonem
 
 Declare all listeners owned or configured by the application, including internal services and managed proxies. Keep outbound database and other dependency connection settings separate; database inventory references belong in `CMDB_DATABASES`. Keep credentials out of the declaration and network JSON. Hostnames, IPv6, Unix sockets, and transport-specific extensions are outside the current pattern; `use` names the role and supplies no separate transport field.
 
+For [ZeroMQ local IPC]({{ site.baseurl }}{% link pages/component-zmq.md %}), configure the socket path separately in the application. `CMDB_NETWORK` inventories IP listeners only; an IPC endpoint requires no tuple or placeholder port.
+
 ## Resolve Runtime Settings
 
 Implement a shared configuration interface and network resolver following CMDB and MyCount's `Configuration` and `Network` pattern. Resolve by role, for example `Network.binding("http")`, returning `(interface, port)`. Replace tuple-position lookups, duplicate fallback values, and older listener constants. A copied constants declaration alone does not wire the application's listeners.
