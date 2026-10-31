@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.21.1] - 2026-10-31 @ 11:33
+
 ### Summary
 
 Make the production Python virtual-environment contract enforceable by the BMForge
