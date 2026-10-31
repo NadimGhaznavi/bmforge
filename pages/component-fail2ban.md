@@ -97,6 +97,8 @@ Keep the blocking service stateless between requests. The timed nftables entry i
 
 Place `BMFORGE_COMPONENT = {"id": "bmforge.fail2ban", "spec_version": "0.3.0"}` in the action client's owning module, following [specification traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}). Follow the [installation lifecycle]({{ site.baseurl }}{% link pages/component-installation.md %}) for owned filters, jail/action files and executable; installing the skill itself never enables a jail or starts a service. This draft still requires validation in the standalone consuming project.
 
+The official [systemd-journald documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-journald.html) describes how stdout/stderr records reach the journal. Fail2ban's native [jail.conf manual](https://github.com/fail2ban/fail2ban/blob/master/man/jail.conf.5) describes `backend = systemd`, `python3-systemd` and `journalmatch`. Verify the installed versions on the consuming host.
+
 Consult upstream [jail/filter/action documentation](https://github.com/fail2ban/fail2ban/blob/master/man/jail.conf.5) and [action configuration example](https://github.com/fail2ban/fail2ban/blob/master/config/action.d/dummy.conf) for native details. They do not expand this contract's supported subset.
 
 ## Acceptance checks
