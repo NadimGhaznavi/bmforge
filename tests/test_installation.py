@@ -412,15 +412,57 @@ class InstallationTests(unittest.TestCase):
             operation = starter.Installation(self.checkout, destination=self.destination)
             operation.apply('install', check=True)
             operation.apply('install')
+            # A pinned dependency upgrade must update the production environment.
+            version = '2.0.0'
+            dist = f'forge_smoke-{version}.dist-info'
+            upgrade_contents = {
+                'forge_smoke/__init__.py': 'VERSION = "2.0.0"\n',
+                f'{dist}/METADATA': f'Metadata-Version: 2.1\nName: forge-smoke\nVersion: {version}\n',
+                f'{dist}/WHEEL': 'Wheel-Version: 1.0\nGenerator: bmforge-tests\nRoot-Is-Purelib: true\nTag: py3-none-any\n',
+            }
+            with zipfile.ZipFile(wheels / f'forge_smoke-{version}-py3-none-any.whl', 'w') as archive:
+                for name, content in upgrade_contents.items():
+                    archive.writestr(name, content)
+                archive.writestr(f'{dist}/RECORD',
+                                 ''.join(f'{name},,\n' for name in (*upgrade_contents, f'{dist}/RECORD')))
+            requirements.write_text('forge-smoke==2.0.0\n')
+            operation.apply('upgrade')
             self.checkout.rename(self.root / 'checkout-gone')
             environment = starter.Installation.python_environment()
             python = self.destination / '.venv/bin/python'
             result = subprocess.run(
                 [str(python), '-B', '-c',
-                 'import bmforge, forge_smoke; print(forge_smoke.__file__)'],
+                 'import bmforge, forge_smoke; print(forge_smoke.__file__); print(forge_smoke.VERSION)'],
                 cwd=self.destination, env=environment, check=True, capture_output=True,
                 text=True, timeout=30)
-            self.assertTrue(Path(result.stdout.strip()).is_relative_to(self.destination / '.venv'))
+            installed_path, installed_version = result.stdout.strip().splitlines()
+            self.assertTrue(Path(installed_path).is_relative_to(self.destination / '.venv'))
+            self.assertEqual(installed_version, '2.0.0')
+            operation.apply('uninstall')
+            self.assertFalse((self.destination / '.venv').exists())
+
+    def test_failed_runtime_import_keeps_success_marker_unpublished(self):
+        (self.checkout / 'requirements.txt').write_text('example-package==1.0\n')
+        def fake_run(command, **kwargs):
+            if command[1:3] == ['-m', 'venv']:
+                venv = self.destination / '.venv'
+                (venv / 'bin').mkdir(parents=True)
+                (venv / 'bin/python').write_text('fake')
+                (venv / 'pyvenv.cfg').write_text('home = /usr/bin\n')
+            if command[1:3] == ['-B', '-c'] and 'import_module(name)' in command[3]:
+                raise subprocess.CalledProcessError(1, command)
+            return subprocess.CompletedProcess(command, 0)
+        with patch.object(starter, 'PROJECT_NAME', 'BMForge'), \
+             patch.object(starter, 'DEPLOYMENT_READY', True), \
+             patch.object(starter, 'COPY_TREES', ()), \
+             patch.object(starter, 'COPY_FILES', ('bmforge/constants/DBMForge.py',)), \
+             patch.object(starter, 'REQUIREMENTS_FILE', 'requirements.txt'), \
+             patch.object(starter, 'RUNTIME_IMPORTS', ('bmforge', 'example_package')), \
+             patch.object(starter.subprocess, 'run', side_effect=fake_run):
+            operation = starter.Installation(self.checkout, destination=self.destination)
+            with self.assertRaises(subprocess.CalledProcessError):
+                operation.apply('install')
+            self.assertFalse((self.destination / starter.VERSION_MARKER).exists())
             operation.apply('uninstall')
             self.assertFalse((self.destination / '.venv').exists())
 
