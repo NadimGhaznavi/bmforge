@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-10-30 @ 20:41
+
 ### Summary
 
 Add small, selectable skills for independent per-host blocking: application
