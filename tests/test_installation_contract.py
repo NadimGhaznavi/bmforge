@@ -28,7 +28,7 @@ class InstallationContractTests(unittest.TestCase):
     def test_installation_is_baseline_and_component_is_versioned(self):
         spec = SPEC.read_text()
         self.assertIn('component_id: "bmforge.installation"', spec)
-        self.assertIn('spec_version: "0.1.1"', spec)
+        self.assertIn('spec_version: "0.1.2"', spec)
         self.assertIn("## Approved implementation technology", spec)
         self.assertIn("install-server.sh", spec)
         self.assertIn(".deployment-version", spec)
@@ -53,9 +53,9 @@ class InstallationContractTests(unittest.TestCase):
                 imported.add(node.module)
         self.assertEqual(imported,
                          {"argparse", "importlib.util", "json", "os", "pathlib",
-                          "shutil", "tempfile"})
+                          "shutil", "subprocess", "tempfile"})
         self.assertIn(
-            'BMFORGE_COMPONENT = {"id": "bmforge.installation", "spec_version": "0.1.1"}',
+            'BMFORGE_COMPONENT = {"id": "bmforge.installation", "spec_version": "0.1.2"}',
             program)
         self.assertIn("DEPLOYMENT_READY = False", program)
         self.assertIn('VERSION_MARKER = ".deployment-version"', program)
