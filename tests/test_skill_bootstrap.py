@@ -71,7 +71,8 @@ class SkillBootstrapTests(unittest.TestCase):
                 path = self.source / original
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(f"# Frozen reference: {original}\n")
-        for original in (module.DB_TEMPLATE, module.GIT_TEMPLATE, module.GIF_TEMPLATE, module.CONSTANTS_TEMPLATE,
+        for original in (module.DB_TEMPLATE, module.GIT_TEMPLATE, module.GIF_TEMPLATE,
+                         module.SECURITY_EVENTS_TEMPLATE, module.CONSTANTS_TEMPLATE,
                          module.LOCALIZER_TEMPLATE, module.TEXT_TEMPLATE, module.EN_CATALOG):
             path = self.source / original
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -399,6 +400,46 @@ class SkillBootstrapTests(unittest.TestCase):
                          (self.source / "pages/component-nftables.md").read_bytes())
         self.assertEqual(lock["skills"]["bmforge-nftables"]["spec_version"], "0.1.0")
         self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_security_event_producer_bootstraps_without_enforcement_skills(self):
+        self.bootstrap("bmforge-security-events")
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {*module.BASE_SKILLS, "bmforge-security-events"})
+        self.assertEqual(lock["skills"]["bmforge-security-events"]["spec_version"], "0.1.0")
+        installed = self.project / ".agents/skills/bmforge-security-events"
+        self.assertEqual((installed / "assets/SecurityEvents.py").read_bytes(),
+                         (self.source / module.SECURITY_EVENTS_TEMPLATE).read_bytes())
+        self.assertEqual((installed / "references/specification.md").read_bytes(),
+                         (self.source / "pages/component-security-events.md").read_bytes())
+        for component in ("bmforge-zmq", "bmforge-fail2ban", "bmforge-nftables"):
+            self.assertFalse((self.project / ".agents/skills" / component).exists())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_security_event_producer_attaches_alone_and_preserves_existing_project(self):
+        (self.project / "AGENTS.md").write_text("Consumer-owned instructions\n")
+        (self.project / "source.py").write_text("original app code\n")
+        result = self.run_manager("attach", "--components", "bmforge-security-events")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {"bmforge-security-events"})
+        self.assertEqual((self.project / "AGENTS.md").read_text(), "Consumer-owned instructions\n")
+        self.assertEqual((self.project / "source.py").read_text(), "original app code\n")
+        self.assertFalse((self.project / ".agents/skills/bmforge-zmq").exists())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_security_event_template_changes_only_notify_existing_pins(self):
+        self.bootstrap("")
+        result = self.run_manager("add", "--components", "bmforge-security-events")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        asset = self.project / ".agents/skills/bmforge-security-events/assets/SecurityEvents.py"
+        pinned = asset.read_bytes()
+        source = self.source / module.SECURITY_EVENTS_TEMPLATE
+        source.write_bytes(source.read_bytes() + b"\n# newer upstream template\n")
+        self.commit_source()
+        check = self.run_manager("check")
+        self.assertEqual(check.returncode, 0, check.stderr)
+        self.assertIn("UPDATE AVAILABLE bmforge-security-events", check.stdout)
+        self.assertEqual(asset.read_bytes(), pinned)
 
     def test_host_ban_skills_attach_only_explicit_components(self):
         selected = {"bmforge-fail2ban", "bmforge-nftables", "bmforge-zmq"}
