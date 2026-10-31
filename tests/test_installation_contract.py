@@ -28,7 +28,7 @@ class InstallationContractTests(unittest.TestCase):
     def test_installation_is_baseline_and_component_is_versioned(self):
         spec = SPEC.read_text()
         self.assertIn('component_id: "bmforge.installation"', spec)
-        self.assertIn('spec_version: "0.1.2"', spec)
+        self.assertIn('spec_version: "0.1.3"', spec)
         self.assertIn("## Approved implementation technology", spec)
         self.assertIn("install-server.sh", spec)
         self.assertIn(".deployment-version", spec)
@@ -55,7 +55,7 @@ class InstallationContractTests(unittest.TestCase):
                          {"argparse", "importlib.util", "json", "os", "pathlib",
                           "shutil", "subprocess", "tempfile"})
         self.assertIn(
-            'BMFORGE_COMPONENT = {"id": "bmforge.installation", "spec_version": "0.1.2"}',
+            'BMFORGE_COMPONENT = {"id": "bmforge.installation", "spec_version": "0.1.3"}',
             program)
         self.assertIn("DEPLOYMENT_READY = False", program)
         self.assertIn('VERSION_MARKER = ".deployment-version"', program)
@@ -86,8 +86,28 @@ class InstallationContractTests(unittest.TestCase):
         self.assertIn("role-and-operation-specific", skill)
         self.assertIn("--check", skill)
 
+    def test_python_runtime_isolation_is_an_installation_standard(self):
+        spec = SPEC.read_text()
+        skill = (ROOT / "skills/bmforge-installation/SKILL.md").read_text()
+        guide = (ROOT / "pages/installation-scripts.md").read_text()
+        program = INSTALL.read_text()
+        for term in ("venv_owned", "RUNTIME_IMPORTS", "SYSTEM_PYTHON",
+                     "pip check", "Fail2ban", "/opt/dev", "--check"):
+            self.assertIn(term, spec, term)
+        for term in ("venv_owned", "RUNTIME_IMPORTS", "SYSTEM_PYTHON",
+                     "Fail2ban", "/opt/dev"):
+            self.assertIn(term, skill, term)
+        for term in ("venv_owned", "RUNTIME_IMPORTS", "SYSTEM_PYTHON"):
+            self.assertIn(term, guide, term)
+            self.assertIn(term, program, term)
+        self.assertIn("self.preflight_python(action)", program)
+        self.assertIn("self.prepare_python()", program)
+        self.assertIn("'venv_owned'", program)
+        self.assertIn("REQUIREMENTS_FILE = None", program)
+        self.assertIn("DEPLOYMENT_READY = False", program)
+
     def test_baseline_skill_bundles_spec_and_reference(self):
-        manager = (ROOT / "skills/bmforge-new-project/scripts/manage.py").read_text()
+        manager = (ROOT / "skills/bmforge/scripts/manage.py").read_text()
         self.assertIn('"bmforge-installation": ("pages/component-installation.md"', manager)
         self.assertIn('BASE_SKILLS = ("bmforge-project", "bmforge-constants", '
                       '"bmforge-localization", "bmforge-installation")', manager)
