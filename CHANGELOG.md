@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.19.1] - 2026-10-31 @ 05:50
+
 This release is named for the element **Mendelevium (Md)**. Mendelevium honors Dmitri Mendeleev, whose periodic table anticipated the existence of several undiscovered elements.
 
 ### Summary
