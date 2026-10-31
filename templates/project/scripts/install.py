@@ -187,8 +187,13 @@ class Installation:
         # Keep ownership information for partial copies so a retry or uninstall can
         # account for new files. Advance the successful-version marker only last.
         owned = sorted(set(previous or ()) | set(names))
+        previous_venv = False
+        if previous is not None:
+            previous_venv = json.loads((self.destination / MANIFEST).read_text()).get('venv') is True
+        if REQUIREMENTS_FILE is not None and (self.destination / VENV_DIR).exists() and not previous_venv and previous is not None:
+            raise ValueError('Refusing to take ownership of an existing unowned virtual environment')
         ownership = {'project': PROJECT_NAME, 'files': owned,
-                     'venv': REQUIREMENTS_FILE is not None or (self.destination / VENV_DIR).is_dir()}
+                     'venv': REQUIREMENTS_FILE is not None or previous_venv}
         self.atomic_write(self.destination / MANIFEST, (json.dumps(ownership, indent=2) + '\n').encode())
         # Existing managed files may change before success; this is not rollback.
         for name in [item for item in names if item != self.version_file]:
@@ -198,6 +203,8 @@ class Installation:
         if REQUIREMENTS_FILE is not None:
             venv = self.destination / VENV_DIR
             if not (venv / 'bin/python').is_file():
+                if venv.exists():
+                    raise ValueError('Existing virtual environment is missing bin/python; inspect before replacing')
                 subprocess.run([shutil.which('python3'), '-m', 'venv', str(venv)], check=True)
             subprocess.run([str(venv / 'bin/python'), '-m', 'pip', 'install',
                             '-r', str(self.destination / REQUIREMENTS_FILE)], check=True)
