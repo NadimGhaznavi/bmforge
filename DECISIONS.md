@@ -9,6 +9,41 @@ permalink: /decisions/
 
 # BMForge decision record
 
+## 2026-10-31: journald security-event producers without enforcement dependencies
+
+**Producer separation.** Add independently selectable `bmforge-security-events` (draft
+`bmforge.security-events` specification `0.1.0`) and a small Python template.
+An application's business logic calls only `emit("abuse")`; it does not know
+IP addresses, rate limits, delivery retries, caching, bans, ZMQ, Fail2ban or
+nftables. The existing trusted request ingress adapter binds and restores
+the validated numeric source; business activities never pass source IPs to
+the publisher. No universal abuse threshold or second security daemon is
+introduced. The producer has **no BMForge component prerequisites**.
+
+**Delivery.** Select the **systemd journal as the single official security-event
+channel**. The application's existing logger emits one canonical line through
+the service's stdout/stderr stream. Native Fail2ban (`0.3.0`) consumes unit-scoped
+journal entries with `backend = systemd` and `journalmatch = _SYSTEMD_UNIT=...`.
+It owns `findtime`, `maxretry`, jail tickets and the ban-only ZMQ action in the
+blocking project; it still requires ZMQ **there**, not in the event producer.
+The host Fail2ban daemon needs its native `python3-systemd` backend. No extra
+app logging files, rotation, file backend, queues, ack protocol or fallbacks.
+
+**Trust and tests.** HTTP `0.5.1` describes explicitly trusted proxy peers,
+overwritten forwarded headers, numeric IPv4/IPv6 normalization and request-local
+context. Test producer formatting, spoof resistance, native journal receipt,
+Fail2ban parsing and an application-originated event through the existing
+blocking-service request. Basic nftables IP blocking is **already covered by
+the blocking component's contract**, not a new gate for producer integration.
+Journal delivery is best effort and subject to native rate limits; do not
+promise guaranteed bans. Native journald/Fail2ban verification remains a
+required consuming-host acceptance check when that host is available.
+
+**Repository boundary.** Implement the reusable specifications, template and
+skill packaging in BMForge only. MyCount, BMCyber and all other applications
+adopt their pinned skill updates in separate, user-authorized tasks.
+
+
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
 ## 2026-10-31: a selectable GitHub Pages site standard
