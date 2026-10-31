@@ -71,6 +71,12 @@ Native [Fail2ban]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) may 
 
 The local enforcement service and kernel-owned nftables bans remain separate. A consuming integration should verify that the trusted source is the intended external address and that its journal entry reaches the native Fail2ban action. **Do not retest nftables IP blocking as a prerequisite for this skill:** the blocking service owns that existing contract.
 
+## Native documentation
+
+- [systemd-journald](https://www.freedesktop.org/software/systemd/man/latest/systemd-journald.html) documents service stdout/stderr capture as journal records, separated at newline boundaries.
+- [systemd.exec](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html) documents service `StandardOutput`/`StandardError` and journal identifiers.
+- [Fail2ban jail.conf](https://github.com/fail2ban/fail2ban/blob/master/man/jail.conf.5) documents the native `systemd` backend and `journalmatch` used by the consumer.
+
 ## Installation and acceptance
 
 1. Install or attach the producer skill alone with no ZMQ, Fail2ban, HTTP or nftables dependency; verify the pinned specification and `SecurityEvents.py` asset. Installing a skill performs no host mutation, log configuration or service deployment.
