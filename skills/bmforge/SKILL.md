@@ -20,7 +20,8 @@ Optional, selected by requirement:
 - `bmforge-timeline`: vis-timeline editing of dated objects and ranges; requires `bmforge-http`.
 - `bmforge-zmq`: PyZMQ REQ/REP clients and servers over TCP or named local IPC sockets.
 - `bmforge-nftables`: host-local timed IP bans, removal and inspection in one owned table.
-- `bmforge-fail2ban`: native security-log filters/jails and a thin local ban action client; requires `bmforge-zmq`.
+- `bmforge-security-events`: independent fire-and-forget security-event producer using journald and trusted request-scoped source binding; no HTTP, ZMQ, Fail2ban or nftables prerequisite.
+- `bmforge-fail2ban`: native **journald** security-event filters/jails and a thin local ban action client; requires `bmforge-zmq` in the blocking project only.
 - `bmforge-db-server`: canonical MariaDB manager and domain data-access interfaces.
 - `bmforge-git`: Git commit and managed-file publishing.
 - `bmforge-github-pages`: project documentation sites with the shared dark theme, required logo, canonical configuration and publishing scaffold; no HTTP or Git component prerequisite.
@@ -32,7 +33,9 @@ Explain relevant capabilities and ask the user which optional skills to install.
 
 For timeline editing, explicitly select `bmforge-http,bmforge-timeline` together, or add timeline when HTTP is already pinned in the project. The manager rejects a missing HTTP dependency before writing files and never installs it implicitly.
 
-For per-host log-driven bans, select `bmforge-zmq,bmforge-fail2ban,bmforge-nftables` in the blocking project. Fail2ban requires an explicitly selected or already pinned ZMQ skill; nftables can be selected alone. Applications only emit security-event logs. These skills cover this small integration subset, not general firewall or Fail2ban administration.
+For an application that only produces security events, select **`bmforge-security-events` alone**. Its application business logic calls `emit("abuse")` and knows no IP, ban policy, Fail2ban/ZMQ or retry mechanics. The application's trusted ingress adapter supplies the source, and its existing systemd unit sends the event through **journald**.
+
+For a blocking service, select `bmforge-zmq,bmforge-fail2ban,bmforge-nftables` as needed. Fail2ban requires ZMQ only in this consumer project; nftables is independently selectable. Native Fail2ban reads producing-service journal events, counts them within its configured window and invokes the existing ban action. Do not require any of these enforcement skills in an event-producing application. These skills cover only this small integration subset.
 
 ## Implementation authorization gate
 
