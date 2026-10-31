@@ -31,6 +31,9 @@ systemd service.
   failures, environment ownership and cleanup, developer venv exclusion, and
   an offline pinned-wheel upgrade with checkout-independent imports.
 - Correct the installation contract test's outdated bootstrap manager location.
+- Clarify the BMForge-first repository boundary in agent guidance: consuming
+  repositories are read-only references until their owners pin the new skill
+  and request independent application changes.
 
 ## [0.21.0] - 2026-10-31 @ 10:35
 
