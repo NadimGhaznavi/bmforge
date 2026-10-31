@@ -36,7 +36,7 @@ class SecurityEvents:
     def trusted_source(self, address: str):
         """Bind only the already-verified peer/proxy source at the ingress boundary."""
         try:
-            if not isinstance(address, str):
+            if not isinstance(address, str) or "%" in address:
                 raise ValueError("Client source must be a numeric IP address")
             parsed = ip_address(address)
             if parsed.is_unspecified or parsed.is_multicast:
