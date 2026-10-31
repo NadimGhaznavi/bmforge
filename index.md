@@ -50,6 +50,7 @@ Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-cont
 | Localizing application interfaces from day one | [Application Localization]({{ site.baseurl }}{% link pages/component-localization.md %}) |
 | Selecting charts, maps or relationship graphs | [Approved display visualizations]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
 | Editing timeline objects | [Timeline Editing (requires HTTP)]({{ site.baseurl }}{% link pages/component-timeline.md %}) |
+| Blocking malicious IPs on one host from application logs | [Fail2ban detection]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) and [nftables timed bans]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
 | Exporting rendered frames as an animated GIF | [GIF Animation]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
 | Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
 | Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
@@ -67,6 +68,8 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 | --- | --- | --- |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
+| Timed host IP bans | `bmforge.nftables` | [nftables timeout sets]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
+| Security-log detection | `bmforge.fail2ban` | [Fail2ban and local ZMQ action (requires ZMQ)]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) |
 | DB Server | `bmforge.db-server` | [Canonical DbMgr and DAL layering]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
 | Git | `bmforge.git` | [Publish and Commit]({{ site.baseurl }}{% link pages/component-git.md %}) |
 | Display visualizations | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |

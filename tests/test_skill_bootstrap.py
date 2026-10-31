@@ -375,13 +375,61 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(repeat.returncode, 2)
         self.assertEqual(existing.read_bytes(), content)
 
-    def test_timeline_requires_http_before_init_or_attach_writes(self):
-        for action in ("init", "attach"):
-            with self.subTest(action=action):
-                result = self.run_manager(action, "--components", "bmforge-timeline")
-                self.assertEqual(result.returncode, 2, result.stderr)
-                self.assertIn("bmforge-timeline requires bmforge-http", result.stderr)
-                self.assertEqual(list(self.project.iterdir()), [self.project / ".git"])
+    def test_required_components_are_checked_before_init_or_attach_writes(self):
+        for name, dependency in (("bmforge-timeline", "bmforge-http"),
+                                 ("bmforge-fail2ban", "bmforge-zmq")):
+            for action in ("init", "attach"):
+                with self.subTest(component=name, action=action):
+                    result = self.run_manager(action, "--components", name)
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    self.assertIn(f"{name} requires {dependency}", result.stderr)
+                    self.assertEqual(list(self.project.iterdir()), [self.project / ".git"])
+
+    def test_nftables_can_attach_independently_with_an_offline_contract(self):
+        (self.project / "AGENTS.md").write_text("Existing host project\n")
+        result = self.run_manager("attach", "--components", "bmforge-nftables")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {"bmforge-nftables"})
+        self.assertEqual((self.project / "AGENTS.md").read_text(), "Existing host project\n")
+        installed = self.project / ".agents/skills/bmforge-nftables"
+        self.assertEqual((installed / "references/specification.md").read_bytes(),
+                         (self.source / "pages/component-nftables.md").read_bytes())
+        self.assertEqual(lock["skills"]["bmforge-nftables"]["spec_version"], "0.1.0")
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_host_ban_skills_attach_only_explicit_components(self):
+        selected = {"bmforge-fail2ban", "bmforge-nftables", "bmforge-zmq"}
+        result = self.run_manager("attach", "--components", ",".join(sorted(selected)))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), selected)
+        self.assertFalse((self.project / "AGENTS.md").exists())
+        for name in selected:
+            self.assertEqual((self.project / ".agents/skills" / name / "references/specification.md").read_bytes(),
+                             (self.source / module.SKILLS[name][0]).read_bytes())
+        self.assertEqual(self.run_manager("check").returncode, 0)
+
+    def test_fail2ban_bootstrap_does_not_implicitly_select_enforcement(self):
+        self.bootstrap("bmforge-fail2ban,bmforge-zmq")
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(set(lock["skills"]), {*module.BASE_SKILLS, "bmforge-fail2ban", "bmforge-zmq"})
+        self.assertFalse((self.project / ".agents/skills/bmforge-nftables").exists())
+
+    def test_add_fail2ban_preserves_the_pinned_zmq_dependency(self):
+        self.bootstrap("bmforge-zmq")
+        directory = self.project / ".agents/skills/bmforge-zmq"
+        before = {p.relative_to(directory): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+        zmq_lock = json.loads((self.project / module.LOCK).read_text())["skills"]["bmforge-zmq"]
+        (self.source / "skills/bmforge-zmq/SKILL.md").write_text("New upstream ZMQ instructions\n")
+        self.commit_source()
+        result = self.run_manager("add", "--components", "bmforge-fail2ban")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        after = {p.relative_to(directory): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+        self.assertEqual(after, before)
+        lock = json.loads((self.project / module.LOCK).read_text())
+        self.assertEqual(lock["skills"]["bmforge-zmq"], zmq_lock)
+        self.assertNotEqual(lock["skills"]["bmforge-fail2ban"]["source_commit"], zmq_lock["source_commit"])
 
     def test_timeline_pair_can_bootstrap_or_attach_without_implicit_skills(self):
         self.bootstrap("bmforge-timeline,bmforge-http")
@@ -402,16 +450,19 @@ class SkillBootstrapTests(unittest.TestCase):
                              (self.source / module.SKILLS[name][0]).read_bytes())
         self.assertEqual(self.run_manager("check").returncode, 0)
 
-    def test_add_timeline_missing_http_preserves_existing_project(self):
+    def test_add_missing_prerequisite_preserves_existing_project(self):
         self.bootstrap("")
         before = {p.relative_to(self.project): p.read_bytes()
                   for p in self.project.rglob("*") if p.is_file() and ".git" not in p.parts}
-        result = self.run_manager("add", "--components", "bmforge-timeline")
-        self.assertEqual(result.returncode, 2, result.stderr)
-        self.assertIn("requires bmforge-http", result.stderr)
-        after = {p.relative_to(self.project): p.read_bytes()
-                 for p in self.project.rglob("*") if p.is_file() and ".git" not in p.parts}
-        self.assertEqual(after, before)
+        for name, dependency in (("bmforge-timeline", "bmforge-http"),
+                                 ("bmforge-fail2ban", "bmforge-zmq")):
+            with self.subTest(component=name):
+                result = self.run_manager("add", "--components", name)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn(f"requires {dependency}", result.stderr)
+                after = {p.relative_to(self.project): p.read_bytes()
+                         for p in self.project.rglob("*") if p.is_file() and ".git" not in p.parts}
+                self.assertEqual(after, before)
 
     def test_add_timeline_preserves_pinned_http_when_upstream_changes(self):
         self.bootstrap("bmforge-http")
@@ -770,7 +821,8 @@ class SkillBootstrapTests(unittest.TestCase):
     def test_full_catalog_installable(self):
         selection = ",".join(k for k in module.SKILLS if k not in module.BASE_SKILLS)
         self.bootstrap(selection)
-        self.assertEqual(len(json.loads((self.project / module.LOCK).read_text())["skills"]), 12)
+        self.assertEqual(set(json.loads((self.project / module.LOCK).read_text())["skills"]),
+                         set(module.SKILLS))
         self.assertEqual(self.run_manager("check").returncode, 0)
 
 
