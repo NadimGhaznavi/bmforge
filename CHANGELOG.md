@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Bohrium (Bh)**. Bohrium honors Niels Bohr, whose atomic model transformed our understanding of electrons.
+
 ### Summary
 
 Isolate deployed Python dependencies under each application's `/opt/prod` installation instead of depending on a development checkout.
