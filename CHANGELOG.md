@@ -9,6 +9,16 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Isolate deployed Python dependencies under each application's `/opt/prod` installation instead of depending on a development checkout.
+
+### Changed
+
+- Advance installation specification to draft 0.1.2; add an opt-in production `.venv` to the existing installer template, with declared requirements installed before the successful-version marker.
+- Require runtime service paths to use deployed Python and code, exclude source virtual environments, and document lifecycle and independence checks.
+
+
 ## [0.20.0] - 2026-10-31 @ 08:22
 
 This release is named for the element **Rutherfordium (Rf)**.Rutherfordium honors 
