@@ -9,6 +9,24 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-10-31 @ 04:26
+
+This release is named for the element **Fermium (Fm)**. Fermium was discovered 
+in debris from the 1952 hydrogen-bomb test and named after physicist Enrico Fermi.
+
+
+### Summary
+
+Allow applications to use named local sockets for ZeroMQ request/reply messaging
+while keeping the existing protocol, client behavior and TCP option.
+
+### Changed
+
+- Extend `bmforge-zmq` to draft `0.4.0` with configurable TCP or local IPC
+  endpoints for clients, servers and health probes. Define filesystem access,
+  single-instance startup, socket cleanup and consuming-project acceptance
+  checks without new runtime modules or changes to the IP-only network schema.
+
 ## [0.18.0] - 2026-10-30 @ 20:41
 
 ### Summary

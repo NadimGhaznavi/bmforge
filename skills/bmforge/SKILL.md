@@ -18,7 +18,7 @@ Always installed **for new-project bootstrap only**:
 Optional, selected by requirement:
 - `bmforge-http`: standard-library HTTP server and optional Jinja2 display.
 - `bmforge-timeline`: vis-timeline editing of dated objects and ranges; requires `bmforge-http`.
-- `bmforge-zmq`: PyZMQ REQ/REP server.
+- `bmforge-zmq`: PyZMQ REQ/REP clients and servers over TCP or named local IPC sockets.
 - `bmforge-nftables`: host-local timed IP bans, removal and inspection in one owned table.
 - `bmforge-fail2ban`: native security-log filters/jails and a thin local ban action client; requires `bmforge-zmq`.
 - `bmforge-db-server`: canonical MariaDB manager and domain data-access interfaces.
