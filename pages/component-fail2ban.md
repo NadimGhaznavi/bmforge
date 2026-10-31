@@ -51,7 +51,7 @@ For the canonical producer format, Fail2ban recognizes the local timestamp and m
 
 ```ini
 [Definition]
-failregex = ^\\s*SECURITY event=abuse ip=<HOST>\\s*$
+failregex = ^\s*SECURITY event=abuse ip=<HOST>\s*$
 ignoreregex =
 journalmatch = _SYSTEMD_UNIT=myapp.service
 ```
