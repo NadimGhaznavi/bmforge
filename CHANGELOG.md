@@ -9,6 +9,26 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Give project documentation sites one reusable GitHub Pages standard, with shared
+dark styling, required project branding and a concise, pinned site scaffold.
+
+### Added
+
+- Add optional `bmforge-github-pages` with draft `0.1.0` guidance, configuration,
+  homepage/README/guide templates and publishing workflow. Bundle the complete
+  resources for offline use through the existing skill manager without selecting
+  application HTTP or Git components.
+
+### Changed
+
+- Require each site's own logo, consistent baseurl-aware navigation, wide content,
+  author sidebar and front-matter titles without duplicate headings. Trim unused
+  configuration boilerplate and document preserving existing sites on adoption.
+- Restrict manual Pages workflow runs to `main` as well as push-triggered builds;
+  keep scaffold Markdown out of BMForge's published pages.
+
 ## [0.19.1] - 2026-10-31 @ 05:50
 
 This release is named for the element **Mendelevium (Md)**. Mendelevium honors Dmitri Mendeleev, whose periodic table anticipated the existence of several undiscovered elements.

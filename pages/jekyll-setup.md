@@ -1,103 +1,182 @@
 ---
-title: Jekyll Setup
+title: Project GitHub Pages Standard
 lang: en
 locale: en-US
 language_name: English
 translation_key: bmforge-project-setup
+component_id: "bmforge.github-pages"
+spec_version: "0.1.0"
+spec_status: "draft"
 ---
 
-Set up a new project's documentation site using GitHub Pages and the shared `NadimGhaznavi/minimal-mistakes` theme. This process prepares the Jekyll configuration and English documentation files, following BMGeoIP and BMDynIP.
+**Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
 
-Record any project-specific setup requirements or exceptions in the project's own documentation.
+Create project documentation sites from one canonical scaffold. The project owns
+its configuration, content and logo; the shared theme owns presentation. This
+standard consolidates the existing BMGeoIP/BMDynIP conventions and is packaged
+as the optional `bmforge-github-pages` skill. It has no HTTP or Git component
+prerequisite and adds no application service.
 
-Establish the new project's name using [CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) so the repository slug, package name, and release settings agree.
+## Contents
 
-## Configure the Site
+- [Scaffold and skill resources](#scaffold-and-skill-resources)
+- [Configure the site](#configure-the-site)
+- [Shared styling and logo](#shared-styling-and-logo)
+- [Documentation structure and titles](#documentation-structure-and-titles)
+- [Approved runtime modules](#approved-runtime-modules)
+- [Traceability](#traceability)
+- [Acceptance checks](#acceptance-checks)
 
-Copy the [configuration template]({{ '/templates/_config.yml' | relative_url }}) to `_config.yml` in the new project's root. Replace every `__PLACEHOLDER__` using the following values.
+## Scaffold and skill resources
+
+Select the skill through [BMForge]({{ site.baseurl }}{% link pages/codex-skills.md %})
+for a new or existing project. Installation pins the resources without changing
+the project's site. After implementation is authorized, use the installed
+`assets/` files and `references/` guides; no live BMForge checkout is required.
+
+| Canonical source | Installed skill asset | Project destination |
+| --- | --- | --- |
+| `templates/_config.yml` | `assets/_config.yml` | `_config.yml` |
+| `templates/jekyll-gh-pages.yml` | `assets/jekyll-gh-pages.yml` | `.github/workflows/jekyll-gh-pages.yml` |
+| `templates/github-pages/index.md` | `assets/index.md` | `index.md` |
+| `templates/github-pages/README.md` | `assets/README.md` | `README.md` |
+| `templates/github-pages/page.md` | `assets/page.md` | Each required guide under `pages/` |
+
+The [configuration template]({{ '/templates/_config.yml' | relative_url }})
+contains the settings used by these project sites, without the unused upstream
+comment, search, social-provider and pagination configuration blocks. Add a
+setting only for a project requirement. Keep the project's actual content,
+translations and required overrides when adopting this standard on an existing
+site; do not replace them with template text.
+
+## Configure the site
+
+Replace every placeholder using established project values. Quote YAML scalars
+correctly, including values containing quotes, backslashes or newlines.
 
 | Placeholder | Value |
 | --- | --- |
-| `__PROJECT_SLUG__` | Repository name, such as `bmforge`; also used as the MyCount site identifier |
+| `__PROJECT_SLUG__` | Repository name; also the MyCount site identifier |
 | `__PROJECT_TITLE__` | Human-readable project name |
-| `__PROJECT_DESCRIPTION__` | One sentence describing the project's purpose |
-| `__GITHUB_OWNER__` | Repository owner or organization, taken from the Git remote |
-| `__SITE_HOST__` | Published hostname, without a protocol or path |
-| `__SITE_BASEURL__` | Empty string for a custom domain; `/repository-name` for a GitHub Pages project URL |
-| `__PROJECT_LOGO__` | Path to an existing logo under `/pages/images/`, or an empty string until one is available |
-| `__AUTHOR_NAME__` | Project owner's display name |
-| `__AUTHOR_LOCATION__`, `__AUTHOR_EMAIL__` | Public author details; use empty strings for omitted details |
-| `__AUTHOR_WEBSITE__` | Author's website URL; remove the corresponding link entry if unused |
+| `__PROJECT_DESCRIPTION__` | One sentence describing the project |
+| `__GITHUB_OWNER__` | Owner or organization from the Git remote |
+| `__SITE_HOST__` | Published hostname, without protocol or path |
+| `__SITE_BASEURL__` | Empty for a custom domain or user site; `/repository-name` for a project site |
+| `__PROJECT_LOGO__` | Required existing logo path under `/pages/images/` |
+| `__AUTHOR_NAME__` | Owner's display name |
+| `__AUTHOR_LOCATION__`, `__AUTHOR_EMAIL__` | Public author details; empty if omitted |
+| `__AUTHOR_WEBSITE__` | Author's website; remove its link entry if unused |
 | `__START_YEAR__` | Year the project began |
+| `__PAGE_TITLE__`, `__PAGE_KEY__` | Guide title and stable key suffix; used only in the page template |
 
-Derive the repository values from the Git remote and the title and description from the project brief. Use owner details and a hostname already established for the project; obtain any missing values from the owner. BMGeoIP and BMDynIP use `<project-slug>.osoyalce.com` with an empty `baseurl`.
+Derive identity from the project brief and Git remote, following
+[CMDB Compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) when
+applicable. Use the project's established domain and public author details;
+obtain missing values from the owner instead of guessing them.
 
-Preserve these shared defaults:
+| Publication | `url` | `baseurl` | `CNAME` |
+| --- | --- | --- | --- |
+| Custom subdomain | `https://project.osoyalce.com` | `""` | Established hostname |
+| GitHub project site | `https://owner.github.io` | `/repository-name` | Omit |
+| GitHub user/organization site | `https://owner.github.io` | `""` | Omit |
 
-- Remote theme `NadimGhaznavi/minimal-mistakes` and skin `dark`
-- MyCount endpoint `https://count.osoyalce.com/count`
-- Multilingual support enabled with English (`en`) as the default language and `en-US` as the default locale
-- Kramdown/GFM Markdown and Rouge highlighting
-- Documentation pages using `layout: single` with the author sidebar; the template also sets `classes: wide`
-- The template's plugin list and Markdown processing settings
+Keep the canonical exclude list and add the application's actual source/package
+and tooling directories. Site output should contain documentation and its
+assets. Do not exclude the guides, logo or linked changelog.
 
-The shared theme owns presentation. Add local layout, CSS, or JavaScript overrides only for a specific project requirement.
+## Shared styling and logo
 
-## Create the Documentation Root
+Use `NadimGhaznavi/minimal-mistakes`, skin `dark`, documentation layout `single`,
+`classes: wide` and `author_profile: true`. Keep the shared MyCount endpoint
+`https://count.osoyalce.com/count` with the project's own identifier. Retain
+Kramdown/GFM, Rouge, compressed Sass and the template's plugin list.
 
-Create this structure in the project root:
+Keep shared typography, colors, spacing, sidebar and responsive behavior in the
+remote theme. Do not copy theme layouts or styles into every project. Add local
+CSS, layouts or JavaScript only for an explicit project requirement. The pinned
+skill contains the instructions and scaffold; the existing shared remote theme
+continues to supply presentation at GitHub build time.
 
-```text
-_config.yml
-index.md
-README.md
-pages/
-  images/
-```
-
-Use `index.md` as the sole documentation entry point. Give it YAML front matter with a project-specific title:
-
-```yaml
----
-title: "Project Name"
-layout: single
-author_profile: true
-lang: en
-locale: en-US
-language_name: English
-translation_key: __PROJECT_SLUG__-home
-permalink: /
----
-```
-
-Below the front matter, add the logo if available, a brief project overview, and links to the documentation that exists. Keep `README.md` to a short overview and the website link.
-
-Put English documentation in `pages/` and shared images in `pages/images/`. Give each documentation page YAML front matter with a `title`, `lang: en`, `locale: en-US`, `language_name: English`, and a stable `translation_key` unique to that page. Make every English page reachable from `index.md`.
+Every project site **must include its own logo** under `pages/images/`. Reuse the
+supplied or established logo, preserve its aspect ratio and transparency, and
+check that it is legible against the dark theme. Set `_config.yml`'s `logo` to
+that file and use the same setting for the homepage image:
 
 {% raw %}
-Use `{{ site.baseurl }}{% link pages/installation.md %}` for an internal page target, substituting an existing filename. Use `{{ site.baseurl }}/pages/images/project-logo.png` for an image target. Include a `[Documentation index]({{ site.baseurl }}{% link index.md %})` link on documentation pages.
+```liquid
+![{{ site.title }} logo]({{ site.logo | relative_url }})
+```
 {% endraw %}
 
-## Prepare Multilingual Support
+Do not substitute another project's branding or an empty logo setting. If the
+asset is missing, obtain it before declaring the site ready to publish.
 
-Keep this block in `_config.yml` for every new project:
+## Documentation structure and titles
 
-```yaml
-multilingual:
-  enabled: true
-  default_lang: en
-```
+Use `index.md` as the sole documentation entry point, English guides under
+`pages/`, and shared images under `pages/images/`. Keep `README.md` to a short
+overview and the published website link. The scaffold creates no speculative
+guides: add only the pages the project needs and link every guide from the index.
 
-Add the English language metadata and stable translation keys during setup. Create actual translations only after the project is complete, when its interface and documentation have settled. Follow [Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) at that stage.
+Give each page a front-matter `title`, `lang: en`, `locale: en-US`,
+`language_name: English` and stable, unique `translation_key`. The homepage
+uses `permalink: /`. A guide inherits the shared layout, width and sidebar.
+**Do not repeat the front-matter title as a body `#` heading:** the theme
+already renders it. README has no front matter and may use a normal H1.
 
-## Verify the Site Files
+{% raw %}
+Use `{{ site.baseurl }}{% link pages/installation.md %}` for an existing guide
+and `{{ '/pages/images/example.png' | relative_url }}` for an image. Do not
+hard-code root-relative asset or page URLs that break under a project baseurl.
+Every guide includes `[Documentation index]({{ site.baseurl }}{% link index.md %})`.
+{% endraw %}
 
-- Check that every configuration placeholder has been replaced and the project name, repository, hostname, logo, and MyCount identifier agree.
-- Check YAML front matter, English language metadata, unique translation keys, internal link targets, image paths, and navigation from `index.md`.
+Enable multilingual support with English (`en`) as default during setup. Add
+English metadata and stable translation keys now; create translations only when
+requested after content settles. Follow
+[Multilingual Documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}).
 
-## Publish the Site
+## Approved runtime modules
 
-Follow [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}) to configure the workflow, domain, and HTTPS, then verify the deployed site.
+This is a static documentation/build contract. It adds no Python runtime module,
+HTTP listener, database or health endpoint. Use the existing GitHub Jekyll build,
+the shared remote theme and plugins listed in the canonical configuration. Do
+not add a Gemfile, local Jekyll requirement, frontend framework or replacement
+theme without an explicit requirement and owner approval. Application runtime
+localization remains separate.
+
+## Traceability
+
+Retain `# BMFORGE_COMPONENT: bmforge.github-pages; spec_version: 0.1.0` in
+`_config.yml`. This comment identifies the adopted contract without creating a
+Python module. The skill lock pins its specification and scaffold fingerprints;
+static scanning of YAML component comments is not implemented.
+
+## Acceptance checks
+
+1. Install with `init`, `attach` or `add`; verify the specification, publishing
+   and multilingual guides, configuration, workflow and Markdown assets are
+   bundled offline. Attachment preserves the site's bytes and existing pins;
+   no HTTP/Git runtime component is implicitly selected.
+2. Replace all scaffold placeholders. Parse YAML/front matter; check identity,
+   MyCount slug, repository, hostname and baseurl. Verify only actual project
+   source/tool directories are excluded, with required site assets included.
+3. Confirm the required logo exists and both masthead and homepage reference
+   that asset. Check aspect ratio, transparency and dark-background legibility.
+4. Check index-to-guide and guide-to-index links, image targets, English metadata
+   and unique translation keys. Check no front-matter title is repeated as a
+   body H1. Verify URLs for the chosen custom-domain or project-subpath setup.
+5. Verify the workflow publishes only `main`, including manual runs; it builds
+   the root, uploads the artifact, and deploys after the build. Keep generated
+   site output and local Jekyll caches ignored.
+6. After an authorized publication, verify both Actions jobs, HTTPS, the domain,
+   homepage, guides, logo, dark styling, wide layout, sidebar and mobile view.
+   Verify MyCount uses the correct site identifier. If translations exist,
+   verify the theme's language selector and translated navigation.
+
+Follow [GitHub Pages Publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %})
+for settings, domain and deployment checks. Report file preparation separately
+from publication; identify any checks that could not run.
 
 ---
 

@@ -59,7 +59,7 @@ $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skil
 | Аналіз збоїв у production | [Навичка RCA](https://github.com/NadimGhaznavi/bmforge/blob/main/skills/bmforge-rca/SKILL.md): збір даних без змін на сервері, відтворення та налагодження локально |
 | Установлення, оновлення або видалення | [Контракт життєвого циклу встановлення]({{ site.baseurl }}{% link pages/component-installation.md %}), [скрипти встановлення]({{ site.baseurl }}{% link pages/installation-scripts.md %}) і [відстеження змін розгортання]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
 | Публікація випуску | [Налаштування випусків]({{ site.baseurl }}{% link pages/release-setup.md %}), [створення випуску]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [журнал змін]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
-| Публікація документації | [Налаштування Jekyll]({{ site.baseurl }}{% link pages/jekyll-setup.md %}), [GitHub Pages]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
+| Створення або публікація вебсайту проєкту | [Стандарт GitHub Pages]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) (`bmforge-github-pages`), [публікація]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [багатомовна документація]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
 
 ## Довідник компонентів (англійською)
 
@@ -67,6 +67,7 @@ $skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skil
 
 | Компонент | Стабільний ідентифікатор | Контракт |
 | --- | --- | --- |
+| Сайт документації проєкту | `bmforge.github-pages` | [Шаблони й оформлення GitHub Pages]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) |
 | HTTP-сервер відображення | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
 | ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
 | Тимчасове блокування IP на хості | `bmforge.nftables` | [Набори nftables зі строком дії]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
