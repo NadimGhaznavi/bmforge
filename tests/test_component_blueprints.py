@@ -10,7 +10,7 @@ COMPONENTS = {
     "zmq": "bmforge.zmq-server",
     "db-server": "bmforge.db-server",
 }
-VERSIONS = {"http": "0.5.0", "zmq": "0.3.1", "db-server": "0.5.0"}
+VERSIONS = {"http": "0.5.0", "zmq": "0.4.0", "db-server": "0.5.0"}
 
 
 class ComponentBlueprintTests(unittest.TestCase):
@@ -144,7 +144,7 @@ class ComponentBlueprintTests(unittest.TestCase):
         self.assertIn("same server", spec)
         skill = (ROOT / "skills/bmforge-zmq/SKILL.md").read_text()
         self.assertIn("escaped lone Unicode surrogates", skill)
-        self.assertIn("0.3.1", skill)
+        self.assertIn(VERSIONS["zmq"], skill)
 
     def test_reference_snapshots_are_local(self):
         base = ROOT / "components/reference/bmgeoip/bmgeoip"
