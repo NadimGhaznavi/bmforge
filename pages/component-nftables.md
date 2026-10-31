@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.nftables"
-spec_version: "0.1.0"
+spec_version: "0.2.0"
 spec_status: "draft"
 translation_key: bmforge-component-nftables
 ---
@@ -13,7 +13,7 @@ translation_key: bmforge-component-nftables
 
 ## Intent and scope
 
-Enforce timed source-IP bans on **one host**, using native nftables. Each internet-facing host runs its own independent stack. The application-owned blocking service decides whether and for how long to ban an address; this component applies that decision. Follow the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and [class responsibilities]({{ site.baseurl }}{% link pages/classification.md %}).
+Enforce timed source-IP bans on **one host**, using native nftables. Each internet-facing host runs its own independent stack. The application-owned blocking service decides whether and for how long to ban an address; this component applies that decision. The kernel entry holds the live block state and expires it; the service keeps no copy. Follow the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) and [class responsibilities]({{ site.baseurl }}{% link pages/classification.md %}).
 
 The supported subset is one owned table, IPv4/IPv6 timeout sets, input drop rules, address insertion/removal and inspection. Do not build a general firewall API or reproduce nftables. No firewalld dependency, NAT, forwarding, routing, packet detection or centralized ban distribution is selected. [Fail2ban]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) and [ZMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) are separate capabilities, selected where required.
 
@@ -49,19 +49,19 @@ The chain drops matching sources; its accept policy leaves other traffic subject
 | Operation | Required behavior |
 | --- | --- |
 | Initialize | Create the owned structure if absent; otherwise verify and reuse it. Do not duplicate rules or flush live bans at normal startup. |
-| Apply ban | Insert the numeric address into its family set with an explicit positive timeout in seconds. The service supplies the effective remaining lifetime; an earlier/duplicate request must not shorten another active ban or restart its lifetime. |
-| Remove ban | Remove only the requested element when the service determines no active source still requires it. An already expired/absent element is an idempotent success after verification; unrelated command errors remain failures. |
+| Apply ban | Submit the numeric address to its family set with an explicit positive timeout in seconds chosen by service policy. Repeated requests are acceptable; use the tested native insertion behavior without stored deadlines or duplicate tracking. Keeping an existing countdown or applying a fresh full duration is acceptable. |
+| Remove ban | Only an explicit, authorized administrative removal deletes the requested element. Fail2ban ticket expiry, unban or stop must never invoke this operation. An already expired/absent element is an idempotent success after verification; unrelated command errors remain failures. |
 | Inspect | List the owned table/sets in JSON and observe remaining expiration. Do not invent a separate query daemon or background polling loop. |
 
-Use an argument vector with `shell=False` and checked return codes. A generated `nft -f -` batch may contain only fixed syntax, trusted identifiers, normalized addresses and validated finite positive integer durations. Reject CIDRs, hostnames, IPv6 zone identifiers, malformed addresses and raw nft input. Check installed behavior for repeated insertion: do not assume `add element` refreshes an existing timeout. When replacement is needed, perform removal/reinsertion atomically in one batch using the service's remaining lifetime.
+Use an argument vector with `shell=False` and checked return codes. A generated `nft -f -` batch may contain only fixed syntax, trusted identifiers, normalized addresses and validated finite positive integer durations. Reject CIDRs, hostnames, IPv6 zone identifiers, malformed addresses and raw nft input. Verify and document repeated-insertion behavior on the installed version; do not assume `add element` refreshes an existing timeout or hide command errors.
 
 Never run `flush ruleset`, change another table, or persist a snapshot of the entire host firewall. Installation/upgrade/uninstall own only this application's rules and files and follow the [installation lifecycle]({{ site.baseurl }}{% link pages/component-installation.md %}). Restrict firewall modification privileges to the enforcing service. Skill installation does not install packages, start services or edit firewall state.
 
-The kernel handles expiration without an application cleanup loop. A service restart must preserve still-active kernel entries. Host reboot or external removal of the owned table loses runtime entries; document this behavior explicitly. Durable recovery, if required by the consuming project, must restore only the remaining lifetime, never restart an old ban's full duration. This draft does not mandate a database or recovery subsystem.
+The kernel is the sole owner of live block state and handles expiration. Keep no application ban map, per-source claims, countdowns, database or saved ban snapshot; add no cleanup loop or recovery/replay subsystem. A service restart verifies and reuses still-active kernel entries. Repeated requests after a restart are ordinary ban requests; no original deadline needs reconstruction. Host reboot or external removal of the owned table loses runtime entries; document that subsequent detection can request a new block.
 
 ## Traceability and references
 
-Place `BMFORGE_COMPONENT = {"id": "bmforge.nftables", "spec_version": "0.1.0"}` in the application's owning `interface/` module, following [specification traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}). This draft is a contract for a consuming implementation, not a proven reference adapter.
+Place `BMFORGE_COMPONENT = {"id": "bmforge.nftables", "spec_version": "0.2.0"}` in the application's owning `interface/` module, following [specification traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}). This draft is a contract for a consuming implementation, not a proven reference adapter.
 
 Use the upstream [nft manual](https://netfilter.org/projects/nftables/manpage.html), especially tables, chains, sets and elements, and [element timeouts](https://wiki.nftables.org/wiki-nftables/index.php/Element_timeouts) for details beyond this subset.
 
@@ -69,10 +69,10 @@ Use the upstream [nft manual](https://netfilter.org/projects/nftables/manpage.ht
 
 1. In an isolated network namespace or disposable host, initialize twice; observe one owned structure and preserve unrelated sentinel rules and an active ban.
 2. Ban test IPv4 and IPv6 sources, observe their input packets dropped and an unbanned source following existing host policy. Observe expiration and restored traffic without a cleanup worker.
-3. Reapply an earlier/duplicate deadline without shortening or extending the active effective deadline; apply a legitimately later deadline atomically. Remove an entry twice, including after natural expiration, without hiding other command failures.
+3. Repeat requests for an active address, including after a restart; verify the documented native insertion behavior without saved deadlines or duplicate tracking. After expiry, a fresh request creates a new timed entry. Explicitly remove an entry twice, including after natural expiration, without hiding other command failures.
 4. Reject malformed addresses, CIDRs, hostnames, IPv6 zone identifiers, shell metacharacters, zero/negative/infinite durations and excessive durations under the project's declared limit before invoking `nft`.
 5. Check missing executable, insufficient privileges, invalid existing table structure and command timeout/failure. The service must report failure or uncertainty rather than acknowledge an unapplied ban.
-6. Restart the service without clearing active entries; verify and document reboot/external-table-removal behavior. Uninstall removes only owned resources.
+6. Restart the service without clearing active entries and without application ban state. Verify that another ordinary ban request works after the restart. Document that reboot/external-table-removal loses runtime blocks without recovery; subsequent requests create new blocks. Uninstall removes only owned resources.
 
 ---
 

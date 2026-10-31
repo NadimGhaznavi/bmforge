@@ -11,6 +11,12 @@ permalink: /decisions/
 
 This file preserves design decisions that should not disappear into conversations. It is a record, not a replacement for the authoritative contracts linked below.
 
+## 2026-10-31: kernel-owned block state and ban-only detection actions
+
+Advance the Fail2ban and nftables contracts to draft `0.2.0`. Applications log events, Fail2ban detects abuse and requests a block, and the local blocking service chooses the duration. The kernel's timed nftables entry is the sole live enforcement state. Keep no application ban map, per-source claims, saved deadlines, duplicate tracking, expiry timers, persistence or recovery/replay subsystem. Repeat requests after a restart are acceptable, including a fresh full duration; a source identifier is diagnostic metadata only.
+
+Fail2ban's `bantime` governs its native detection ticket, independently of enforcement duration. Unban, stop and flush hooks leave blocks untouched. Restored tickets may send ordinary ban requests without special replay suppression. Service restarts preserve kernel entries, while reboot or external table removal loses them without reconstruction; subsequent detection can request a new block. Explicit administrative removal remains available. This supersedes the source-claim and ban/unban requirements in the initial 2026-10-30 decision.
+
 ## 2026-10-31: optional named local IPC for ZeroMQ
 
 Extend the existing ZMQ client/server contract to draft `0.4.0` with an application-selected `ipc:///absolute/path.sock` endpoint alongside TCP. Preserve REQ/REP, envelopes, validation, bounded calls and health semantics. Keep existing TCP defaults; IPC selection does not create a second listener or a fallback. PyZMQ already supplies IPC, so the approved runtime-module inventory is unchanged.
