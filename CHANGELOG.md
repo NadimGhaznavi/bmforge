@@ -9,6 +9,18 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Keep timed blocking stateless in the service: Fail2ban requests a block, the
+service chooses its duration, and the kernel holds and expires the entry.
+
+### Changed
+
+- Advance Fail2ban and nftables to draft `0.2.0`: use ban-only actions,
+  accept repeated requests after restarts, and remove application source claims,
+  saved deadlines, replay suppression and lifecycle tracking.
+  Fail2ban ticket expiry and stop hooks leave enforcement untouched.
+
 ## [0.19.0] - 2026-10-31 @ 04:26
 
 This release is named for the element **Fermium (Fm)**. Fermium was discovered 
