@@ -9,6 +9,9 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+This release is named for the element **Rutherfordium (Rf)**.Rutherfordium honors 
+Ernest Rutherford, whose experiments revealed the atomic nucleus.
+
 ### Summary
 
 Give project documentation sites one reusable GitHub Pages standard, with shared
