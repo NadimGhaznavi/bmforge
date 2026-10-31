@@ -97,6 +97,33 @@ class SecurityEventTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             self.events.emit("abuse")
 
+    def test_manager_and_consumer_contract_keep_producer_independent(self):
+        manager_path = ROOT / "skills/bmforge/scripts/manage.py"
+        spec = importlib.util.spec_from_file_location("bmforge_manager_security_test", manager_path)
+        manager = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(manager)
+        self.assertEqual(manager.SKILLS["bmforge-security-events"],
+                         ("pages/component-security-events.md", ()))
+        self.assertNotIn("bmforge-security-events", manager.REQUIRES)
+        self.assertEqual(manager.REQUIRES["bmforge-fail2ban"], ("bmforge-zmq",))
+        self.assertEqual(manager.SECURITY_EVENTS_TEMPLATE,
+                         "components/templates/security-events/interface/SecurityEvents.py")
+        self.assertIn("assets/SecurityEvents.py",
+                      manager.bundle.__code__.co_consts)
+        fail2ban = (ROOT / "pages/component-fail2ban.md").read_text()
+        self.assertIn('spec_version: "0.3.0"', fail2ban)
+        self.assertIn("backend = systemd", fail2ban)
+        self.assertIn("journalmatch = _SYSTEMD_UNIT=myapp.service", fail2ban)
+        self.assertIn("python3-systemd", fail2ban)
+        self.assertIn("fail2ban-regex", fail2ban)
+        self.assertIn("Fail2ban owns all **per-source event counting**", fail2ban)
+        self.assertNotIn("logpath = /var/log/", fail2ban)
+        http = (ROOT / "pages/component-http.md").read_text()
+        self.assertIn('spec_version: "0.5.1"', http)
+        self.assertIn("## Trusted HTTP source for security events", http)
+        self.assertIn("overwrites", http)
+        self.assertIn("no Fail2ban", http)
+
     def test_spec_and_producer_only_own_fire_and_forget_publication(self):
         spec = (ROOT / "pages/component-security-events.md").read_text()
         skill = (ROOT / "skills/bmforge-security-events/SKILL.md").read_text()
