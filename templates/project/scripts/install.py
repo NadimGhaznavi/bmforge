@@ -168,8 +168,15 @@ class Installation:
                     or '/opt/dev/' in configuration.read_text()
                     or '/opt/dev/' in str(binary.resolve())):
                 raise ValueError(f'Production virtual environment is incomplete or references /opt/dev: {venv}')
-        if not Path(SYSTEM_PYTHON).is_absolute() or '/opt/dev/' in SYSTEM_PYTHON:
-            raise ValueError('SYSTEM_PYTHON must name an absolute host interpreter outside /opt/dev')
+        host_python = Path(SYSTEM_PYTHON)
+        if (not host_python.is_absolute() or '/opt/dev/' in SYSTEM_PYTHON
+                or host_python.is_relative_to(self.destination)
+                or host_python.is_relative_to(self.checkout)
+                or host_python.resolve().is_relative_to(self.checkout)
+                or host_python.resolve().is_relative_to(self.destination)
+                or '/opt/dev/' in str(host_python.resolve())
+                or (host_python.parent.parent / 'pyvenv.cfg').exists()):
+            raise ValueError('SYSTEM_PYTHON must be a host interpreter outside development and deployed environments')
         if shutil.which(SYSTEM_PYTHON) is None:
             raise ValueError(f'Missing host Python interpreter: {SYSTEM_PYTHON}')
         self.run([SYSTEM_PYTHON, '-B', '-c', 'import venv, ensurepip'],
