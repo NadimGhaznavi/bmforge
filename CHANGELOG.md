@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+- Close off dl task.
+
 ## [0.22.0] - 2026-11-01 @ 05:36
 
 ### Summary
