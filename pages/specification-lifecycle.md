@@ -6,7 +6,7 @@ language_name: English
 translation_key: bmforge-specification-lifecycle
 ---
 
-BMForge defines the **current preferred contracts** for new implementations. Each application owns its implementation and may upgrade deliberately, without any runtime link to BMForge.
+BMForge defines the **current preferred contracts** for new implementations. Each application owns its implementation and may upgrade deliberately, without any runtime link to BMForge. **The current specification describes one clean target state, not a collection of legacy-compatible paths.** Older consumers adopt a new revision by deliberately refactoring their own source, deployment and tests; BMForge adds no version adapters, migration shims or legacy runtime branches. Previous specifications remain accessible through their published Git history.
 
 ## Identify the implemented contract
 

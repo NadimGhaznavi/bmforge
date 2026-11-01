@@ -6,13 +6,12 @@ This component has no Fail2ban, ZMQ, firewall, retry or storage dependency.
 
 from contextlib import contextmanager
 from contextvars import ContextVar
-from datetime import datetime
 from ipaddress import ip_address
 import logging
 import re
 
 
-BMFORGE_COMPONENT = {"id": "bmforge.security-events", "spec_version": "0.1.0"}
+BMFORGE_COMPONENT = {"id": "bmforge.security-events", "spec_version": "0.1.1"}
 
 _SOURCE_ADDRESS: ContextVar[str | None] = ContextVar(
     "bmforge.security-events.source", default=None
@@ -57,5 +56,4 @@ class SecurityEvents:
         address = _SOURCE_ADDRESS.get()
         if address is None:
             raise RuntimeError("No trusted client source bound to this request")
-        timestamp = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
-        self._logger.warning("%s SECURITY event=%s ip=%s", timestamp, event, address)
+        self._logger.warning("SECURITY event=%s ip=%s", event, address)

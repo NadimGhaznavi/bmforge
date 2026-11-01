@@ -85,7 +85,7 @@ class SkillBootstrapTests(unittest.TestCase):
 
     def run_manager(self, action, *more):
         identity = ("--name", "AcmeApp", "--subtype", "Inventory") if action == "init" else ()
-        source = ("--source", self.source) if action != "setup-branches" else ()
+        source = ("--source", self.source) if action in ("init", "attach", "add", "check") else ()
         return command("python3", MANAGER, action, "--project", self.project,
                        *source, *identity, *more)
 
@@ -207,6 +207,32 @@ class SkillBootstrapTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("UPDATE AVAILABLE bmforge-http", result.stdout)
         self.assertEqual(installed.read_bytes(), old)
+
+    def test_verify_uses_no_git_upstream_or_network_and_checks_installed_pins(self):
+        self.bootstrap("bmforge-security-events")
+        shutil.rmtree(self.source)
+        with mock.patch.object(module, "git", side_effect=AssertionError("Git forbidden")), \
+             mock.patch.object(module, "source_checkout",
+                               side_effect=AssertionError("Network/source forbidden")):
+            self.assertEqual(module.start_verify(SimpleNamespace(project=self.project)), 0)
+        output = self.run_manager("verify")
+        self.assertEqual(output.returncode, 0, output.stderr)
+        self.assertIn("Integrity only:", output.stdout)
+        self.assertIn("no Git commands", output.stdout)
+
+    def test_verify_reports_modified_pins_and_manager_without_git(self):
+        self.bootstrap("bmforge-security-events")
+        skill = self.project / ".agents/skills/bmforge-security-events/SKILL.md"
+        skill.write_text(skill.read_text() + "\nchanged without approval\n")
+        manager = self.project / module.MANAGER
+        manager.write_text(manager.read_text() + "\n# tampered\n")
+        with mock.patch.object(module, "git", side_effect=AssertionError("Git forbidden")):
+            result = module.start_verify(SimpleNamespace(project=self.project))
+            self.assertEqual(result, 1)
+        output = self.run_manager("verify")
+        self.assertEqual(output.returncode, 1, output.stderr)
+        self.assertIn("LOCALLY MODIFIED bmforge-security-events", output.stdout)
+        self.assertIn("LOCALLY MODIFIED manager", output.stdout)
 
     def test_empty_component_selection_installs_all_baseline_skills(self):
         self.bootstrap("")

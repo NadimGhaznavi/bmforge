@@ -1,6 +1,6 @@
 # BMForge agent guidance
 
-BMForge is a **standalone engineering specification repository**, not a runtime library. Every application owns its implementation.
+BMForge is a **standalone engineering specification repository**, not a runtime library. Every application owns its implementation. **Specify only the current desired design:** do not add automatic legacy migrations, file-format translators, compatibility shims, runtime fallbacks or special handling for old application configurations. Deliberately refactor older consuming projects when they adopt a new BMForge specification; historical contracts remain available through their original Git revisions.
 
 ## Repository boundary and skill adoption
 

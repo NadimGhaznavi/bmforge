@@ -34,6 +34,8 @@ Open Codex in an established Git repository and enter `$bmforge`. Choose only th
 
 **Existing projects retain their own `AGENTS.md`, architecture, application files, branches and release tooling.** Attachment does not install the new-project baseline or create a release scaffold. More skills can be added later with approval; checking for newer skills never upgrades them automatically.
 
+The pinned manager offers two read-only checks: `python3 .agents/bmforge/manage.py verify --project .` confirms **local hashes only, without Git or network**, while `... check --project .` also uses Git to compare against a separately refreshed local BMForge cache. Neither changes pins or application files.
+
 For a producer-only integration, select **`bmforge-security-events`** alone. It pins the [security-event producer]({{ site.baseurl }}{% link pages/component-security-events.md %}) and its small Python template: application code emits a named event, while the trusted request ingress and systemd journal handle address attribution and delivery. It does not select ZMQ, Fail2ban, nftables or a new logging service. The blocking project separately selects Fail2ban and its required ZMQ skill.
 
 For a project website, select **`bmforge-github-pages`**. It pins the

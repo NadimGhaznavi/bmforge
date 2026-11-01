@@ -38,7 +38,7 @@ class SecurityEventTests(unittest.TestCase):
             self.assertIsNone(self.events.emit("abuse"))
         lines = self.lines()
         self.assertEqual(len(lines), 1)
-        self.assertRegex(lines[0], r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} SECURITY event=abuse ip=192\.0\.2\.10$")
+        self.assertEqual(lines[0], "SECURITY event=abuse ip=192.0.2.10")
         self.assertNotIn("WARNING", lines[0])
         self.assertEqual(self.output.getvalue().count("\n"), 1)
 
@@ -97,8 +97,7 @@ class SecurityEventTests(unittest.TestCase):
             elif isinstance(node, ast.ImportFrom):
                 modules.add(node.module)
         self.assertEqual(modules,
-                         {"contextlib", "contextvars", "datetime", "ipaddress",
-                          "logging", "re"})
+                         {"contextlib", "contextvars", "ipaddress", "logging", "re"})
 
     def test_parallel_request_contexts_do_not_leak_sources(self):
         barrier = Barrier(2)
@@ -132,12 +131,12 @@ class SecurityEventTests(unittest.TestCase):
         self.assertIn("assets/SecurityEvents.py",
                       manager.bundle.__code__.co_consts)
         fail2ban = (ROOT / "pages/component-fail2ban.md").read_text()
-        self.assertIn('spec_version: "0.3.0"', fail2ban)
+        self.assertIn('spec_version: "0.3.1"', fail2ban)
         self.assertIn("backend = systemd", fail2ban)
         self.assertIn("journalmatch = _SYSTEMD_UNIT=myapp.service", fail2ban)
         self.assertIn("python3-systemd", fail2ban)
         self.assertIn("fail2ban-regex", fail2ban)
-        self.assertIn("Fail2ban owns all **per-source event counting**", fail2ban)
+        self.assertIn("Fail2ban aggregates matches", fail2ban)
         self.assertNotIn("logpath = /var/log/", fail2ban)
         http = (ROOT / "pages/component-http.md").read_text()
         self.assertIn('spec_version: "0.5.1"', http)
@@ -149,9 +148,11 @@ class SecurityEventTests(unittest.TestCase):
         spec = (ROOT / "pages/component-security-events.md").read_text()
         skill = (ROOT / "skills/bmforge-security-events/SKILL.md").read_text()
         self.assertEqual(module.BMFORGE_COMPONENT,
-                         {"id": "bmforge.security-events", "spec_version": "0.1.0"})
+                         {"id": "bmforge.security-events", "spec_version": "0.1.1"})
         self.assertIn("Fire-and-forget", skill)
         self.assertIn("systemd-journald", spec)
+        self.assertIn("timestamp-free", spec)
+        self.assertNotIn("datetime", SOURCE.read_text())
         self.assertIn("No trusted client", SOURCE.read_text())
         self.assertEqual(re.findall(r"^    def (\w+)\(", SOURCE.read_text(), flags=re.MULTILINE),
                          ["__init__", "trusted_source", "emit"])

@@ -9,6 +9,44 @@ permalink: /decisions/
 
 # BMForge decision record
 
+## 2026-11-01: clean current security journal contract, without migration machinery
+
+**No legacy compatibility in BMForge.** The authoritative specification defines
+one current implementation. Applications pinned to older specifications are
+refactored and retested deliberately when their owners adopt the new skills.
+Do not add legacy config parsers, ownership-schema translators, file-backend
+fallbacks or compatibility branches to BMForge. Retain historical versions
+through Git rather than in runtime code.
+
+**Native journal format.** Advance the independent producer to specification
+`0.1.1`: its canonical `MESSAGE` is exactly
+`SECURITY event=<name> ip=<trusted-address>`, with **no application timestamp**.
+Journald owns event time and trusted service metadata. Advance Fail2ban to
+`0.3.1`: the journal backend produces a hostname/identifier/PID prefix and
+uses Fail2ban 1.1.x `common.conf` with `logtype = journal` and
+`%(__prefix_line)s`. Do not match an unprefixed `MESSAGE` as though it were
+the entire native line. Use unit-scoped `journalmatch`.
+
+**Native configuration.** Project-managed current defaults use owned
+`filter.d/*.conf`, `jail.d/*.conf` and `action.d/*.conf` files. Operators
+can use separate `*.local` overrides; native effective settings must still
+satisfy the journal-only contract. Conflicts fail preflight, not silently
+migrate. Retired owned files are handled by each application's explicit,
+approved deployment plan, with unowned files preserved.
+
+**Acceptance.** Distinguish parsing (`fail2ban-client -t/-d`), daemon Python
+systemd bindings, actual journal records/unit metadata, and native
+`fail2ban-regex` matches. Exercise two distinct countable events with
+independent Fail2ban thresholds and overlapping-jail ban requests, but no
+application counters, state, retries or additional nftables validation gate.
+
+**Offline pin integrity.** Add `manage.py verify` for local hash checks with
+no Git, network or writes. The existing Git-based `check` command remains
+responsible for update discovery from the separately maintained upstream cache.
+This is a new, minimal native operation, not a MyCount-specific compatibility
+implementation.
+
+
 ## 2026-10-31: journald security-event producers without enforcement dependencies
 
 **Producer separation.** Add independently selectable `bmforge-security-events` (draft

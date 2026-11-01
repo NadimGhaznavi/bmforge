@@ -298,6 +298,13 @@ Before the first BMForge-related edit in a Codex session, run the **read-only**,
 
     python3 .agents/bmforge/manage.py check --project .
 
+If this project's policy prohibits all Git commands, use the alternative:
+
+    python3 .agents/bmforge/manage.py verify --project .
+
+verify checks only local pinned-skill and manager hashes, with no Git, network or
+writes; it does not check whether newer upstream skills exist.
+
 The check reads a clean local BMForge main checkout at
 ~/.cache/bmforge-upstream (override with BMFORGE_SOURCE or --source).
 It never fetches or clones. Refresh that checkout separately with
@@ -613,19 +620,43 @@ def local_update_source(explicit, recorded):
     return source
 
 
-def start_check(args):
-    root = project_root(args.project)
-    lock = load_lock(root)
+def local_pin_integrity(root, lock):
+    """Check installed skill/manager hashes without Git, network or mutations."""
     modified = []
     for name, installed in sorted(lock["skills"].items()):
         directory = root / ".agents/skills" / name
         try:
-            current = fingerprint(installed_bundle(directory))
-            if current != installed["sha256"]:
+            if fingerprint(installed_bundle(directory)) != installed["sha256"]:
                 modified.append(name)
         except (OSError, SetupError):
             modified.append(name)
-    manager_changed = sha256((root / MANAGER).read_bytes()).hexdigest() != lock["manager_sha256"]
+    manager = root / MANAGER
+    manager_changed = (not manager.is_file() or manager.is_symlink()
+                       or sha256(manager.read_bytes()).hexdigest() != lock["manager_sha256"])
+    return modified, manager_changed
+
+
+def start_verify(args):
+    """Verify only local pins, even in an app that prohibits every Git command."""
+    root = Path(args.project).expanduser().resolve()
+    if not root.is_dir():
+        raise SetupError(f"Project directory does not exist: {root}")
+    lock = load_lock(root)
+    modified, manager_changed = local_pin_integrity(root, lock)
+    for name in modified:
+        print(f"LOCALLY MODIFIED {name}: installed snapshot differs from the lock; nothing changed")
+    if manager_changed:
+        print("LOCALLY MODIFIED manager: pinned script differs from the lock")
+    if not modified and not manager_changed:
+        print("All local BMForge pins have valid hashes.")
+    print("Integrity only: no Git commands, network requests, update checks or writes.")
+    return 1 if modified or manager_changed else 0
+
+
+def start_check(args):
+    root = project_root(args.project)
+    lock = load_lock(root)
+    modified, manager_changed = local_pin_integrity(root, lock)
     for name in modified:
         print(f"LOCALLY MODIFIED {name}: installed snapshot differs from the lock; nothing changed")
     if manager_changed:
@@ -710,7 +741,7 @@ def start_setup_branches(args):
 def main(argv=None):
     parser = ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="action", required=True)
-    for action in ("init", "attach", "add", "check", "setup-branches"):
+    for action in ("init", "attach", "add", "check", "verify", "setup-branches"):
         cmd = sub.add_parser(action)
         cmd.add_argument("--project", default=".", help="Existing Git repository root")
         if action in ("init", "attach", "add", "check"):
@@ -728,7 +759,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         return {"init": start_init, "attach": start_attach,
-                "add": start_add, "check": start_check,
+                "add": start_add, "check": start_check, "verify": start_verify,
                 "setup-branches": start_setup_branches}[args.action](args) or 0
     except (SetupError, OSError, subprocess.TimeoutExpired) as error:
         print(f"BMForge: {error}", file=sys.stderr)
