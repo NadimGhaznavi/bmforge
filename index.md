@@ -10,8 +10,6 @@ language_name: English
 translation_key: bmforge-home
 ---
 
-<link rel="stylesheet" href="{{ '/pages/css/bmforge-home.css' | relative_url }}">
-
 ![BMForge logo]({{ site.logo | relative_url }})
 
 **Build small. Fail visibly. Own the implementation.**
@@ -20,31 +18,7 @@ BMForge turns an application's engineering decisions into **versioned specificat
 
 ## From requirements to an independent application
 
-<section class="bmforge-flow" aria-label="BMForge software development lifecycle">
-  <ol class="bmforge-flow__steps">
-    <li>
-      <span class="bmforge-flow__step">01 · Human</span>
-      <h3>Define</h3>
-      <p>The owner sets requirements, architecture, scope and approval boundaries.</p>
-    </li>
-    <li>
-      <span class="bmforge-flow__step">02 · BMForge</span>
-      <h3>Specify</h3>
-      <p>Contracts define processes, approved modules, component behaviour and acceptance checks.</p>
-    </li>
-    <li>
-      <span class="bmforge-flow__step">03 · Codex</span>
-      <h3>Build &amp; verify</h3>
-      <p>Pinned skills guide implementation, testing, installation and release preparation in the project's own repository.</p>
-    </li>
-    <li>
-      <span class="bmforge-flow__step">04 · Application</span>
-      <h3>Run independently</h3>
-      <p>The released application owns its code and operates without a BMForge runtime dependency.</p>
-    </li>
-  </ol>
-  <p class="bmforge-flow__feedback"><strong>↶ Feedback into BMForge:</strong> Real application defects reveal gaps. Improve the specification and regression checks, then deliberately adopt updated skills in future work.</p>
-</section>
+![BMForge SDLC: human requirements flow into BMForge specifications, Codex implementation and verification, then an independent application; real-world findings improve BMForge.]({{ '/pages/images/bmforge-sdlc.en.svg' | relative_url }})
 
 ## The engineering philosophy
 
