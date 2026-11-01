@@ -15,9 +15,14 @@ Keep BMForge's security-event integration standards clean and current: emit
 timestamp-free journal messages, match Fail2ban's actual journal-prefixed lines,
 and validate the native service end to end. Application updates are explicit
 refactors, not compatibility migrations.
+The site now separates the brief human-facing SDLC overview from the full
+agent-facing engineering reference.
 
 ### Changed
 
+- Replace the dense homepage with a responsive SDLC flow and explicit feedback
+  loop; retain the existing task index, component catalogue and links in a
+  dedicated technical reference without changing runtime specifications.
 - Advance Security Events to draft `0.1.1`: omit embedded timestamps from the
   canonical `MESSAGE` and use journald's trusted event time; keep one
   fire-and-forget emit call and no application ban state.
