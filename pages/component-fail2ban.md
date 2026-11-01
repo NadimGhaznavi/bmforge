@@ -4,7 +4,7 @@ lang: en
 locale: en-US
 language_name: English
 component_id: "bmforge.fail2ban"
-spec_version: "0.3.0"
+spec_version: "0.3.1"
 spec_status: "draft"
 translation_key: bmforge-component-fail2ban
 ---
@@ -31,53 +31,76 @@ Record the tested host package version in the application. Use native configurat
 
 ## Systemd journal event boundary
 
-**Only journald is supported as the event delivery channel for this integration.** The producing application's service sends exactly one UTF-8 security line to its normal stdout/stderr journal stream, via the [Security Event Producer]({{ site.baseurl }}{% link pages/component-security-events.md %}). The producer formats a local `yyyy-mm-dd hh:mm:ss` timestamp, fixed event identifier and trusted numeric IPv4/IPv6 source; business logic only calls `emit("abuse")`. The producing application has no ZMQ client, rate counters, delivery acknowledgements, retries, local ban storage, firewall operations or knowledge of the blocking service.
+**Journald is the only supported delivery channel.** The independently selected [Security Event Producer]({{ site.baseurl }}{% link pages/component-security-events.md %}) writes exactly one line to a producing systemd service's existing stdout/stderr journal stream. Application business code only calls \`emit("abuse")\`; it never supplies an IP, counts events, retries delivery, saves ban state or knows the blocking service.
 
-Example journal `MESSAGE` (the journal has additional trusted metadata):
+The canonical journal \`MESSAGE\` is **timestamp-free**:
 
-```text
-2026-10-31 17:19:00 SECURITY event=abuse ip=192.0.2.10
-```
+\`\`\`text
+SECURITY event=abuse ip=192.0.2.10
+\`\`\`
 
-Do not add a file writer, `logpath`, file rotation, an application log watcher, or a fallback to file-based backends. Confirm the actual running service writes unprefixed messages to its journal unit, with `StandardOutput=journal` and `StandardError=journal` where appropriate. Read the unit's trusted `_SYSTEMD_UNIT` value from `journalctl -u <unit> -o verbose`; do not trust a caller-supplied syslog identifier, forwarded HTTP header or arbitrary JSON field as the source.
+Journald supplies the event time (e.g., \`__REALTIME_TIMESTAMP\`), hostname, service identity and PID as separate metadata. **Fail2ban's systemd backend reconstructs a prefixed line from \`_HOSTNAME\`, \`SYSLOG_IDENTIFIER\` (or \`_COMM\`), PID and \`MESSAGE\`.** Do not anchor the filter directly to \`^SECURITY\` against that full line, or expect Fail2ban to see \`MESSAGE\` alone. Use the native journal prefix pattern below. Never insert an additional timestamp, level, Gunicorn prefix or attacker-controlled free text inside the producer's \`MESSAGE\`.
 
-Journal rate limits or service failures may drop events. Fire-and-forget means **best-effort publication**, not guaranteed enforcement. Do not add queues, application retries or a second delivery mechanism to solve this hypothetical failure. The host must have native `python3-systemd` bindings installed for the Fail2ban service's interpreter. These are **Fail2ban's host dependencies**, not additional Python requirements in the producing application's venv.
+Do not add a log file, \`logpath\`, rotation, independent watcher or fallback delivery backend. Verify the producing unit's \`StandardOutput=journal\` and \`StandardError=journal\`, and confirm the actual \`_SYSTEMD_UNIT\` recorded by the journal. Journal rate limits or service outages can lose events; fire-and-forget is **best effort**, not a guaranteed ban or an invitation to add an application queue.
 
 ## Native journal filter and jail
 
-Configure `backend = systemd` explicitly for this application's jail. Use `journalmatch = _SYSTEMD_UNIT=<real-app-unit>.service` in the filter's `[Definition]` or jail-specific override, scoped to the verified originating unit, and **do not configure `logpath`**. Keep the owned configuration narrow: one filter per required event format, an app-specific `.local` jail and the existing ban-only action. Leave native vendor files, unrelated jails and other service logging unchanged.
+Use \`backend = systemd\` per jail, a real unit-scoped \`journalmatch\`, and the installed Fail2ban \`common.conf\` journal prefix pattern. The host's Fail2ban Python interpreter must have its native \`systemd.journal\` bindings; they are **not** a dependency in the producer's application venv.
 
-For the canonical producer format, Fail2ban recognizes the local timestamp and matches the remaining fixed line using this filter example:
+A current Fail2ban 1.1.x filter for the exact canonical \`abuse\` event is:
 
-```ini
+\`\`\`ini
+[INCLUDES]
+before = common.conf
+
+[DEFAULT]
+logtype = journal
+
 [Definition]
-failregex = ^\s*SECURITY event=abuse ip=<HOST>\s*$
+failregex = ^%(__prefix_line)sSECURITY event=abuse ip=<HOST>$
 ignoreregex =
 journalmatch = _SYSTEMD_UNIT=myapp.service
-```
+\`\`\`
 
-Use the **actual** deployed unit and intended event name, not the example literals. Require `usedns = no`, appropriate host exemptions through `ignoreip` and the blocking service, and explicit native `findtime`, `maxretry`, `bantime`, plus the configured `action`. The logger must not wrap messages with a second timestamp, `WARNING` prefix, Gunicorn formatter, exception text or attacker-controlled content. Anchored matching and journal unit scoping are both required to prevent spoofed or unrelated entries becoming ban requests. Verify IPv4 and IPv6 matching and timestamp recognition with **native Fail2ban**, not just a Python regex.
+\`common.conf\` already defines \`__prefix_line\` for journal mode, including the optional host and process/PID prefix. This uses Fail2ban's native format rather than a custom parser, date parser, or a catch-all \`.*\` prefix. Replace \`myapp.service\` and \`abuse\` with the actual trusted unit and selected event. Match only an allowlisted event name and numeric IPv4/IPv6 source. The special \`<HOST>\` capture must be parsed by Fail2ban with \`usedns = no\`. Test with **real** journal metadata and native \`fail2ban-regex\`; an offline representative prefix/regex fixture is useful, but is not proof of end-to-end journal matching.
 
-Fail2ban owns all **per-source event counting**. Choose the meaning of an event deliberately: if one record already means confirmed abuse, set `maxretry = 1`; if events are countable actions, configure `maxretry > 1` with a suitable `findtime` in the jail. Do not count the same threshold in the application and Fail2ban, or make the application share rate counters across Gunicorn workers. Fail2ban naturally consumes journal entries from all workers under the same unit.
+Example disabled jail:
 
-Keep a finite positive `bantime` as Fail2ban's own ticket suppression interval, not the kernel ban duration. Ticket expiration must not remove or shorten the blocking service's kernel entry. Only an app-specific, explicit deployment decision can change `findtime`, `maxretry`, the event semantics, or protected addresses; there is no universal abuse threshold.
-
-### Example jail (disabled until verified)
-
-```ini
+\`\`\`ini
 [myapp-abuse]
 enabled = false
 backend = systemd
-filter = myapp-security
+filter = myapp-abuse
 usedns = no
 findtime = 60
 maxretry = 1
 bantime = 20h
 ignoreip = 127.0.0.0/8 ::1
 action = local-ban[source=myapp-abuse]
-```
+\`\`\`
 
-The `journalmatch` appears in the filter above. The `action` names an already-implemented consumer-side ZMQ command, not a new action transport. This is illustrative, not a policy for every application. No application-side event duplication or cache is implied.
+The native jail's \`bantime\` is a ticket/suppression interval, **not** the kernel ban duration. The blocking service chooses the duration. Leave \`actionunban\`, \`actionstop\` and \`actionflush\` empty; ticket expiry must not remove or shorten a kernel entry.
+
+For **countable** events, create separate named filters/jails with identical journal matching but distinct fixed event identifiers. A disposable test may use \`bad_request\` (3 events in 60 seconds) and \`auth_failure\` (5 events in 300 seconds), each with its own \`failregex\`, \`findtime\`, and \`maxretry\`. Those are **test-only thresholds**, not recommended production settings. Fail2ban aggregates matches from all producing workers for the same trusted client address. The application must not maintain another counter or retry state. Confirm unrelated event names do not increment the other jail. When one IP independently crosses both thresholds, both jails may invoke the same ban-only action. Such repeated requests are permissible; do not add application cross-jail deduplication, source claims, or ban lifecycle tracking.
+
+## Clean configuration ownership (no legacy migration)
+
+New implementations ship only the **current** native arrangement. The consuming project's installer owns the explicitly declared \`filter.d/<name>.conf\`, \`jail.d/<name>.conf\`, and \`action.d/<name>.conf\` defaults. Operator-owned \`*.local\` overrides are separate and must not be overwritten. Native Fail2ban configuration layering supplies the effective settings; do not build a Python file merger, \`configparser\`-based translator or a legacy ownership-record compatibility engine.
+
+During an authorized installation or upgrade, validate the **effective** native configuration, including any operator override. An override that switches a managed journal jail to \`backend = auto\`, restores \`logpath\`, widens \`journalmatch\`, enables an unverified jail or restores an unban hook **fails preflight**; never silently accept it. Retired project-owned native files must be removed by the application's explicitly reviewed deployment plan; unowned files remain untouched. For an older application, first **refactor its source, deployment rules, configuration and ownership records** to meet the current specification, then apply its normal release/deployment. BMForge does not provide compatibility transforms, fallback backends or automatic migration machinery.
+
+The \`bmforge-installation\` contract owns the generic install/upgrade/uninstall ordering and preservation of unrelated operator data. This component owns only its current filter/jail/action file set, native preflight and activation checks.
+
+## Native preflight and acceptance recipe
+
+These checks establish **different facts**; passing one must not be reported as evidence of another. Perform on a disposable systemd host before enabling a production jail:
+
+1. **Configuration structure:** verify each owned \`.conf\` file, operator \`.local\` precedence, effective \`backend = systemd\`, journalmatch, action hooks, and disabled-by-default jail. Run \`fail2ban-client -t\` for native parsing and \`fail2ban-client -d\` to inspect the effective command configuration. Neither proves a journal message matches.
+2. **Host bindings:** inspect the installed \`fail2ban.service\` executable and check that **its interpreter**, not the producer's \`.venv\`, can \`import systemd.journal\`. E.g., on a host whose daemon uses OS Python, \`/usr/bin/python3 -c 'import systemd.journal'\`. Failure blocks activation; do not add this module to the application venv.
+3. **Journal transport:** trigger a permitted test event from the **running application's normal request path**. Inspect \`journalctl -u myapp.service -o cat\` for the exact timestamp-free \`MESSAGE\`, and \`journalctl -u myapp.service -o verbose\` for actual \`_SYSTEMD_UNIT\`, event time, hostname, identifier and PID. Confirm the journal service is readable by Fail2ban's daemon account, not just an administrator.
+4. **Actual matching:** run \`fail2ban-regex -m '_SYSTEMD_UNIT=myapp.service' systemd-journal /etc/fail2ban/filter.d/myapp-abuse.conf\`. Verify native journal timestamp handling, both IP families, exact event selection, and nonmatches for benign events, wrong unit, forged free text and misleading prefixes. Inspect matched and missed entries; do not substitute a synthetic plain logfile test.
+5. **Independent counting:** on an isolated service/jail instance, emit below- and at-threshold sequences for **two** countable event names. Confirm each jail's own \`findtime\`/\`maxretry\` applies per address across workers; unrelated events do not cross-increment. With a controlled ban-action stub or isolated existing action, observe overlapping jails independently requesting bans for the same source only when their thresholds are crossed. Never send these fixtures to a live blocking service.
+6. **Action boundary:** with the already-implemented local ZMQ client, verify successful native action dispatch and visible failure for an unavailable/rejecting service. Verify only \`actionban\` requests enforcement; stop, unban and ticket expiry do not. **Do not re-test nftables' already established core IP-blocking behavior** as a new integration prerequisite.
 
 ## Action client boundary
 
@@ -95,7 +118,7 @@ Keep the blocking service stateless between requests. The timed nftables entry i
 
 ## Traceability and references
 
-Place `BMFORGE_COMPONENT = {"id": "bmforge.fail2ban", "spec_version": "0.3.0"}` in the action client's owning module, following [specification traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}). Follow the [installation lifecycle]({{ site.baseurl }}{% link pages/component-installation.md %}) for owned filters, jail/action files and executable; installing the skill itself never enables a jail or starts a service. This draft still requires validation in the standalone consuming project.
+Place `BMFORGE_COMPONENT = {"id": "bmforge.fail2ban", "spec_version": "0.3.1"}` in the action client's owning module, following [specification traceability]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}). Follow the [installation lifecycle]({{ site.baseurl }}{% link pages/component-installation.md %}) for owned filters, jail/action files and executable; installing the skill itself never enables a jail or starts a service. This draft still requires validation in the standalone consuming project.
 
 The official [systemd-journald documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd-journald.html) describes how stdout/stderr records reach the journal. Fail2ban's native [jail.conf manual](https://github.com/fail2ban/fail2ban/blob/master/man/jail.conf.5) describes `backend = systemd`, `python3-systemd` and `journalmatch`. Verify the installed versions on the consuming host.
 
@@ -103,12 +126,12 @@ Consult upstream [jail/filter/action documentation](https://github.com/fail2ban/
 
 ## Acceptance checks
 
-1. Select `bmforge-fail2ban` plus explicitly selected/already pinned `bmforge-zmq` in the **blocking project**; reject missing ZMQ before writing files. Independently select/install `bmforge-security-events` **alone** in a producer project without ZMQ, Fail2ban or nftables.
-2. On a disposable systemd host, confirm the real application service publishes unprefixed canonical `MESSAGE` records to journald, with the correct `_SYSTEMD_UNIT` and validated trusted IPv4/IPv6 addresses. A synthetic logfile fixture alone is insufficient. Confirm `backend = systemd`, available Fail2ban `python3-systemd` bindings and a unit-scoped `journalmatch`; reject `logpath` or a file backend for this component.
-3. Verify the real journal with `journalctl -u myapp.service -o cat` and `fail2ban-regex -m '_SYSTEMD_UNIT=myapp.service' systemd-journal /etc/fail2ban/filter.d/myapp-security.conf`, using the real deployed unit/filter. Check timestamp and numeric address recognition, benign lines, wrong event names, attacker-controlled imitations, and both IP families. Confirm the disabled jail configuration passes `fail2ban-client -t` before enabling it.
-4. Start with **real application requests**, including through the trusted proxy and across multiple workers where used. Confirm the application emits only the selected semantic event and trusted address, journald records it, and Fail2ban observes its native count/window. Below-threshold events and `ignoreip` sources must not invoke the action; at threshold, exactly the expected action invokes the existing local ZMQ client and the blocking service receives the correct source.
-5. Test a missing listener, rejected result, error reply or lost acknowledgement: the consumer action reports nonzero without direct firewall calls or retries. Ticket expiry, manual jail unban and jail stop leave the block untouched; only `actionban` sends enforcement requests.
-6. Restart/reload the jail without clearing kernel entries, and accept ordinary later ban requests from new/restored events. Do not introduce source-claim state, replay ledgers or expiration workers. **Do not re-prove nftables' established basic IP-blocking behavior as a condition for adopting this journal integration.** The independent blocking service already owns that test contract.
+1. A producer can install \`bmforge-security-events\` without HTTP, ZMQ, Fail2ban or nftables. Only the blocking/consumer project requires \`bmforge-zmq\` for \`bmforge-fail2ban\`; the manager rejects missing prerequisites before writing files.
+2. Validate the journal-aware filter using Fail2ban 1.1.x \`common.conf\`, \`logtype = journal\`, \`%(__prefix_line)s\`, and the systemd backend's reconstructed hostname/identifier/PID prefix. A timestamp-free canonical \`MESSAGE\` from the producer must yield exactly the expected IPv4/IPv6 address; wrong service, event, prefix or injected text must never request a ban.
+3. Preflight native configuration, daemon-interpreter \`systemd.journal\` support, real unit journal access and actual \`fail2ban-regex\` matches separately. Keep the jail disabled until the native checks pass. A syntactically valid filter file alone does not establish detection.
+4. Preserve only the current spec's clean owned \`.conf\` defaults and separate operator \`.local\` overrides. Reject conflicting effective overrides; do not support automatic legacy migration, fallback file backends or historic ownership records. Refactor older consuming installations explicitly.
+5. Exercise two countable event types with different native thresholds and both non-overlapping and overlapping per-IP failures. Each jail matches only its own event, and two independent thresholds can both invoke the same ban action. Never introduce producer-side counts, caches, IP state, retries or cross-jail deduplication.
+6. Verify ban-only action behavior, missing service/error/timeout results and state-free restart. The kernel's existing timed bans are not revalidated in this journal integration.
 
 
 ---
