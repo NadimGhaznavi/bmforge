@@ -9,6 +9,21 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Add native English and Ukrainian SVG architecture diagrams in the established dark
+osoyalce visual style, so both BMForge homepages explain the SDLC and its
+continuous-improvement loop at a glance.
+
+### Changed
+
+- Replace the English homepage's temporary HTML flow with an accessible SVG.
+  Give Ukrainian visitors the same concise overview and a localized SVG.
+  Move the former Ukrainian technical catalogue to its own reference page.
+- Remove superseded homepage-specific CSS; keep SVGs self-contained, with
+  no new Jekyll, runtime or JavaScript dependencies.
+
+
 ## [0.22.0] - 2026-11-01 @ 05:36
 
 ### Summary
