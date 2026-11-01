@@ -298,6 +298,13 @@ Before the first BMForge-related edit in a Codex session, run the **read-only**,
 
     python3 .agents/bmforge/manage.py check --project .
 
+If this project's policy prohibits all Git commands, use the alternative:
+
+    python3 .agents/bmforge/manage.py verify --project .
+
+verify checks only local pinned-skill and manager hashes, with no Git, network or
+writes; it does not check whether newer upstream skills exist.
+
 The check reads a clean local BMForge main checkout at
 ~/.cache/bmforge-upstream (override with BMFORGE_SOURCE or --source).
 It never fetches or clones. Refresh that checkout separately with
