@@ -15,6 +15,10 @@ Add native English and Ukrainian SVG architecture diagrams in the established da
 osoyalce visual style, so both BMForge homepages explain the SDLC and its
 continuous-improvement loop at a glance.
 
+### Fixed
+
+- Release issue.
+
 ### Changed
 
 - Replace the English homepage's temporary HTML flow with an accessible SVG.
