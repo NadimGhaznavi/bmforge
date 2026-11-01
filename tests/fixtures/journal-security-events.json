@@ -1,0 +1,106 @@
+{
+  "description": "Representative native systemd journal metadata for Fail2ban 1.1.x formatJournalEntry; these are synthetic unit fixtures, not live journal evidence.",
+  "unit": "mycount-server.service",
+  "entries": [
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4219",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:01-05:00",
+      "MESSAGE": "SECURITY event=bad_request ip=192.0.2.10",
+      "event": "bad_request",
+      "address": "192.0.2.10"
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "_COMM": "python3",
+      "_PID": "4220",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:02-05:00",
+      "MESSAGE": "SECURITY event=auth_failure ip=2001:db8::10",
+      "event": "auth_failure",
+      "address": "2001:db8::10"
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4221",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:03-05:00",
+      "MESSAGE": "SECURITY event=bad_request ip=192.0.2.10",
+      "event": "bad_request",
+      "address": "192.0.2.10"
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4222",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:04-05:00",
+      "MESSAGE": "SECURITY event=auth_failure ip=192.0.2.10",
+      "event": "auth_failure",
+      "address": "192.0.2.10"
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4223",
+      "_SYSTEMD_UNIT": "another.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:05-05:00",
+      "MESSAGE": "SECURITY event=bad_request ip=198.51.100.7",
+      "event": null,
+      "address": null
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4224",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:06-05:00",
+      "MESSAGE": "Normal visitor analytics 192.0.2.10",
+      "event": null,
+      "address": null
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4225",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:07-05:00",
+      "MESSAGE": "WARNING SECURITY event=bad_request ip=192.0.2.10",
+      "event": null,
+      "address": null
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4226",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:08-05:00",
+      "MESSAGE": "SECURITY event=other ip=192.0.2.10",
+      "event": null,
+      "address": null
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4227",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:09-05:00",
+      "MESSAGE": "SECURITY event=bad_request ip=evil.example",
+      "event": null,
+      "address": null
+    },
+    {
+      "_HOSTNAME": "wintermute",
+      "SYSLOG_IDENTIFIER": "gunicorn",
+      "_PID": "4228",
+      "_SYSTEMD_UNIT": "mycount-server.service",
+      "__REALTIME_TIMESTAMP": "2026-11-01T02:52:10-05:00",
+      "MESSAGE": "request body: SECURITY event=bad_request ip=192.0.2.10",
+      "event": null,
+      "address": null
+    }
+  ]
+}

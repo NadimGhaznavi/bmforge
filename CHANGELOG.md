@@ -9,6 +9,46 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-11-01 @ 05:36
+
+### Summary
+
+Keep BMForge's security-event integration standards clean and current: emit
+timestamp-free journal messages, match Fail2ban's actual journal-prefixed lines,
+and validate the native service end to end. Application updates are explicit
+refactors, not compatibility migrations.
+The site now separates the brief human-facing SDLC overview from the full
+agent-facing engineering reference.
+
+### Changed
+
+- Replace the dense homepage with a responsive SDLC flow and explicit feedback
+  loop; retain the existing task index, component catalogue and links in a
+  dedicated technical reference without changing runtime specifications.
+- Advance Security Events to draft `0.1.1`: omit embedded timestamps from the
+  canonical `MESSAGE` and use journald's trusted event time; keep one
+  fire-and-forget emit call and no application ban state.
+- Advance Fail2ban to draft `0.3.1`: use the native 1.1.x `common.conf` journal
+  prefix with unit-scoped matching, separate config/bindings/journal/filter
+  checks, and two distinct countable-event acceptance cases with independent
+  thresholds and overlapping-jail behavior.
+- Define only the current owned native `.conf` defaults and separate operator
+  `.local` overrides. Conflicting effective settings fail validation; legacy
+  configurations are refactored by consuming applications, never migrated by
+  BMForge.
+- Add `manage.py verify` to check locally pinned skill and manager hashes
+  without Git, network, cache freshness checks or writes, while leaving the
+  original Git-based `check` for update discovery.
+- Clarify current-spec-only adoption in agent guidance and lifecycle policy.
+
+### Added
+
+- Add realistic journal metadata fixtures and offline regression tests for
+  native journal prefixes, fixed event names, IPv4/IPv6 and unit scoping, plus
+  no-Git pin-integrity tests. Native live journal/Fail2ban acceptance remains
+  required on a disposable systemd host.
+
+
 ## [0.21.2] - 2026-10-31 @ 17:44
 
 ### Summary

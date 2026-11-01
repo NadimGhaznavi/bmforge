@@ -1,5 +1,8 @@
 ---
-layout: home
+layout: single
+title: BMForge
+permalink: /
+classes: wide
 author_profile: true
 lang: en
 locale: en-US
@@ -7,87 +10,50 @@ language_name: English
 translation_key: bmforge-home
 ---
 
-![BMForge Logo](/pages/images/bmforge.png)
+<link rel="stylesheet" href="{{ '/pages/css/bmforge-home.css' | relative_url }}">
 
-# BMForge
+![BMForge logo]({{ site.logo | relative_url }})
 
 **Build small. Fail visibly. Own the implementation.**
 
-BMForge is an engineering contract for coding agents. It defines how applications are built, tested, released, and integrated with the local environment. It is **not a shared runtime library**: each application owns its code. Separate applications interact only through documented public APIs.
+BMForge turns an application's engineering decisions into **versioned specifications, proven patterns and project-local AI agent skills**. Codex follows the owner's software development lifecycle (SDLC), rather than improvising a new stack for every project.
 
-BMForge is another fine product from the [Bear & Moose](https://osoyalce.com) brand.
+## From requirements to an independent application
 
-## Start with Codex
+<section class="bmforge-flow" aria-label="BMForge software development lifecycle">
+  <ol class="bmforge-flow__steps">
+    <li>
+      <span class="bmforge-flow__step">01 · Human</span>
+      <h3>Define</h3>
+      <p>The owner sets requirements, architecture, scope and approval boundaries.</p>
+    </li>
+    <li>
+      <span class="bmforge-flow__step">02 · BMForge</span>
+      <h3>Specify</h3>
+      <p>Contracts define processes, approved modules, component behaviour and acceptance checks.</p>
+    </li>
+    <li>
+      <span class="bmforge-flow__step">03 · Codex</span>
+      <h3>Build &amp; verify</h3>
+      <p>Pinned skills guide implementation, testing, installation and release preparation in the project's own repository.</p>
+    </li>
+    <li>
+      <span class="bmforge-flow__step">04 · Application</span>
+      <h3>Run independently</h3>
+      <p>The released application owns its code and operates without a BMForge runtime dependency.</p>
+    </li>
+  </ol>
+  <p class="bmforge-flow__feedback"><strong>↶ Feedback into BMForge:</strong> Real application defects reveal gaps. Improve the specification and regression checks, then deliberately adopt updated skills in future work.</p>
+</section>
 
-Install the **`bmforge` skill** once in a Codex chat:
+## The engineering philosophy
 
-```text
-$skill-installer install https://github.com/NadimGhaznavi/bmforge/tree/main/skills/bmforge
-```
+**One standard, no legacy baggage.** Keep solutions lean, make failures visible and require approval for new technology choices. When the standard improves, older applications can be deliberately refactored to adopt it; BMForge does not grow compatibility layers to preserve outdated designs.
 
-Then invoke `$bmforge` in Codex. In a new repository, it bootstraps the engineering baseline and your chosen components. In an existing repository, it can attach just the selected skill, such as RCA, without changing the application architecture or release process. See the [short setup guide]({{ site.baseurl }}{% link pages/codex-skills.md %}).
+## Explore BMForge
 
-## The engineering contract
+[Get started with Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) · [Technical reference and component catalogue]({{ site.baseurl }}{% link pages/technical-reference.md %}) · [Engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %})
 
-Read the [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}) before implementing anything.
+BMForge is an engineering specification, **not a shared application framework or runtime library**. Independent applications communicate through documented public APIs.
 
-- **Lean by default:** build only what is required. Every abstraction, service, retry, and fallback needs a reason.
-- **Trust contracts:** validate at external boundaries; don't revalidate trusted internal data at every layer.
-- **Fail visibly:** broken internal assumptions, unavailable required resources, and unsuccessful operations must not look like success.
-- **Respect distributed boundaries:** explicit acknowledgements and timeouts where delivery matters; no invented resiliency architecture.
-- **Verify behaviour:** test the selected component contracts and meaningful failure paths, not imaginary requirements.
-- **Expose health:** running applications provide a simple, on-demand health result for monitoring.
-
-## Start a task
-
-| What Codex is doing | Authoritative starting point |
-| --- | --- |
-| Building an application | Root `AGENTS.md`, [engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [class classification]({{ site.baseurl }}{% link pages/classification.md %}), then selected [component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) |
-| Starting a new project with Codex | [Use BMForge with Codex]({{ site.baseurl }}{% link pages/codex-skills.md %}) |
-| Implementing or improving a component | [Component blueprints]({{ site.baseurl }}{% link pages/component-blueprints.md %}) and [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) |
-| Building the DAL or classifying application code | [Activity / Interface / Entity]({{ site.baseurl }}{% link pages/classification.md %}) and [DB Server]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
-| Centralizing constants and avoiding magic strings | [Constants standard]({{ site.baseurl }}{% link pages/component-constants.md %}) |
-| Localizing application interfaces from day one | [Application Localization]({{ site.baseurl }}{% link pages/component-localization.md %}) |
-| Selecting charts, maps or relationship graphs | [Approved display visualizations]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
-| Editing timeline objects | [Timeline Editing (requires HTTP)]({{ site.baseurl }}{% link pages/component-timeline.md %}) |
-| Publishing an application security event without blocking dependencies | [Security Event Producer]({{ site.baseurl }}{% link pages/component-security-events.md %}): journald and trusted request context |
-| Blocking malicious IPs on one host from security events | [Fail2ban journal detection]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) and [nftables timed bans]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
-| Exporting rendered frames as an animated GIF | [GIF Animation]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
-| Configuring a service | [Runtime configuration]({{ site.baseurl }}{% link pages/runtime-configuration.md %}) and [network configuration]({{ site.baseurl }}{% link pages/network-configuration.md %}) |
-| Integrating an installed application with CMDB | [CMDB compliance]({{ site.baseurl }}{% link pages/cmdb-compliance.md %}) |
-| Making an application monitorable | [Application health checks]({{ site.baseurl }}{% link pages/health-checks.md %}) |
-| Investigating a production defect | [RCA skill](https://github.com/NadimGhaznavi/bmforge/blob/main/skills/bmforge-rca/SKILL.md): collect evidence read-only and troubleshoot locally |
-| Installing, upgrading or uninstalling | [Installation Lifecycle contract]({{ site.baseurl }}{% link pages/component-installation.md %}), [installation scripts]({{ site.baseurl }}{% link pages/installation-scripts.md %}) and [deployment impact]({{ site.baseurl }}{% link pages/deployment-impact-tracking.md %}) |
-| Publishing a release | [Release setup]({{ site.baseurl }}{% link pages/release-setup.md %}), [creating a release]({{ site.baseurl }}{% link pages/creating-a-release.md %}), [changelog maintenance]({{ site.baseurl }}{% link pages/changelog-maintenance.md %}) |
-| Creating or publishing a project website | [Project GitHub Pages standard]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) (`bmforge-github-pages`), [publishing]({{ site.baseurl }}{% link pages/github-pages-publishing.md %}), [multilingual documentation]({{ site.baseurl }}{% link pages/multilingual-documentation.md %}) |
-
-## Component specifications
-
-Each contract specifies behaviour, a **fixed approved runtime-module inventory**, and acceptance checks. Codex adapts the **frozen local reference code** rather than choosing other frameworks. If the prescribed modules are insufficient, Codex must stop and ask for approval before changing the specification.
-
-| Component | Stable ID | Contract |
-| --- | --- | --- |
-| Project documentation site | `bmforge.github-pages` | [GitHub Pages scaffold and styling]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) |
-| HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
-| ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
-| Timed host IP bans | `bmforge.nftables` | [nftables timeout sets]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
-| Security-event production | `bmforge.security-events` | [Fire-and-forget journald event producer (no prerequisites)]({{ site.baseurl }}{% link pages/component-security-events.md %}) |
-| Security-journal detection | `bmforge.fail2ban` | [Fail2ban journal filter and local ZMQ action (requires ZMQ)]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) |
-| DB Server | `bmforge.db-server` | [Canonical DbMgr and DAL layering]({{ site.baseurl }}{% link pages/component-db-server.md %}) |
-| Git | `bmforge.git` | [Publish and Commit]({{ site.baseurl }}{% link pages/component-git.md %}) |
-| Display visualizations | `bmforge.visualization` | [Plotly.js, Leaflet, Cytoscape.js]({{ site.baseurl }}{% link pages/component-visualization.md %}) |
-| Timeline editing | `bmforge.timeline` | [vis-timeline (requires HTTP)]({{ site.baseurl }}{% link pages/component-timeline.md %}) |
-| GIF animation | `bmforge.gif-animation` | [Pillow GIF frame encoder]({{ site.baseurl }}{% link pages/component-gif-animation.md %}) |
-| Constants | `bmforge.constants` | [Domain-grouped fixed values]({{ site.baseurl }}{% link pages/component-constants.md %}) |
-| Application localization | `bmforge.localization` | [English source and multilingual runtime UI]({{ site.baseurl }}{% link pages/component-localization.md %}) |
-| Installation lifecycle | `bmforge.installation` | [Install/upgrade/uninstall, versioned footprint and client/server roles]({{ site.baseurl }}{% link pages/component-installation.md %}) |
-
-## Traceability and improvement
-
-Implementing modules carry a small, statically readable component ID and specification version. The [specification lifecycle]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}) defines how to identify a gap, improve a contract, add a regression case, and version the change. The [decision record]({{ site.baseurl }}{% link DECISIONS.md %}) captures choices and unresolved work.
-
-**Current state:** Pinned Codex skills, release scaffolding and read-only offline update checks are implemented, including the optional GIF Animation and production RCA skills. Component contracts and reference implementations remain drafts undergoing validation in consuming applications. CMDB scanning of component version markers is still planned.
-
----
-
-[Changelog]({{ site.baseurl }}{% link CHANGELOG.md %}) · [BMForge repository](https://github.com/NadimGhaznavi/bmforge) 
+Another [Bear & Moose](https://osoyalce.com) project. · [Source repository](https://github.com/NadimGhaznavi/bmforge)
