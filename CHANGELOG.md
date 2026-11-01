@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.22.2] - 2026-11-01 @ 06:00
+
 ### Summary
 
 Add native English and Ukrainian SVG architecture diagrams in the established dark
