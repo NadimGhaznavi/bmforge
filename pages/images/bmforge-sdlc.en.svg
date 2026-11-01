@@ -60,7 +60,7 @@
 <circle cx="935" cy="441" r="4.2" fill="#80d9ac"/>
 <text x="950" y="446" font-family="'Noto Sans','DejaVu Sans',Arial,sans-serif" fill="#cbd9e7" font-size="17" font-weight="450">No BMForge at runtime</text>
 <circle cx="935" cy="490" r="4.2" fill="#80d9ac"/>
-<text x="950" y="495" font-family="'Noto Sans','DejaVu Sans',Arial,sans-serif" fill="#cbd9e7" font-size="17" font-weight="450">Documented public APIs</text>
+<text x="950" y="495" font-family="'Noto Sans','DejaVu Sans',Arial,sans-serif" fill="#cbd9e7" font-size="17" font-weight="450">Documented APIs</text>
 </g>
 <path d="M301 384 H323" fill="none" stroke="#67cfe7" stroke-width="3" marker-end="url(#arrow)"/>
 <path d="M588 384 H610" fill="none" stroke="#67cfe7" stroke-width="3" marker-end="url(#arrow)"/>
