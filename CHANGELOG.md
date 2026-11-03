@@ -9,6 +9,21 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Show how a project ships its development knowledge alongside its source code.
+Keep both human-facing homepages brief and replace the stage-card diagrams with
+English and Ukrainian architecture views in the BMDynIP visual style.
+
+### Changed
+
+- Show the human architect, AI agent, project repository, pinned component skills,
+  contributors and independent application runtime with icons and labeled flows.
+  Include source distribution with bundled skills and reviewed specification
+  feedback, without changing BMForge's implementation or component contracts.
+- Explain the contributor benefit in both homepages while shortening the
+  surrounding copy; preserve the technical-reference navigation and shared theme.
+
 ## [0.22.2] - 2026-11-01 @ 06:00
 
 ### Summary
