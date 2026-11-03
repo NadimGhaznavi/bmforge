@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.23.0] - 2026-11-03 @ 17:31
+
 ### Summary
 
 Show how a project ships its development knowledge alongside its source code.
