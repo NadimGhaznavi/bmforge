@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="500" viewBox="0 0 1180 500" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">ZeroMQ component traceability</title>
+<desc id="desc">Left to right: use cases, analysis responsibilities, design classes, and source code. Humans review the models, then Codex implements the approved design. The model is a first draft.</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#92b4c9"/></marker>
+</defs>
+<style>
+  .heading{font:700 28px system-ui,Arial,sans-serif;fill:#f0f6fb}
+  .lead{font:15px system-ui,Arial,sans-serif;fill:#9cb7c7}
+  .panelTitle{font:700 23px system-ui,Arial,sans-serif;fill:#f4f9fd}
+  .caption{font:15px system-ui,Arial,sans-serif;fill:#92b4c9}
+  .item{font:16px system-ui,Arial,sans-serif;fill:#e4eef5}
+  .footer{font:700 15px system-ui,Arial,sans-serif;fill:#a8c0ce}
+</style>
+<rect width="1180" height="500" rx="18" fill="#0b141d"/>
+<text x="28" y="44" class="heading" >ZeroMQ REQ/REP</text>
+<text x="29" y="75" class="lead" >Trace a responsibility from requirement to reference code</text>
+<g><rect x="20" y="102" width="269" height="297" rx="18" fill="#13232e" stroke="#24a8ff" stroke-opacity=".6" stroke-width="2"/><rect x="20" y="102" width="269" height="9" rx="4" fill="#24a8ff"/><text x="40" y="149" class="panelTitle" >Use cases</text><text x="40" y="174" class="caption" >What must happen</text><circle cx="45" cy="212" r="4" fill="#24a8ff"/><text x="60" y="218" class="item" >UC-01 Exchange</text><circle cx="45" cy="254" r="4" fill="#24a8ff"/><text x="60" y="260" class="item" >UC-02 Reject invalid</text><circle cx="45" cy="296" r="4" fill="#24a8ff"/><text x="60" y="302" class="item" >UC-03 Health probe</text><circle cx="45" cy="338" r="4" fill="#24a8ff"/><text x="60" y="344" class="item" >UC-04 Lifecycle</text></g>
+<g><rect x="317" y="102" width="269" height="297" rx="18" fill="#13232e" stroke="#63d2b1" stroke-opacity=".6" stroke-width="2"/><rect x="317" y="102" width="269" height="9" rx="4" fill="#63d2b1"/><text x="337" y="149" class="panelTitle" >Analysis</text><text x="337" y="174" class="caption" >Logical responsibilities</text><circle cx="342" cy="212" r="4" fill="#63d2b1"/><text x="357" y="218" class="item" >Boundary: REQ/REP</text><circle cx="342" cy="254" r="4" fill="#63d2b1"/><text x="357" y="260" class="item" >Entity: Envelope</text><circle cx="342" cy="296" r="4" fill="#63d2b1"/><text x="357" y="302" class="item" >Control: Dispatch</text><circle cx="342" cy="338" r="4" fill="#63d2b1"/><text x="357" y="344" class="item" >Control: Lifecycle</text></g>
+<g><rect x="614" y="102" width="269" height="297" rx="18" fill="#13232e" stroke="#edbd73" stroke-opacity=".6" stroke-width="2"/><rect x="614" y="102" width="269" height="9" rx="4" fill="#edbd73"/><text x="634" y="149" class="panelTitle" >Design</text><text x="634" y="174" class="caption" >Proposed class model</text><circle cx="639" cy="212" r="4" fill="#edbd73"/><text x="654" y="218" class="item" >ZMQServer</text><circle cx="639" cy="254" r="4" fill="#edbd73"/><text x="654" y="260" class="item" >ZMQMsg</text><circle cx="639" cy="296" r="4" fill="#edbd73"/><text x="654" y="302" class="item" >Application handler</text><circle cx="639" cy="338" r="4" fill="#edbd73"/><text x="654" y="344" class="item" >Client (draft)</text></g>
+<g><rect x="911" y="102" width="269" height="297" rx="18" fill="#13232e" stroke="#b3a1ef" stroke-opacity=".6" stroke-width="2"/><rect x="911" y="102" width="269" height="9" rx="4" fill="#b3a1ef"/><text x="931" y="149" class="panelTitle" >Code</text><text x="931" y="174" class="caption" >Pinned source snapshot</text><circle cx="936" cy="212" r="4" fill="#b3a1ef"/><text x="951" y="218" class="item" >ZMQServer.py</text><circle cx="936" cy="254" r="4" fill="#b3a1ef"/><text x="951" y="260" class="item" >ZMQMsg.py</text><circle cx="936" cy="296" r="4" fill="#b3a1ef"/><text x="951" y="302" class="item" >LookupHandler.py</text><circle cx="936" cy="338" r="4" fill="#b3a1ef"/><text x="951" y="344" class="item" >Client (not pinned)</text></g>
+<path d="M291 240H312 M588 240H609 M885 240H906" stroke="#92b4c9" stroke-width="3" marker-end="url(#arrow)" fill="none"/>
+<path d="M20 433H878" stroke="#63d2b1" stroke-width="2" stroke-dasharray="5 5"/>
+<path d="M911 433H1161" stroke="#b3a1ef" stroke-width="2" stroke-dasharray="5 5"/>
+<text x="28" y="456" class="footer" >HUMAN REVIEW / APPROVED DESIGN BASELINE</text>
+<text x="921" y="456" class="footer" >CODEX IMPLEMENTATION</text>
+</svg>

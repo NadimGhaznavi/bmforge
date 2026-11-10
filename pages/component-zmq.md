@@ -9,82 +9,86 @@ spec_status: "draft"
 translation_key: bmforge-component-zmq
 ---
 
-**Component ID:** `{{ page.component_id }}` · **Specification:** `{{ page.spec_version }}` ({{ page.spec_status }})
+**Component:** `{{ page.component_id }}` · **Contract:** `{{ page.spec_version }}` ({{ page.spec_status }}) · **Architecture view:** first draft
 
-This contract follows the [engineering policy]({{ site.baseurl }}{% link pages/engineering-contract.md %}), [health check contract]({{ site.baseurl }}{% link pages/health-checks.md %}), and [traceability rules]({{ site.baseurl }}{% link pages/specification-lifecycle.md %}).
+**Start here:** [Use cases](#use-cases) · [Analysis](#analysis-model) · [Design](#design-model) · [Code](#implementation-and-source) · [Traceability](#traceability)
 
-## Intent and scope
+This is the **human-facing map** of the ZeroMQ REQ/REP component. It shows what it does, what is responsible for what, and where to inspect the implementation. The [complete technical contract]({{ site.baseurl }}{% link pages/component-zmq-contract.md %}) remains authoritative for Codex, including the approved modules, TCP/IPC rules, error handling and acceptance checks.
 
-Implement application-owned `pyzmq` request/reply clients and servers for small JSON control and query messages over **TCP or named local IPC sockets**. This blueprint covers **REQ/REP only**. Transport selection changes the endpoint, not the message protocol or application handlers. Do not silently substitute PUB/SUB, PUSH/PULL, queues or distributed brokers; a different messaging pattern requires a separate approved specification.
+## From behaviour to code
 
-## Approved runtime modules
+![Four-stage ZeroMQ traceability diagram: use cases lead to analysis responsibilities, proposed design classes and frozen source snapshots. The human reviews the design; Codex implements it.]({{ '/pages/images/zmq-architecture.svg' | relative_url }})
 
-This is the **complete approved module inventory for the reusable ZeroMQ REQ/REP infrastructure** in specification `0.4.0`. PyZMQ provides both transports; IPC adds no Python module or third-party dependency. Provision filesystem access and runtime directories through the application's existing deployment lifecycle.
+The **human approves the use cases and design**. Codex implements within that baseline. Code is inspectable but does not need line-by-line human approval. The class model below is **provisional**: it describes the existing contract and reference code, not an approved new implementation.
 
-| Origin | Module | Purpose |
+## Use cases
+
+| ID | Actor and goal | Success / failure |
 | --- | --- | --- |
-| Python stdlib | `collections.abc` | `Callable` handler interface |
-| Python stdlib | `dataclasses` | `dataclass` and `field` for the message envelope |
-| Python stdlib | `json` | Encode and decode the versioned message payload |
-| Python stdlib | `threading` | `Thread` and `Event` for the socket-owning worker lifecycle |
-| Python stdlib | `typing` | `Any` annotation in the envelope |
-| Third-party | `zmq` | PyZMQ `Context`, REP socket, polling, timeout and cleanup |
+| **UC-01** | Application client exchanges a command or query. | One versioned JSON request gets one correlated reply, within a bounded timeout. |
+| **UC-02** | Application client sends invalid or unsupported input. | Structured error returned; the listener remains usable. |
+| **UC-03** | Health probe checks the existing endpoint. | `health` returns `ok`, or a bounded failure when unavailable. |
+| **UC-04** | Service owner starts, stops or reconfigures the listener. | Bind readiness and failures are visible; TCP or protected local IPC is selected; shutdown releases the socket. |
 
-**Approval boundary:** This list is binding for the reusable component infrastructure. Codex may rename local classes, configure ports and paths, and implement the application-owned handlers, but **must pause and ask the user** before adding, removing, or replacing an approved module or framework. Do not install another package as a workaround. User-approved changes belong in a revised BMForge specification before adoption.
+These are summaries, not replacement acceptance criteria. See [contract checks 1–10]({{ site.baseurl }}{% link pages/component-zmq-contract.md %}#acceptance-checks).
 
-These are Python import modules, not a complete transitive dependency tree. The consuming application's dependency file records installed package versions. Application business logic and separately selected BMForge components are outside this list; they must not quietly change this component's technology choices.
+## Analysis model
 
-**Not part of this component:** `pymysql`, the BMGeoIP `GeoIpLookup` class, and application-specific `LookupHandler` behaviour in the snapshot are business integration, not additional approved transport modules. Do not substitute asyncio, a broker, a raw-socket protocol, or different ZeroMQ communication patterns. A new transport pattern needs its own approved specification.
+**Problem-space responsibilities**, independent of Python classes:
 
-## Reference snapshot
+| Role | Responsibility |
+| --- | --- |
+| **Boundary: Request/reply** | Accept one framed request and return one response; enforce the message/transport boundary. |
+| **Entity: Message envelope** | Carry the protocol version, sender, target, method and payload. |
+| **Control: Dispatch** | Route a validated request to an application-owned operation. |
+| **Control: Lifecycle** | Establish readiness, report worker failure and stop cleanly. |
 
-- `components/reference/bmgeoip/bmgeoip/zmq/ZMQServer.py`: socket-owning worker, endpoint passed to `bind`, ready/failure signalling, orderly cleanup
-- `components/reference/bmgeoip/bmgeoip/zmq/ZMQMsg.py`: versioned JSON envelope
-- `components/reference/bmgeoip/bmgeoip/server/LookupHandler.py`: example *application-owned* dispatch, input validation and error response
-- `components/reference/bmgeoip/bmgeoip/constants/DZMQ.py`: snapshot of timeout and protocol constants
+These are logical roles, not a requirement to create four Python classes. They follow BMForge's [Activity / Interface / Entity classification]({{ site.baseurl }}{% link pages/classification.md %}).
 
-## Endpoint selection and local IPC
+## Design model
 
-Choose one transport for the application endpoint. Preserve existing TCP defaults unless the application selects IPC. The server binds and each client connects using its resolved endpoint:
+**Solution-space classes**, subject to your design review:
 
-| Transport | Example | Configuration |
+| Design element | Responsibility and boundary | Reference |
 | --- | --- | --- |
-| TCP | `tcp://127.0.0.1:18081` | Existing application interface/port resolver and `CMDB_NETWORK` conventions; clients use a reachable destination rather than a wildcard bind address. |
-| Local IPC | `ipc:///run/example/control.sock` | An application-configured absolute filesystem path on the same host, shared by the server, clients and health probe. No IP address or TCP port is required. |
+| **`ZMQServer`** (interface) | Own the REP socket and worker thread; poll, reply, signal readiness/failure and clean up. | [`ZMQServer.py`](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/zmq/ZMQServer.py) |
+| **`ZMQMsg`** (entity) | Serialize, parse and validate the versioned JSON envelope. | [`ZMQMsg.py`](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/zmq/ZMQMsg.py) |
+| **Application handler** (activity) | Interpret supported methods and perform application-specific work. **Outside** the reusable transport. | [`LookupHandler.py` example](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/server/LookupHandler.py) |
+| **Application client** (interface) | Send a bounded REQ, receive the reply, and handle timed-out exchanges. | **Draft:** no pinned client snapshot yet. |
 
-Keep IPC paths in application-owned configuration under the existing runtime-configuration precedence. `CMDB_NETWORK` remains IP-only: do not invent a port or extend its tuple schema for IPC. An IPC-only application has no IP listener to declare for this endpoint. Do not bind both transports or fall back to TCP implicitly.
+**Design decisions, not extra classes:** endpoint configuration selects TCP or a named IPC path; deployment owns IPC permissions and the single-server lifecycle. The application owns method names, authorisation and payload schemas. None of the draft names above expands the [approved runtime module inventory]({{ site.baseurl }}{% link pages/component-zmq-contract.md %}#approved-runtime-modules).
 
-For IPC on supported Unix-domain-socket platforms:
+## Request/reply interaction
 
-- Use an absolute named filesystem socket, not a relative path, wildcard or Linux abstract `ipc://@...` address. Abstract sockets do not provide filesystem access controls. Reject invalid paths and platform path-length violations; fail visibly if IPC is unavailable.
-- Before starting the worker, deployment must provide the runtime directory and service user/group, restrict directory traversal to approved callers, and allow only the server identity to create/remove entries. Set a restrictive service umask before bind and verify the socket's effective access permissions. Do not temporarily expose a permissive socket or change the process-wide umask inside the worker. Clients only connect; they do not create directories, change permissions or remove socket files.
-- Enforce one server instance per socket path through the service lifecycle. **A second libzmq IPC bind can replace an existing pathname binding**; do not rely on a TCP-style address-in-use error. Recover a stale socket only after establishing that its owning instance has stopped, and never unlink an arbitrary existing file or another instance's socket.
-- The server owns bind/close and orderly socket cleanup; deployment recreates transient runtime directories after reboot. Verify clean stop/restart and controlled recovery after an unclean stop. Missing directories, permission errors or failed binds must prevent a ready/healthy report. Keep timeout, validation and application authorisation rules identical on both transports.
+![Runtime sequence sketch: a client sends one REQ, the ZeroMQ worker parses the envelope, an application handler dispatches the command, and one REP returns a result or error.]({{ '/pages/images/zmq-exchange.svg' | relative_url }})
 
-Upstream details: [ZeroMQ IPC transport](https://libzmq.readthedocs.io/en/latest/zmq_ipc.html) and [Linux Unix-domain socket permissions](https://man7.org/linux/man-pages/man7/unix.7.html).
+The same message contract applies to TCP and IPC. Malformed requests must receive an error instead of silently breaking the REP worker. A health probe uses the **same** endpoint, not an additional server.
 
-## Required contract
+## Implementation and source
 
-- Implement the selected configurable TCP or IPC endpoint as described above, using the same REQ/REP envelope on both. For TCP, declare the listener via BMForge Network Configuration and CMDB conventions; never expose a listener beyond the trusted network without explicit review of security requirements.
-- The worker creates, owns, uses, and closes its own ZeroMQ context and REP socket **on the same thread**. Use a bounded poll interval, send timeout, and `LINGER=0`; do not share sockets across threads.
-- Report bind/initialisation failure synchronously to the parent before it claims the listener is ready. Surface later fatal worker failures through an explicit check or equivalent supervisor integration.
-- Receive exactly one JSON frame per request and send exactly one reply per received request, including invalid messages, preserving REQ/REP alternation. Define safe behaviour for malformed frames and handler exceptions; do not allow one bad request to kill the worker silently.
-- A versioned UTF-8 JSON envelope includes `protocol_version` (integer), `sender` (nonempty string), `target` (string or null), `method` (nonempty string), and `payload` (object). Reject incompatible versions or invalid shapes. Bound message size for the application's threat model.
-- **Reject invalid Unicode scalar values before application dispatch.** JSON `\\u` escapes can decode into lone UTF-16 surrogates even when the wire frame is valid UTF-8. Validate all decoded strings and object keys, including nested payloads and envelope correlation fields. Respond with `invalid_request` and keep the listener usable. Valid escaped surrogate *pairs* representing Unicode characters are legal. Invalid external Unicode must never be classified as a fatal application defect.
-- Replies preserve correlation context from the request when available. Define success `status: ok` and error `status: error`, with structured `error.code` and `error.message`. Application handlers define supported `method` values, argument validation, authorisation if required and business operations.
-- Shut down promptly on service stop, release the endpoint, and report fatal errors. Client implementations need bounded send/receive timeouts and a defined retry/reconnect policy on either transport, because a failed REQ exchange can require rebuilding a REQ socket.
-- Reserve `method: "health"` with empty object payload on the existing REQ/REP endpoint. A working listener/handler replies with the usual `status: "ok"` envelope; an unavailable listener must fail the bounded client call. Do not add an HTTP server, background supervisor, or automatic recovery solely for monitoring. The application's HTTP `/health` may call this method to report ZeroMQ status to CMDB.
-- Do not add a generic dispatcher, discovery service, persistence layer, or asynchronous broker without a requirement.
+This is a **frozen BMGeoIP reference snapshot**, not a full compliant implementation or a runtime BMForge dependency. Codex adapts the transport into each consuming application.
 
-## Acceptance checks
+- [Socket worker: `ZMQServer.py`](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/zmq/ZMQServer.py)
+- [Message envelope: `ZMQMsg.py`](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/zmq/ZMQMsg.py)
+- [Application dispatch example: `LookupHandler.py`](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/server/LookupHandler.py)
+- [Protocol/timeouts example: `DZMQ.py`](https://github.com/NadimGhaznavi/bmforge/blob/main/components/reference/bmgeoip/bmgeoip/constants/DZMQ.py)
+- [Codex component skill](https://github.com/NadimGhaznavi/bmforge/blob/main/skills/bmforge-zmq/SKILL.md)
 
-1. Exercise each transport the application supports: TCP on a loopback ephemeral port and/or IPC at a temporary absolute socket path. A real client exchanges the same valid request/reply envelope, including protocol and routing fields. When both are supported, run the protocol, failure and health checks below on both.
-2. Bad JSON, multi-frame message, unsupported protocol version, wrong target and unsupported method return defined errors; worker remains usable afterwards.
-3. Syntactically valid JSON containing escaped lone `\\ud800` / `\\udfff` values in envelope strings, nested payload values or object keys yields `invalid_request`. A subsequent valid request succeeds on the **same server**, and valid Unicode including escaped surrogate pairs remains accepted.
-4. A handler exception is handled according to documented failure policy, never a silent hang.
-5. TCP bind conflict is reported during startup; IPC duplicate startup is prevented by the service lifecycle without replacing the active binding. Missing/unwritable IPC directories, invalid/overlong paths and unsupported IPC fail startup visibly without a TCP fallback. Forced worker failure is observable by its supervisor.
-6. Shutdown releases sockets and threads; client timeout/recovery is tested. For IPC, verify socket cleanup, clean restart and controlled stale-socket recovery without deleting unrelated files.
-7. A `health` request gets a normal success reply while the ZeroMQ handler is usable; a stopped listener times out/fails within the configured bound and cannot be reported healthy by the application.
-8. Application code does not import bmgeoip or BMForge at runtime; its message methods and payload schemas are documented locally.
-9. Verify the ZeroMQ transport uses the approved runtime modules only; any proposed replacement or addition was approved by the user before implementation.
-10. For IPC, a permitted local user exchanges requests; a different unprivileged user outside the approved access group cannot connect or replace the socket. Verify effective directory/socket permissions from creation, no TCP listener for this endpoint, and client/health configuration that needs no IP address or port. Document the user/group checks actually run.
+The snapshot predates parts of contract `0.4.0`; it is **not evidence that every acceptance check passes**. Current consuming applications must supply and test any missing behaviour.
+
+## Traceability
+
+| Use case | Analysis responsibility | Design element | Verification |
+| --- | --- | --- | --- |
+| UC-01 | Boundary + envelope + dispatch | `ZMQServer`, `ZMQMsg`, handler, client | Checks 1, 6, 8 |
+| UC-02 | Boundary + envelope | `ZMQMsg`, `ZMQServer` | Checks 2–4 |
+| UC-03 | Boundary + dispatch | `ZMQServer`, app handler | Check 7 |
+| UC-04 | Lifecycle + boundary | `ZMQServer`, app configuration | Checks 5, 6, 9, 10 |
+
+[Open the full acceptance checks]({{ site.baseurl }}{% link pages/component-zmq-contract.md %}#acceptance-checks) · [Engineering contract]({{ site.baseurl }}{% link pages/engineering-contract.md %})
+
+*Next iteration:* clickable class-level graph, contextual descriptions on selection, consuming-project code links and test-result links. This draft deliberately avoids adding a new viewer, framework or runtime dependency.
+
+---
+
+[Component catalogue]({{ site.baseurl }}{% link pages/technical-reference.md %}) · [Technical contract]({{ site.baseurl }}{% link pages/component-zmq-contract.md %})

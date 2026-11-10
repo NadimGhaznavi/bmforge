@@ -61,7 +61,7 @@ Each contract specifies behaviour, a **fixed approved runtime-module inventory**
 | --- | --- | --- |
 | Project documentation site | `bmforge.github-pages` | [GitHub Pages scaffold and styling]({{ site.baseurl }}{% link pages/jekyll-setup.md %}) |
 | HTTP display server | `bmforge.http-server` | [HTTP]({{ site.baseurl }}{% link pages/component-http.md %}) |
-| ZeroMQ REQ/REP | `bmforge.zmq-server` | [ZeroMQ]({{ site.baseurl }}{% link pages/component-zmq.md %}) |
+| ZeroMQ REQ/REP | `bmforge.zmq-server` | [Architecture view]({{ site.baseurl }}{% link pages/component-zmq.md %}) · [Technical contract]({{ site.baseurl }}{% link pages/component-zmq-contract.md %}) |
 | Timed host IP bans | `bmforge.nftables` | [nftables timeout sets]({{ site.baseurl }}{% link pages/component-nftables.md %}) |
 | Security-event production | `bmforge.security-events` | [Fire-and-forget journald event producer (no prerequisites)]({{ site.baseurl }}{% link pages/component-security-events.md %}) |
 | Security-journal detection | `bmforge.fail2ban` | [Fail2ban journal filter and local ZMQ action (requires ZMQ)]({{ site.baseurl }}{% link pages/component-fail2ban.md %}) |

@@ -9,6 +9,20 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+### Summary
+
+Make the ZeroMQ component easier to understand and inspect through diagram-led
+use cases, analysis roles, design elements and links to pinned source code.
+Keep the full `0.4.0` technical contract authoritative for pinned Codex skills.
+
+### Changed
+
+- Replace the dense human-facing ZeroMQ page with a compact traceability draft,
+  two dark-themed diagrams and links from requirements to reference classes.
+- Move the unchanged technical requirements and acceptance checks to a dedicated
+  contract page, and point skill installation and technical guidance to it.
+  No ZeroMQ runtime requirements, dependencies or specification version change.
+
 ## [0.23.0] - 2026-11-03 @ 17:31
 
 ### Summary
