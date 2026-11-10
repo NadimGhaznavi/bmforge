@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="312" viewBox="0 0 1180 312" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">ZeroMQ REQ/REP interaction</title>
+<desc id="desc">Client sends a request to the server; the server decodes and validates a versioned message, invokes the application handler, then sends one correlated reply. An invalid request gets a structured error. Both transports use the same message protocol.</desc>
+<defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8db7cb"/></marker>
+<marker id="tipBack" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#63d2b1"/></marker></defs>
+<style>
+  .heading{font:700 25px system-ui,Arial,sans-serif;fill:#f4f9fd}
+  .small{font:15px system-ui,Arial,sans-serif;fill:#9cb7c7}
+  .node{font:700 20px system-ui,Arial,sans-serif;fill:#eef5fc}
+  .explain{font:15px system-ui,Arial,sans-serif;fill:#d3e0e9}
+</style>
+<rect width="1180" height="312" rx="18" fill="#0b141d"/>
+<text x="28" y="44" class="heading">One request. One reply.</text>
+<text x="28" y="70" class="small">TCP or named local IPC  ·  versioned JSON  ·  bounded timeouts</text>
+<g fill="#162936" stroke-width="2">
+  <rect x="23" y="105" width="222" height="95" rx="12" stroke="#24a8ff"/>
+  <rect x="326" y="105" width="224" height="95" rx="12" stroke="#63d2b1"/>
+  <rect x="630" y="105" width="224" height="95" rx="12" stroke="#edbd73"/>
+  <rect x="934" y="105" width="222" height="95" rx="12" stroke="#b3a1ef"/>
+</g>
+<text x="42" y="142" class="node">Client</text><text x="42" y="170" class="explain">REQ / timeout</text>
+<text x="346" y="142" class="node">ZMQServer</text><text x="346" y="170" class="explain">Owns REP socket</text>
+<text x="650" y="142" class="node">ZMQMsg</text><text x="650" y="170" class="explain">Decode + validate</text>
+<text x="952" y="142" class="node">App handler</text><text x="952" y="170" class="explain">Business method</text>
+<g fill="none" stroke="#8db7cb" stroke-width="2.5" marker-end="url(#tip)"><path d="M249 143H319"/><path d="M554 143H623"/><path d="M858 143H926"/></g>
+<path d="M1044 205V244H133V205" fill="none" stroke="#63d2b1" stroke-width="3" marker-end="url(#tipBack)"/>
+<text x="360" y="237" class="explain">REP: correlated success or structured error</text>
+<text x="28" y="287" class="small">Invalid envelope → error reply without dispatch. Health uses this same request/reply path.</text>
+</svg>
