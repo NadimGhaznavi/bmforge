@@ -9,6 +9,8 @@ permalink: /CHANGELOG/
 
 ## [Unreleased]
 
+## [0.23.1] - 2026-11-10 @ 17:57
+
 ### Summary
 
 Make the ZeroMQ component easier to understand and inspect through diagram-led
